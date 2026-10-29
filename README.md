@@ -29,6 +29,8 @@ The UE5 scene includes offline fallback geometry for the Assembly, Pionirski Par
 4. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
 
 **Controls:** WASD move, mouse look, left mouse fire, R reload, Shift sprint, Space jump, E interact/enter/exit, Esc pause/resume.
+
+For local build instructions, diagnostic logs and the optional self-hosted GitHub packaging workflow, see [Docs/UE5_WINDOWS_BUILD_SR.md](Docs/UE5_WINDOWS_BUILD_SR.md).
 5. Only after validating Editor gameplay, run `Package_Windows.bat` to attempt a Win64 Shipping package. Packaging now refuses to start if the setup marker is not `SUCCESS` or if `Content/Maps/L_Cacilend.umap` is absent.
 
 The full C++ build log is saved to `Build/UE5-build.log`; a failed Windows package is logged to `Build/UE5-package.log`. The preflight checker only verifies installation signals; it is not a compile test. GitHub CI checks source structure, syntax and configuration/code contracts, not an actual Unreal C++ build, packaged EXE, or gameplay.
