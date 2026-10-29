@@ -11,7 +11,9 @@
 - `Content/Python/Setup_Google3DTiles_Cesium.py` — optional live Google Photorealistic 3D Tiles setup through Cesium for Unreal.
 - `Scripts/generate_textures.py` — generates local PBR texture sources.
 - `Scripts/extract_cod2_assets.py` / `Extract_COD2_Assets.bat` — local-only extraction of relevant `.iwd` contents from a COD2 installation.
+- `Build_Run_Cacilend_UE5.bat` — attempts a real UE5.8 C++ editor build, then launches the editor asset/map setup.
 - `Import_Cacilend_Assets.bat`, `Setup_Cacilend_Assets.bat`, `Package_Windows.bat` — Windows tools.
+- `Install_COD2_Blender_Importer.bat`, `Extract_COD2_Assets.bat` and `Download_CC0_Weapon_Fallback.bat` — local asset preparation.
 
 The UE5 scene includes offline fallback geometry for the Assembly, Pionirski Park, Presidency/New Palace, Main Post Office Palace, surrounding urban blocks and the encampment. When matching imported assets exist at the documented `/Game/Cacilend/Imported/...` paths, the map builder/character/weapon code uses them. Without local assets, the project remains a procedural prototype.
 
@@ -21,10 +23,11 @@ Requirements: Windows 10/11 64-bit, Unreal Engine 5.8 and Visual Studio 2022 wit
 
 1. Clone/download this repository to a short path such as `C:\\Games\\CacilendUE`.
 2. Open `CacilendUE.uproject` and let Unreal/Visual Studio compile the C++ module.
-3. (Optional) If using a locally installed COD2 copy, read `Docs/ASSET_IMPORT_PIPELINE_SR.md`, run `Extract_COD2_Assets.bat`, export the selected models to FBX in Blender, and place them under `SourceArt/Import/`.
-4. Run `Setup_Cacilend_Assets.bat`. It generates procedural PBR textures, imports local FBX/textures if present, builds the map/materials and attempts the optional Google 3D Tiles setup.
-5. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
-6. After Editor gameplay is validated, run `Package_Windows.bat` to attempt a Win64 Shipping package.
+3. Run `Build_Run_Cacilend_UE5.bat` to invoke UnrealBuildTool for `CacilendUEEditor Win64 Development` and then launch setup in Unreal Editor.
+4. (Optional) If using a locally installed COD2 copy, read `Docs/ASSET_IMPORT_PIPELINE_SR.md`, run `Extract_COD2_Assets.bat`, install the Blender importer via `Install_COD2_Blender_Importer.bat`, export selected models to FBX, and place them under `SourceArt/Import/`.
+5. Run `Setup_Cacilend_Assets.bat` when you want to rerun generation/import without rebuilding C++.
+6. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
+7. After Editor gameplay is validated, run `Package_Windows.bat` to attempt a Win64 Shipping package.
 
 ## Original COD2 models and textures
 
