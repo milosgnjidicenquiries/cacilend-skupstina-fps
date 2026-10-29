@@ -120,6 +120,9 @@ def main():
             "Setup launcher must wait for an explicit Editor setup completion marker.")
     require("write_setup_status('SUCCESS'" in setup_py and "write_setup_status('FAILED'" in setup_py,
             "Editor setup Python must report explicit success/failure status.")
+    require("def validate_level_setup():" in setup_py and "does_asset_exist(MAP_PATH)" in setup_py and
+            "'CacilendMapBuilder', 'PlayerStart'" in setup_py and "validate_level_setup()" in setup_py,
+            "Editor setup must verify the saved map and required gameplay actors before reporting success.")
     require((ROOT / "Scripts/Wait_Cacilend_Setup.ps1").is_file(),
             "Setup completion waiter is missing.")
     require("UE5-build.log" in build_launcher and "Tail 80" in build_launcher,
