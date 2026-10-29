@@ -73,6 +73,11 @@ def main():
     for accessor in ("GetHealth", "GetKills", "GetAmmo", "GetReserveAmmo", "IsReloading", "IsInInterior", "IsNearAssemblyEntrance"):
         require(accessor in hud_cpp or accessor in character_cpp,
                 f"HUD/character contract missing accessor: {accessor}")
+    require("MISIJA: OSIGURAJ PRILAZ I UDJI U ZGRADU" in hud_cpp and "SPACE SKOK" in hud_cpp,
+            "HUD must show the mission objective and core movement/weapon controls.")
+    require("GetWorldTimerManager().ClearTimer(ReloadTimerHandle)" in character_cpp and
+            "bReloading = false;" in character_cpp and "bSprinting = false;" in character_cpp,
+            "Player respawn must clear reload and sprint states.")
     require("Enemy->TakeDamage(34.0f" in character_cpp and "AddKill()" in character_cpp,
             "Player firing path must damage enemies and track kills.")
     require("Player->TakeDamage(" in enemy_cpp,
@@ -99,6 +104,14 @@ def main():
         content = read(rel)
         require("Scripts\\Find_UE_5_8.ps1" in content and f"-Purpose {purpose}" in content,
                 f"{rel} must use Find_UE_5_8.ps1 with Purpose {purpose}.")
+    build_launcher = read("Build_Run_Cacilend_UE5.bat")
+    package_launcher = read("Package_Windows.bat")
+    require("Check_Cacilend_UE5_Requirements.ps1" in build_launcher,
+            "Main build launcher must run the prerequisite checker automatically.")
+    require("UE5-build.log" in build_launcher and "Tail 80" in build_launcher,
+            "Main build launcher must retain build logs and show a useful error tail.")
+    require("UE5-package.log" in package_launcher and "Tail 100" in package_launcher,
+            "Packaging launcher must retain UAT logs and show a useful error tail.")
     require((ROOT / "Check_Cacilend_UE5_Requirements.bat").is_file(),
             "One-click UE5 requirements checker is missing.")
     require((ROOT / "Scripts/Check_Cacilend_UE5_Requirements.ps1").is_file(),
