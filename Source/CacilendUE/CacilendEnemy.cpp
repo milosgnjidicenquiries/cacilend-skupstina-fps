@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/SkeletalMesh.h"
+#include "Animation/AnimSequence.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -70,7 +71,15 @@ void ACacilendEnemy::BeginPlay()
             CharacterMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             CharacterMesh->SetVisibility(true, true);
             CharacterMesh->SetHiddenInGame(false);
-            UE_LOG(LogTemp, Log, TEXT("[Cacilend] Using imported COD2 skeletal soldier."));
+            CharacterMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+            ImportedIdleAnimation = LoadObject<UAnimSequence>(nullptr, TEXT("/Game/Cacilend/Imported/Animations/AN_COD2_Idle.AN_COD2_Idle"));
+            ImportedWalkAnimation = LoadObject<UAnimSequence>(nullptr, TEXT("/Game/Cacilend/Imported/Animations/AN_COD2_Walk.AN_COD2_Walk"));
+            UAnimSequence* InitialAnimation = ImportedIdleAnimation ? ImportedIdleAnimation.Get() : ImportedWalkAnimation.Get();
+            if (InitialAnimation) CharacterMesh->PlayAnimation(InitialAnimation, true);
+            bImportedCOD2Mesh = true;
+            UE_LOG(LogTemp, Log, TEXT("[Cacilend] Using imported COD2 skeletal soldier; idle=%s walk=%s"),
+                ImportedIdleAnimation ? TEXT("yes") : TEXT("no"),
+                ImportedWalkAnimation ? TEXT("yes") : TEXT("no"));
         }
         AttackCooldown = FMath::FRandRange(0.3f, 1.4f);
         return;
@@ -98,7 +107,23 @@ void ACacilendEnemy::Tick(float DeltaSeconds)
     FVector Delta = Player->GetActorLocation() - GetActorLocation();
     Delta.Z = 0.0f;
     const float Dist = Delta.Size();
-    if (Dist < 6000.0f && Dist > 240.0f)
+    const bool bShouldWalk = Dist < 6000.0f && Dist > 240.0f;
+    if (bImportedCOD2Mesh)
+    {
+        UAnimSequence* DesiredAnimation = bShouldWalk && ImportedWalkAnimation
+            ? ImportedWalkAnimation.Get()
+            : (ImportedIdleAnimation ? ImportedIdleAnimation.Get() : ImportedWalkAnimation.Get());
+        if (DesiredAnimation)
+        {
+            if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+            {
+                if (CharacterMesh->GetAnimation() != DesiredAnimation)
+                    CharacterMesh->PlayAnimation(DesiredAnimation, true);
+            }
+        }
+        bPlayingWalkAnimation = bShouldWalk;
+    }
+    if (bShouldWalk)
     {
         const FVector Dir = Delta.GetSafeNormal();
         SetActorLocation(GetActorLocation() + Dir * 140.0f * DeltaSeconds, true);
