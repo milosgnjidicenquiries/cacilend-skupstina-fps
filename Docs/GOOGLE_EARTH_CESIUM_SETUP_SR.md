@@ -28,6 +28,12 @@ Ovo su okvirne, lokalno skalirane koordinate za igranje — nisu geodetski surve
 9. U World Outliner-u izaberi `GooglePhotorealistic3DTiles_Belgrade`, potvrdi **Source = From URL**, URL `https://tile.googleapis.com/v1/3dtiles/root.json?key=YOUR_API_KEY` i uključi **Show Credits On Screen**.
 10. Pritisni Play i proveri da tileset učita centar Beograda. Skripta pokušava da uključi **Create Physics Meshes** da bi FPS karakter mogao da se oslanja na učitane tiles. Ovo troši dodatne resurse; ako je performansa loša, smanji nivo geometrije/obim tileset-a pre nego što isključiš kolizije. Ako ne radi, proveri log, ključ, API/billing, mrežu i Cesium plugin verziju.
 
+## Važno ograničenje za EEA billing
+
+Google trenutno navodi da Photorealistic 3D Tiles nisu dostupni projektima povezanim sa billing nalogom čija je adresa u Evropskom ekonomskom prostoru (EEA). Ako je Google Cloud billing profil registrovan u Hrvatskoj ili drugoj EEA zemlji, nemoj računati da će se ovaj sloj učitati; Google može vratiti HTTP 403 čak i kada je API ključ ispravan. Proveri zvanične [Google 3D Tiles error-handling napomene](https://developers.google.com/maps/documentation/tile/error_handling) pre uključivanja billing-a. Ako billing profil nije EEA, ipak su neophodni API pristup, ključ, Map Tiles API i billing.
+
+Ako Photorealistic 3D Tiles nisu dostupni, offline geometrija u projektu ostaje aktivna. Alternativa je koristiti zasebne, legalno licencirane lokalne modele zgrada i open map podloge; nemoj preuzimati ili pakovati Google Earth fotogrametriju van uslova Google licence.
+
 ## Obavezna atribucija i ključevi
 
 Google-ova pravila traže da prikazuješ kredite/attribution koji se dobijaju sa tiles. Visina u Cesium-u je ellipsoidna, ne isto što i lokalno prijavljena nadmorska visina; vrednost 160 m je okvirni start i mora vizuelno da se proveri. Zbog toga skripta postavlja `show_credits_on_screen = True`. Nemoj ga isključivati. Google API key nije upisan u source code; fajl sa ključem je git-ignored. Ipak, ako je ključ upotrebljen u tileset URL-u unutar projekta/pakovanog EXE-a, može se izvući iz klijentske aplikacije. Za lokalni test koristi poseban, API-ograničen ključ, postavi kvote i budžetska upozorenja i ne distribuiraj build sa ključem bez provere Google pravila/bezbednosti. Ne postavljaj key u javni GitHub, screenshot ili javni build bez pravilnih ograničenja.
