@@ -2,7 +2,10 @@
 setlocal
 set "ROOT=%~dp0"
 set "UAT="
-for %%P in (
+if defined UE_5_8_ROOT (
+  if exist "%UE_5_8_ROOT%\Engine\Build\BatchFiles\RunUAT.bat" set "UAT=%UE_5_8_ROOT%\Engine\Build\BatchFiles\RunUAT.bat"
+)
+if not defined UAT for %%P in (
   "%ProgramFiles%\Epic Games\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat"
   "D:\Epic Games\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat"
   "C:\Epic Games\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat"
