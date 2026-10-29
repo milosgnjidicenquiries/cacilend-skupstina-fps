@@ -13,7 +13,7 @@ POKRETANJE — REDOM
 1) Preuzmi/kloniraj repo u kratak folder, npr. C:\Games\CacilendUE, pa raspakuj ako je ZIP.
 2) Dvaput klikni Check_Cacilend_UE5_Requirements.bat. Skripta proverava Windows, hardver, UE5.8, VS workload, MSVC i Windows SDK. Izvestaj ce biti u Build\UE5-preflight-report.txt. Ovo nije build; ako postoje FAIL stavke, ispravi ih pre sledeceg koraka.
 3) Ako je UE5.8 instaliran na nestandardnoj lokaciji, podesi promenljivu okruzenja UE_5_8_ROOT na folder koji sadrzi Engine, npr. D:\Epic Games\UE_5.8.
-4) Dvaput klikni Build_Run_Cacilend_UE5.bat. Skripta pokusava C++ build. Ako se build zavrsi neuspesno, sacuvaj ceo log sa porukom greske; ne ocekuj da je EXE napravljen.
+4) Dvaput klikni Build_Run_Cacilend_UE5.bat. Skripta ponavlja proveru preduslova, a zatim pokusava C++ build. Ako se build zavrsi neuspesno, sacuvaj ceo log sa porukom greske; ne ocekuj da je EXE napravljen.
 5) Kada C++ build uspe, skripta otvara Unreal Editor i pokrece setup mape/materijala. U editoru otvori /Game/Maps/L_Cacilend i pritisni Play.
 6) Ako samo zelis da otvoris projekat bez automatskog setup-a, pokreni Start_Cacilend_Editor.bat ili otvori CacilendUE.uproject.
 7) Tek nakon sto gameplay radi u editoru, pokreni Package_Windows.bat za Windows Shipping paket.
