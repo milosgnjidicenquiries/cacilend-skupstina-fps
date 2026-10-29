@@ -23,18 +23,6 @@ Primarni projekat je **CacilendUE.uproject — Unreal Engine 5.8 / Windows**. Br
 6. U Blenderu, koristeći **CoD Asset Importer**, izaberi File → Import → CoD Asset Importer → Import model i odaberi željeni XModel. Ovaj dodatak može da uveze i COD2 D3DBSP mapu; međutim, COD2 mapa nije geografski Beograd. Za FPS prototip iz nje biraj pojedinačne vojnike, oružja i propove, a beogradski raspored ostavi kao poseban nivo. Izvezi odabrane mesh-eve kao FBX preko File → Export → FBX ili `Scripts/blender_export_selected_fbx.py`. Za karakter izaberi Skeletal Mesh i njegov armature; za statičnu pušku/prop dodaj `--static` pri korišćenju skripte.
 7. **Animacije se obrađuju odvojeno od modela.** Pokreni `Convert_COD2_Animations.bat` i prevuci na njega jednu kompajliranu `.xanim_bin` datoteku iz `Build/LocalCOD2Extraction/xanim`. Skripta preuzima open-source [xmodelconverter v24.1](https://github.com/riicchhaarrd/xmodelconverter/releases/tag/v24.1) i pokušava da napravi `.xanim_export` u `Build/LocalCOD2Extraction/exported`. Zatim pokreni `Install_COD2_Animation_Addon.bat` i instaliraj `pv_blender_cod` dodatak iz [v0.9.0 release-a](https://github.com/prov3ntus/pv_blender_cod/releases/tag/v0.9.0). U Blenderu izaberi postojeći COD2 armature i pokušaj uvoz `.xanim_export`, pa izvezi animaciju kao FBX. **Ovo je eksperimentalni korak:** održavalac dodatka navodi poznate probleme sa XAnim importom; ako se animacija ne učita ili je deformisana, preskoči je za prvi build, koristi proxy/single-node fallback ili popravi/retargetuj animaciju ručno. Ne predstavljaj ovu konverziju kao proverenu dok se ne testira sa konkretnim XAnim fajlom.
 
-   | Putanja | Namena |
-   | --- | --- |
-   | `Buildings/SM_NationalAssembly.fbx` | zamena fasade Skupštine |
-   | `Buildings/SM_PionirskiPark.fbx` | opcioni statični park/prop |
-   | `Buildings/SM_Presidency.fbx` | zamena zgrade Predsedništva |
-   | `Buildings/SM_MainPostOfficePalace.fbx` | zamena Glavne pošte |
-   | `Characters/SK_COD2_Soldier.fbx` | Skeletal Mesh vojnika |
-   | `Weapons/SM_COD2_Weapon.fbx` | FPS Static Mesh COD2 puške |
-   | `Weapons/SM_CC0_Rifle.fbx` | opciona CC0 fallback puška, nije COD2 original |
-   | `Animations/AN_COD2_Idle.fbx` | opcioni idle, kompatibilan sa imported skeleton-om |
-   | `Animations/AN_COD2_Walk.fbx` | opcioni walk, kompatibilan sa imported skeleton-om |
-
 8. Sačuvaj izvezene FBX i teksture pod `SourceArt/Import/` koristeći tačno sledeće putanje i imena:
 
    | Putanja | Namena |
