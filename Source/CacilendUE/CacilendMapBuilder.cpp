@@ -185,14 +185,14 @@ void ACacilendMapBuilder::BuildExterior()
 {
     if (!bUseGooglePhotogrammetry)
     {
-        AddBlock(TEXT("Asphalt"), FVector(0,900,-32), FVector(16000,24500,70), FRotator::ZeroRotator, FLinearColor::White, true);
-    AddBlock(TEXT("Concrete"), FVector(-8500,900,-5), FVector(900,24500,45), FRotator::ZeroRotator, FLinearColor(0.61f,0.60f,0.56f), true);
-    AddBlock(TEXT("Concrete"), FVector(8500,900,-5), FVector(900,24500,45), FRotator::ZeroRotator, FLinearColor(0.61f,0.60f,0.56f), true);
+        AddBlock(TEXT("Asphalt"), FVector(0,900,-32), FVector(4000,24500,70), FRotator::ZeroRotator, FLinearColor::White, true);
+    AddBlock(TEXT("Concrete"), FVector(-2200,900,-5), FVector(400,24500,45), FRotator::ZeroRotator, FLinearColor(0.61f,0.60f,0.56f), true);
+    AddBlock(TEXT("Concrete"), FVector(2200,900,-5), FVector(400,24500,45), FRotator::ZeroRotator, FLinearColor(0.61f,0.60f,0.56f), true);
     AddBlock(TEXT("Grass"), FVector(-11200,700,-48), FVector(4200,24000,60), FRotator::ZeroRotator, FLinearColor(0.26f,0.31f,0.20f), true);
     AddBlock(TEXT("Grass"), FVector(11200,700,-48), FVector(4200,24000,60), FRotator::ZeroRotator, FLinearColor(0.24f,0.30f,0.19f), true);
 
-    for (int32 I=-5; I<=5; ++I)
-        AddBlock(TEXT("Concrete"), FVector(I*1200.0f,-6500,4), FVector(6,5200,2), FRotator::ZeroRotator, FLinearColor(0.38f,0.39f,0.37f), false);
+    for (int32 I=-1; I<=1; ++I)
+        AddBlock(TEXT("Concrete"), FVector(I*900.0f,-6500,4), FVector(6,5200,2), FRotator::ZeroRotator, FLinearColor(0.38f,0.39f,0.37f), false);
     AddBlock(TEXT("Asphalt"), FVector(-2500,-1400,5), FVector(1500,2700,2), FRotator::ZeroRotator, FLinearColor(0.75f,0.75f,0.72f), false);
     AddBlock(TEXT("Asphalt"), FVector(3000,3600,5), FVector(1200,1700,2), FRotator::ZeroRotator, FLinearColor(0.69f,0.69f,0.66f), false);
 
