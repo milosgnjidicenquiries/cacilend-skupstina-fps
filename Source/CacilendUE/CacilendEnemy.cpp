@@ -2,7 +2,9 @@
 #include "CacilendFPSCharacter.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Engine/StaticMesh.h"
+#include "Engine/SkeletalMesh.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -53,6 +55,26 @@ UStaticMeshComponent* ACacilendEnemy::AddPart(FName Name, const TCHAR* MeshPath,
 void ACacilendEnemy::BeginPlay()
 {
     Super::BeginPlay();
+
+    // Use a local COD2-derived skeletal mesh when the user imports one.
+    // A clean checkout deliberately falls back to the built-in proxy soldier.
+    if (USkeletalMesh* ImportedSoldier = LoadObject<USkeletalMesh>(nullptr,
+            TEXT("/Game/Cacilend/Imported/Characters/SK_COD2_Soldier.SK_COD2_Soldier")))
+    {
+        if (USkeletalMeshComponent* CharacterMesh = GetMesh())
+        {
+            CharacterMesh->SetSkeletalMesh(ImportedSoldier);
+            CharacterMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
+            CharacterMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+            CharacterMesh->SetRelativeScale3D(FVector(1.0f));
+            CharacterMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+            CharacterMesh->SetVisibility(true, true);
+            CharacterMesh->SetHiddenInGame(false);
+            UE_LOG(LogTemp, Log, TEXT("[Cacilend] Using imported COD2 skeletal soldier."));
+        }
+        AttackCooldown = FMath::FRandRange(0.3f, 1.4f);
+        return;
+    }
     const FString Fabric = TEXT("/Game/Cacilend/Materials/M_DarkFabric.M_DarkFabric");
     const FString Metal = TEXT("/Game/Cacilend/Materials/M_Metal.M_Metal");
     const FLinearColor Olive(0.11f, 0.14f, 0.10f);
