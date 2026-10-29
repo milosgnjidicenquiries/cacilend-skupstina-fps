@@ -288,9 +288,9 @@ function fire(){
  if(!active||!player.locked||reloading||shotDelay>0)return;
  if(player.ammo<=0){toast('PRAZAN OKVIR — PRITISNI R');return;}
  player.ammo--;shotDelay=.13;recoil=Math.min(recoil+.04,.15);flash.visible=true;flashLight.intensity=12;flashTime=.045;shotSound();
- raycaster.setFromCamera(new THREE.Vector2(0,0),camera);const hits=raycaster.intersectObjects(scene.children,true);
+ raycaster.setFromCamera(new THREE.Vector2(0,0),camera);const hits=raycaster.intersectObjects(scene.children.filter(object=>object!==camera),true);
  let end=camera.position.clone().add(raycaster.ray.direction.clone().multiplyScalar(60));
- if(hits.length){end=hits[0].point;let o=hits[0].object;while(o&&o!==scene){if(o.userData&&o.userData.practiceTarget){const t=targets.find(q=>q.group===o.userData.practiceTarget);if(t&&t.active){t.active=false;t.group.visible=false;player.hits++;toast('META POGOĐENA');setTimeout(()=>{t.group.position.set(t.baseX,0,t.baseZ);t.group.visible=true;t.active=true;},2200);}break;}o=o.parent;}}
+ if(hits.length){end=hits[0].point;let o=hits[0].object;while(o&&o!==scene){if(o.userData&&o.userData.practiceTarget){const t=targets.find(q=>q.group===o.userData.practiceTarget);if(t&&t.active){t.active=false;t.group.visible=false;player.hits++;$('hit').classList.add('on');hitTime=.12;toast('META POGOĐENA');setTimeout(()=>{t.group.position.set(t.baseX,0,t.baseZ);t.group.visible=true;t.active=true;},2200);}break;}o=o.parent;}}
  tracer(camera.position.clone().add(raycaster.ray.direction.clone().multiplyScalar(.5)),end);updateHud();
 }
 function reload(){
