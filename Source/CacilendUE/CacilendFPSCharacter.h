@@ -39,6 +39,8 @@ protected:
     void FinishReload();
     void StartSprint();
     void StopSprint();
+    void StartCrouch();
+    void StopCrouch();
     void Interact();
     void TogglePause();
     void ToggleInterior(bool bEnter);
