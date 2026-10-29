@@ -275,7 +275,8 @@ void ACacilendFPSCharacter::ToggleInterior(bool bEnter)
     if (bEnter)
     {
         ExteriorReturnLocation = FVector(0.0f, 7950.0f, 100.0f);
-        SetActorLocation(FVector(22000.0f, -4550.0f, 100.0f), false, nullptr, ETeleportType::TeleportPhysics);
+        // Start deeper inside the chamber, outside the E-to-exit interaction radius.
+        SetActorLocation(FVector(22000.0f, -3300.0f, 100.0f), false, nullptr, ETeleportType::TeleportPhysics);
         SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
     }
     else
