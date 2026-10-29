@@ -5,6 +5,7 @@
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
+#include "EngineUtils.h"
 #include "Engine/StaticMesh.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
@@ -260,6 +261,7 @@ void ACacilendFPSCharacter::Interact()
 void ACacilendFPSCharacter::ToggleInterior(bool bEnter)
 {
     bInInterior = bEnter;
+    SetPhotogrammetryVisible(!bEnter);
     if (bEnter)
     {
         ExteriorReturnLocation = FVector(0.0f, 7950.0f, 100.0f);
@@ -273,6 +275,20 @@ void ACacilendFPSCharacter::ToggleInterior(bool bEnter)
     }
     if (APlayerController* PC = Cast<APlayerController>(GetController()))
         PC->SetControlRotation(GetActorRotation());
+}
+
+void ACacilendFPSCharacter::SetPhotogrammetryVisible(bool bVisible)
+{
+    if (!GetWorld()) return;
+    for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+    {
+        if (It->GetClass()->GetName().Contains(TEXT("Cesium3DTileset")))
+        {
+            It->SetActorHiddenInGame(!bVisible);
+            It->SetActorEnableCollision(bVisible);
+            UE_LOG(LogTemp, Log, TEXT("[Cacilend] Google 3D Tiles visibility set to %s."), bVisible ? TEXT("visible") : TEXT("hidden for interior"));
+        }
+    }
 }
 
 float ACacilendFPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -289,6 +305,7 @@ void ACacilendFPSCharacter::ResetAfterDeath()
     AmmoInMagazine = 30;
     ReserveAmmo = FMath::Max(ReserveAmmo, 60);
     bInInterior = false;
+    SetPhotogrammetryVisible(true);
     SetActorLocation(FVector(0.0f, -7200.0f, 100.0f), false, nullptr, ETeleportType::TeleportPhysics);
     SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
     if (APlayerController* PC = Cast<APlayerController>(GetController())) PC->SetControlRotation(GetActorRotation());
