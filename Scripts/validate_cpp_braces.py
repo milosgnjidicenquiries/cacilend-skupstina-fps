@@ -6,7 +6,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Source"
 LITERAL_OR_COMMENT = re.compile(
-    r"""//[^\n]*|/\*.*?\*/|"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\'""",
+    r"""//[^\n]*|/\*.*?\*/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'""",
     re.DOTALL,
 )
 PAIRS = {")": "(", "}": "{", "]": "["}
@@ -15,11 +15,11 @@ OPEN = set(PAIRS.values())
 
 def check_file(path):
     source = path.read_text(encoding="utf-8", errors="replace")
-    clean = LITERAL_OR_COMMENT.sub(lambda match: "\\n" * match.group(0).count("\\n"), source)
+    clean = LITERAL_OR_COMMENT.sub(lambda match: "\n" * match.group(0).count("\n"), source)
     stack = []
     line = 1
     for char in clean:
-        if char == "\\n":
+        if char == "\n":
             line += 1
         elif char in OPEN:
             stack.append((char, line))
@@ -85,7 +85,7 @@ def main():
     except ValueError as exc:
         failures.append(str(exc))
     if failures:
-        print("\\n".join(failures))
+        print("\n".join(failures))
         return 1
     print("C++ delimiter and required-symbol checks passed for {} source/header files.".format(len(source_files)))
     print("Note: an actual Unreal Engine 5.8 C++ build is still required.")
