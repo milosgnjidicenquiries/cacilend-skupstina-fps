@@ -12,6 +12,20 @@ TEXTURE_DEST = '/Game/Cacilend/Textures'
 MATERIAL_DEST = '/Game/Cacilend/Materials'
 MAP_PATH = '/Game/Maps/L_Cacilend'
 
+STATUS_FILE = os.path.join(ROOT, 'Build', 'UE5-setup-status.txt')
+
+
+def write_setup_status(status, detail=''):
+    """Write a small status marker so the Windows launcher can verify setup completion."""
+    try:
+        os.makedirs(os.path.dirname(STATUS_FILE), exist_ok=True)
+        with open(STATUS_FILE, 'w', encoding='utf-8') as handle:
+            handle.write(str(status).strip() + '\\n')
+            if detail:
+                handle.write(str(detail).replace('\\r', ' ').replace('\\n', ' ') + '\\n')
+    except Exception as status_error:
+        log('Could not write setup status marker: ' + str(status_error))
+
 MATERIALS = {
     'Asphalt': (4.0, 4.0, 0.92, 0.0),
     'Concrete': (3.0, 3.0, 0.82, 0.0),
@@ -275,4 +289,10 @@ def main():
     log('SETUP COMPLETE. Press Play in Unreal Editor to test the Windows FPS prototype.')
 
 
-main()
+try:
+    main()
+    write_setup_status('SUCCESS', 'Saved level: ' + MAP_PATH)
+except Exception as setup_error:
+    write_setup_status('FAILED', repr(setup_error))
+    log('FATAL setup error: ' + repr(setup_error))
+    raise
