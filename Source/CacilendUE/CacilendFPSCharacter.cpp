@@ -176,14 +176,22 @@ void ACacilendFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void ACacilendFPSCharacter::MoveForward(float Value)
 {
-    if (Value != 0.0f && Controller)
-        AddMovementInput(FRotationMatrix(Controller->GetControlRotation()).GetUnitAxis(EAxis::X), Value);
+    if (Value == 0.0f || !Controller) return;
+
+    // Use yaw only: looking up/down must not reduce horizontal movement speed.
+    const FRotator YawRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
+    const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+    AddMovementInput(ForwardDirection, Value);
 }
 
 void ACacilendFPSCharacter::MoveRight(float Value)
 {
-    if (Value != 0.0f && Controller)
-        AddMovementInput(FRotationMatrix(Controller->GetControlRotation()).GetUnitAxis(EAxis::Y), Value);
+    if (Value == 0.0f || !Controller) return;
+
+    // Strafing stays in the horizontal plane regardless of camera pitch.
+    const FRotator YawRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
+    const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+    AddMovementInput(RightDirection, Value);
 }
 
 void ACacilendFPSCharacter::Fire()
