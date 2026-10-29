@@ -1,17 +1,9 @@
 @echo off
 setlocal
 set "ROOT=%~dp0"
-set "UAT="
-if defined UE_5_8_ROOT (
-  if exist "%UE_5_8_ROOT%\Engine\Build\BatchFiles\RunUAT.bat" set "UAT=%UE_5_8_ROOT%\Engine\Build\BatchFiles\RunUAT.bat"
-)
-if not defined UAT for %%P in (
-  "%ProgramFiles%\Epic Games\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat"
-  "D:\Epic Games\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat"
-  "C:\Epic Games\UE_5.8\Engine\Build\BatchFiles\RunUAT.bat"
-) do (
-  if exist "%%~P" set "UAT=%%~P"
-)
+set "UE_ROOT="
+for /f "usebackq delims=" %%E in (`powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%Scripts\Find_UE_5_8.ps1" -Purpose Package`) do set "UE_ROOT=%%E"
+if defined UE_ROOT set "UAT=%UE_ROOT%\Engine\Build\BatchFiles\RunUAT.bat"
 if not defined UAT (
   echo Unreal Engine 5.8 nije pronadjen. Instaliraj ga kroz Epic Games Launcher.
   pause
