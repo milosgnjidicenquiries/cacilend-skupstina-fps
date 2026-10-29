@@ -27,7 +27,7 @@ SLEDECI OBAVEZNI TEST NA WINDOWS RACUNARU
 1. Pokreni Check_Cacilend_UE5_Requirements.bat (ili Build_Run_Cacilend_UE5.bat, koji sada pokrece istu proveru).
 2. Ako provera prodje, pokreni Build_Run_Cacilend_UE5.bat.
 3. Ako build padne, prilozi Build/UE5-build.log.
-4. Ako build prodje, pokreni setup, otvori /Game/Maps/L_Cacilend, pritisni Play i testiraj kretanje, skok, pucanje, reload, sprint, AI, HUD i ulaz/izlaz iz enterijera.
+4. Ako build prodje, pokreni setup, otvori /Game/Maps/L_Cacilend, pritisni Play i testiraj kretanje, skok, pucanje, reload, sprint, Escape pauzu/nastavak, AI, HUD i ulaz/izlaz iz enterijera.
 5. Tek nakon uspesnog Editor testa pokreni Package_Windows.bat. Ako pakovanje padne, sacuvaj Build/UE5-package.log.
 
 SADRZAJ
