@@ -24,6 +24,13 @@ void ACacilendHUD::DrawHUD()
     APlayerController* OwningPC = GetOwningPlayerController();
     ACacilendFPSCharacter* Player = OwningPC ? Cast<ACacilendFPSCharacter>(OwningPC->GetPawn()) : nullptr;
     if (!Player) return;
+    if (Player->IsPaused())
+    {
+        DrawRect(FLinearColor(0.005f, 0.008f, 0.007f, 0.88f), 0.0f, 0.0f, W, H);
+        DrawText(TEXT("PAUSED"), White, CX - 55.0f, CY - 42.0f, Font, 2.0f, false);
+        DrawText(TEXT("PRESS ESC TO RESUME"), Green, CX - 96.0f, CY + 4.0f, Font, 1.0f, false);
+        return;
+    }
     DrawText(TEXT("CACILEND // SKUPSTINA"), White, 34.0f, 28.0f, Font, 1.45f, false);
     DrawText(TEXT("MISIJA: OSIGURAJ PRILAZ I UDJI U ZGRADU"), FLinearColor(0.79f, 0.83f, 0.80f, 0.9f), 34.0f, 58.0f, Font, 1.0f, false);
     const int32 PlayerHealth = FMath::Clamp(Player->GetHealth(), 0, 100);
@@ -34,7 +41,7 @@ void ACacilendHUD::DrawHUD()
     const FString Ammo = Player->IsReloading() ? TEXT("RELOADING...") : FString::Printf(TEXT("%02d  /  %02d"), Player->GetAmmo(), Player->GetReserveAmmo());
     DrawText(Ammo, Player->GetAmmo() <= 5 ? Amber : White, W - 220.0f, H - 82.0f, Font, 1.7f, false);
     DrawText(TEXT("E  INTERACT     R  RELOAD"), FLinearColor(0.75f, 0.79f, 0.76f, 0.75f), W - 260.0f, H - 42.0f, Font, 0.9f, false);
-    DrawText(TEXT("WASD KRETANJE  |  SHIFT TRCANJE  |  SPACE SKOK  |  LMB PUCANJE"),
+    DrawText(TEXT("WASD KRETANJE  |  SHIFT TRCANJE  |  SPACE SKOK  |  LMB PUCANJE  |  ESC PAUZA"),
         FLinearColor(0.76f, 0.80f, 0.77f, 0.75f), CX - 225.0f, H - 24.0f, Font, 0.8f, false);
     if (Player->IsInInterior())
         DrawText(TEXT("ASSEMBLY CHAMBER // EXIT: E"), Amber, CX - 145.0f, 32.0f, Font, 1.0f, false);
