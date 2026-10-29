@@ -32,7 +32,7 @@ jobs:
         run: |
           $tokens = $null
           $parseErrors = $null
-          foreach ($script in @("Scripts/Check_Cacilend_UE5_Requirements.ps1", "Scripts/Find_UE_5_8.ps1")) {
+          foreach ($script in @("Scripts/Check_Cacilend_UE5_Requirements.ps1", "Scripts/Find_UE_5_8.ps1", "Scripts/Wait_Cacilend_Setup.ps1")) {
             $tokens = $null
             $parseErrors = $null
             [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $script).Path, [ref]$tokens, [ref]$parseErrors) | Out-Null
