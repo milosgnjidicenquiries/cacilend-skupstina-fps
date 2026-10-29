@@ -1,17 +1,38 @@
-IZVESTAJ O PAKETU
+IZVESTAJ O VALIDACIJI — CACILEND UE5.8 FPS
+Azurirano: 2026-10-29
 
-U ovom repozitorijumu su izvorni Unreal Engine projekat, C++ fajlovi, konfiguracija i skripte.
-PBR PNG teksture generišu se lokalno skriptom Scripts/generate_textures.py i nisu commit-ovane.
+POTVRDJENE AUTOMATSKE PROVERE (GitHub Actions / Windows runner)
+- CacilendUE.uproject je validan JSON i cilja Unreal Engine 5.8.
+- Python skripte prolaze py_compile proveru sintakse.
+- Oba PowerShell dijagnosticka/helper skripta prolaze PowerShell parser.
+- C++ fajlovi prolaze proveru strukture/uglastih zagrada i obaveznih simbola.
+- Projektni contract test proverava da se GameMode, FPS pawn, HUD, mapa i PlayerStart medjusobno slazu.
+- C++ InputComponent binding imena poklapaju se sa Config/DefaultInput.ini.
+- Testovi proveravaju osnovni damage/kill tok, HUD instrukcije, reset reload/sprint stanja i fallback BaseColor materijala bez PBR tekstura.
+- Sve glavne .bat skripte koriste zajednicki UE 5.8 locator.
+- Build skripta proverava preduslove pre kompilacije i cuva Build/UE5-build.log.
+- Windows packaging skripta cuva Build/UE5-package.log.
+- Browser JavaScript prolazi node --check.
+- Izvorni i UE5-only ZIP paketi se automatski prave i upload-uju kao GitHub Actions artefakti.
 
-Lokalno provereno pre objavljivanja:
-- CacilendUE.uproject je validan JSON.
-- Python skripte prolaze proveru sintakse.
-- Projekat sadrži target konfiguracije za Game i Editor.
-- GitHub workflow za proveru izvora može da proveri JSON/Python i napravi source archive.
+STA OVE PROVERE NE DOKAZUJU
+- One ne pokrecu UnrealBuildTool nad C++ projektom.
+- Ne potvrduju da su sve Unreal Engine API reference kompatibilne na instaliranom UE5.8 buildu.
+- Ne pokrecu Unreal Editor Python bootstrap za stvarno kreiranje/snimanje nivoa.
+- Ne potvrduju cook/stage/package ili pokretanje Windows EXE-a.
+- Ne potvrduju vizuelni kvalitet, framerate, koliziju ili gameplay testove u editoru.
 
-Nije provereno:
-- Unreal Engine C++ kompilacija.
-- Editor skripta za kreiranje mape i materijala.
-- Cook/stage/package i pokretanje Windows EXE.
+SLEDECI OBAVEZNI TEST NA WINDOWS RACUNARU
+1. Pokreni Check_Cacilend_UE5_Requirements.bat (ili Build_Run_Cacilend_UE5.bat, koji sada pokrece istu proveru).
+2. Ako provera prodje, pokreni Build_Run_Cacilend_UE5.bat.
+3. Ako build padne, prilozi Build/UE5-build.log.
+4. Ako build prodje, pokreni setup, otvori /Game/Maps/L_Cacilend, pritisni Play i testiraj kretanje, skok, pucanje, reload, sprint, AI, HUD i ulaz/izlaz iz enterijera.
+5. Tek nakon uspesnog Editor testa pokreni Package_Windows.bat. Ako pakovanje padne, sacuvaj Build/UE5-package.log.
 
-Za te testove potreban je računar ili self-hosted GitHub runner sa Unreal Engine 5.8, Visual Studio C++ alatima i kompatibilnim Windows SDK-om.
+SADRZAJ
+- Projekat koristi proceduralnu geometriju kao offline fallback.
+- Originalni vlasnicki Call of Duty 2 modeli/teksture/animacije nisu ukljuceni u javni repozitorijum.
+- COD2 uvoz je opcionalan; animacioni uvoz je eksperimentalan.
+- Google Photorealistic 3D Tiles/Cesium je opcionalan i zahteva posebnu konfiguraciju/API key. Osnovna offline mapa ne treba kljuc.
+
+Zakljucak: staticke i konfiguracione provere su automatizovane; C++ build, editor bootstrap, gameplay i finalni Windows paket ostaju neprovereni dok ne budu izvrseni na racunaru sa UE 5.8 i kompatibilnim Windows C++ toolchain-om.
