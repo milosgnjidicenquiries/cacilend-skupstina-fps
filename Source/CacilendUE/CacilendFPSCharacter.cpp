@@ -274,7 +274,8 @@ void ACacilendFPSCharacter::StopSprint()
 
 bool ACacilendFPSCharacter::IsNearAssemblyEntrance() const
 {
-    if (bInInterior) return true;
+    if (bInInterior)
+        return FVector::DistSquared(GetActorLocation(), FVector(22000.0f, -4600.0f, 100.0f)) < FMath::Square(750.0f);
     return FVector::DistSquared(GetActorLocation(), FVector(0.0f, 9700.0f, 100.0f)) < FMath::Square(520.0f);
 }
 
@@ -294,6 +295,7 @@ void ACacilendFPSCharacter::Interact()
 
 void ACacilendFPSCharacter::ToggleInterior(bool bEnter)
 {
+    if (bSprinting) StopSprint();
     bInInterior = bEnter;
     SetPhotogrammetryVisible(!bEnter);
     if (bEnter)
