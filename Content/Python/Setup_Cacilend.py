@@ -113,17 +113,24 @@ def create_material(name, u_tiling, v_tiling, default_roughness, metallic):
     connect(uv, '', uv_multiply, 'A')
     connect(uv_scale, '', uv_multiply, 'B')
 
-    base = expr(mat, unreal.MaterialExpressionTextureSample, -420, -180)
+    tint = expr(mat, unreal.MaterialExpressionVectorParameter, -650, 100)
+    set_prop_if_exists(tint, 'parameter_name', 'Tint')
+    set_prop_if_exists(tint, 'default_value', unreal.LinearColor(1.0, 1.0, 1.0, 1.0))
     if base_tex:
+        base = expr(mat, unreal.MaterialExpressionTextureSample, -420, -180)
         base.set_editor_property('texture', base_tex)
         connect(uv_multiply, '', base, 'Coordinates')
-        tint = expr(mat, unreal.MaterialExpressionVectorParameter, -650, 100)
-        set_prop_if_exists(tint, 'parameter_name', 'Tint')
-        set_prop_if_exists(tint, 'default_value', unreal.LinearColor(1.0, 1.0, 1.0, 1.0))
         mul = expr(mat, unreal.MaterialExpressionMultiply, -350, -100)
         connect(base, 'RGB', mul, 'A')
         connect(tint, '', mul, 'B')
         unreal.MaterialEditingLibrary.connect_material_property(mul, '', unreal.MaterialProperty.MP_BASE_COLOR)
+    else:
+        # Keep visible neutral materials even when optional Python texture tools or
+        # generated PBR files are unavailable. Runtime mesh components tint this
+        # parameter to produce the map's limestone, asphalt, concrete, etc.
+        unreal.MaterialEditingLibrary.connect_material_property(
+            tint, '', unreal.MaterialProperty.MP_BASE_COLOR
+        )
 
     if norm_tex:
         normal = expr(mat, unreal.MaterialExpressionTextureSample, -420, 350)
