@@ -195,7 +195,7 @@ def build_level():
     if not builder_class:
         raise RuntimeError('Cacilend C++ module was not found. Compile the project in Unreal/Visual Studio, then rerun this script.')
     spawn_if_class(builder_class, unreal.Vector(0, 0, 0))
-    player_start = spawn_if_class(unreal.PlayerStart, unreal.Vector(0, -7200, 105), unreal.Rotator(0, 90, 0))
+    player_start = spawn_if_class(unreal.PlayerStart, unreal.Vector(-8500, -7200, 105), unreal.Rotator(0, 90, 0))
     if player_start:
         player_start.set_actor_label('FPS_Start_Approach')
 
