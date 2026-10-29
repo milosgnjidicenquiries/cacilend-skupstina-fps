@@ -111,6 +111,13 @@ def main():
     package_launcher = read("Package_Windows.bat")
     require("Check_Cacilend_UE5_Requirements.ps1" in build_launcher,
             "Main build launcher must run the prerequisite checker automatically.")
+    setup_launcher = read("Setup_Cacilend_Assets.bat")
+    require("Wait_Cacilend_Setup.ps1" in setup_launcher and "UE5-setup-status.txt" in setup_launcher,
+            "Setup launcher must wait for an explicit Editor setup completion marker.")
+    require("write_setup_status('SUCCESS'" in setup_py and "write_setup_status('FAILED'" in setup_py,
+            "Editor setup Python must report explicit success/failure status.")
+    require((ROOT / "Scripts/Wait_Cacilend_Setup.ps1").is_file(),
+            "Setup completion waiter is missing.")
     require("UE5-build.log" in build_launcher and "Tail 80" in build_launcher,
             "Main build launcher must retain build logs and show a useful error tail.")
     require("UE5-package.log" in package_launcher and "Tail 100" in package_launcher,
