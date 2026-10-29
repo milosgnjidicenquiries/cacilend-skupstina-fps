@@ -1,4 +1,4 @@
-name: Validate source and archive
+name: Validate source and browser JS
 
 on:
   push:
@@ -13,32 +13,35 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - name: Validate project JSON
         shell: pwsh
         run: |
           $project = Get-Content CacilendUE.uproject -Raw | ConvertFrom-Json
           if ($project.EngineAssociation -ne "5.8") { throw "Expected Unreal Engine 5.8 association." }
           Write-Host "uproject JSON valid."
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
       - name: Validate Python syntax
         shell: pwsh
         run: |
           python -m py_compile Scripts/generate_textures.py Content/Python/Setup_Cacilend.py
           Write-Host "Python syntax valid."
-
+      - name: Validate browser JavaScript syntax
+        shell: pwsh
+        run: |
+          node --check browser/src/main.js
+          Write-Host "Browser JavaScript syntax valid."
       - name: Create source archive
         shell: pwsh
         run: |
-          $exclude = @("Binaries", "DerivedDataCache", "Intermediate", "Saved", ".git")
           Compress-Archive -Path * -DestinationPath "$env:RUNNER_TEMP\CacilendUE-Source.zip" -Force
           Copy-Item "$env:RUNNER_TEMP\CacilendUE-Source.zip" "CacilendUE-Source.zip" -Force
-
       - name: Upload source archive
         uses: actions/upload-artifact@v4
         with:
