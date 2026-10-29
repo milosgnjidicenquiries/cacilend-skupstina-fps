@@ -78,6 +78,9 @@ def main():
     require("GetWorldTimerManager().ClearTimer(ReloadTimerHandle)" in character_cpp and
             "bReloading = false;" in character_cpp and "bSprinting = false;" in character_cpp,
             "Player respawn must clear reload and sprint states.")
+    require("FVector(22000.0f, -3300.0f, 100.0f)" in character_cpp and
+            "FVector(22000.0f, -4600.0f, 100.0f)" in character_cpp,
+            "Interior spawn must be separated from the E-to-exit trigger.")
     require("Enemy->TakeDamage(34.0f" in character_cpp and "AddKill()" in character_cpp,
             "Player firing path must damage enemies and track kills.")
     require("Player->TakeDamage(" in enemy_cpp,
