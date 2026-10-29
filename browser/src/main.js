@@ -518,7 +518,7 @@ function interact(){
 function blocked(x,z){
  if(player.inside){return x<66.8||x>89.2||z< -19||z>18.5;}
  if(x < -96 || x > 96 || z > 78 || z < -84)return true;
- if(Math.abs(z+40)<2.7&&Math.abs(x)>4.2)return true;
+ if(Math.abs(z+40)<2.7&&Math.abs(x)<25.5&&Math.abs(x)>4.2)return true;
  for(const s of solids)if(Math.abs(x-s.x)<s.hx+.38&&Math.abs(z-s.z)<s.hz+.38)return true;
  return false;
 }
