@@ -28,7 +28,7 @@ UE5 ima offline fallback geometriju za Dom Narodne skupštine, Pionirski park, P
 
 Za C++ build koristi Visual Studio 2026 (aktuelna Epic preporuka) ili kompatibilni Visual Studio 2022 17.14+. U Visual Studio Installer-u uključi workload `Game development with C++`, MSVC toolset 14.38 ili noviji i Windows SDK 10.0.22621.0 ili noviji. U opcionalnim komponentama workload-a uključi Visual Studio Tools for Unreal Engine; Blueprint debugger i Unreal Engine Test Adapter su korisni dodatni alati.
 
-1. Preuzmi/kloniraj repo u kratak folder, npr. `C:\\Games\\CacilendUE`.
+1. Preuzmi/kloniraj repo u kratak folder, npr. `C:\Games\CacilendUE`.
 2. Pokreni `Check_Cacilend_UE5_Requirements.bat`. Skripta proverava Windows, RAM, GPU naziv, UE5.8, Visual Studio/C++ workload, MSVC, Windows SDK i slobodan prostor. Izveštaj se čuva u `Build/UE5-preflight-report.txt`. Reši sve `FAIL` stavke pre build-a; `WARN` stavke označavaju moguća ograničenja.
 3. Pokreni `Build_Run_Cacilend_UE5.bat`. Skripta poziva UnrealBuildTool za `CacilendUEEditor Win64 Development` i tek ako kompilacija uspe pokreće setup u Unreal Editor-u. Ako je engine instaliran na nestandardnoj lokaciji, podesi promenljivu okruženja `UE_5_8_ROOT` na folder engine-a.
 4. U Editor-u otvori `/Game/Maps/L_Cacilend` i pritisni **Play**.
