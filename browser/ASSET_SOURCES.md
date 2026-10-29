@@ -16,6 +16,12 @@ This file records the models used or reviewed for the Ćaćilend FPS prototype.
 
 The source pages currently present these models as downloadable and display a Creative Commons Attribution label. That label alone does not establish that the uploader had rights to relicense proprietary Call of Duty 2 game assets. The models are therefore linked in the online gallery but their binary files have not been repackaged into the public game build.
 
+## Optional CC0 weapon fallback for the UE5 project
+
+- [FPS Asset Kit](https://github.com/petroulacl/fps-asset-kit) describes the pack as CC0/public domain and attributes the Flat Guns models to OpenGameArt.
+- Run `Download_CC0_Weapon_Fallback.bat` to fetch the FBX for local import as `SM_CC0_Rifle.fbx`.
+- It is only a temporary model; it does not replace the COD2 original. The UE5 character prefers `SM_COD2_Weapon` when it exists, then tries `SM_CC0_Rifle`, then falls back to procedural geometry.
+
 ## Weapon GLB currently loaded at runtime
 
 - [FPS Asset Kit (CC0)](https://github.com/petroulacl/fps-asset-kit)
