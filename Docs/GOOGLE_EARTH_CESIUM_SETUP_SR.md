@@ -26,7 +26,7 @@ Ovo su okvirne, lokalno skalirane koordinate za igranje — nisu geodetski surve
 7. Pokreni `Setup_Cacilend_Assets.bat`. Skripta će pokušati da pronađe Cesium plugin i API key; ako ih nađe, kreira/konfiguriše Cesium Georeference i Google 3D Tileset. Ako nije moguće podesiti property automatski, proveri izlazni Unreal log.
 8. Proveri da je georeference origin podešen na Latitude `44.81076`, Longitude `20.46583`, Height približno `160 m` (visina iznad elipsoida; početna aproksimacija). To poravnava postojeći offline svet.
 9. U World Outliner-u izaberi `GooglePhotorealistic3DTiles_Belgrade`, potvrdi **Source = From URL**, URL `https://tile.googleapis.com/v1/3dtiles/root.json?key=YOUR_API_KEY` i uključi **Show Credits On Screen**.
-10. Pritisni Play i proveri da tileset učita centar Beograda. Ako ne radi, proveri log, ključ, API/ billing, mrežu i Cesium plugin verziju.
+10. Pritisni Play i proveri da tileset učita centar Beograda. Skripta pokušava da uključi **Create Physics Meshes** da bi FPS karakter mogao da se oslanja na učitane tiles. Ovo troši dodatne resurse; ako je performansa loša, smanji nivo geometrije/obim tileset-a pre nego što isključiš kolizije. Ako ne radi, proveri log, ključ, API/billing, mrežu i Cesium plugin verziju.
 
 ## Obavezna atribucija i ključevi
 
