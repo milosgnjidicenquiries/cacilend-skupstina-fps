@@ -87,6 +87,13 @@ def main():
             "Interior exit prompt must follow the same distance check as the E interaction.")
     require("if (bSprinting) StopSprint();" in character_cpp,
             "Entering/exiting the Assembly must clear sprint speed and FOV modifiers.")
+    require("GetNavAgentPropertiesRef().bCanCrouch = true" in character_cpp and
+            'BindAction(TEXT("Crouch"), IE_Pressed' in character_cpp and
+            'BindAction(TEXT("Crouch"), IE_Released' in character_cpp and
+            "Crouch(false)" in character_cpp and "UnCrouch(false)" in character_cpp,
+            "Hold-to-crouch must be enabled, bound, and released in the C++ character.")
+    require("CTRL CROUCH" in hud_cpp and 'ActionName="Crouch"' in input_ini,
+            "Crouch must be described in the HUD and mapped in DefaultInput.ini.")
     require("Enemy->TakeDamage(34.0f" in character_cpp and "AddKill()" in character_cpp,
             "Player firing path must damage enemies and track kills.")
     require("Player->TakeDamage(" in enemy_cpp,
