@@ -15,9 +15,10 @@ Animations/AN_COD2_Walk.fbx (opciono)
 
 Za originalne COD2 modele iz svoje lokalne instalacije:
 1. Pokreni Extract_COD2_Assets.bat [putanja_do_COD2_instalacije].
-2. U Blenderu instaliraj dodatak https://github.com/mauserzjeh/cod-asset-importer.
-3. Uvezi odgovarajući COD2 XModel/XAnim; eksportuj izabrani objekat ili skelet kao FBX.
-4. Preimenuj FBX u očekivano ime iznad, stavi njegove teksture pored FBX-a i sačuvaj u ovaj folder.
-5. Pokreni Import_Cacilend_Assets.bat ili Setup_Cacilend_Assets.bat.
+2. Pokreni `Install_COD2_Blender_Importer.bat`; dodatak https://github.com/mauserzjeh/cod-asset-importer uvozi COD2 D3DBSP mape i XModel-e, ne XAnim animacije.
+3. U Blenderu uvezi željeni XModel, izvezi izabrani mesh/skeleton kao FBX i preimenuj ga tačno prema putanjama iznad.
+4. Za animacije pokreni `Convert_COD2_Animations.bat` sa jednom lokalnom `.xanim_bin` datotekom, pa instaliraj `Install_COD2_Animation_Addon.bat`. XAnim import je eksperimentalan i može zahtevati ručno popravljanje/retarget.
+5. Stavi teksture pored FBX-a i sačuvaj ih u odgovarajući podfolder ovog direktorijuma.
+6. Pokreni `Import_Cacilend_Assets.bat` ili `Setup_Cacilend_Assets.bat`.
 
 Ako mapa dolazi iz COD2 D3DBSP-a, ona nije geografski ispravna za centar Beograda. Koristi taj importer za zasebne modele/props, a stvarni raspored Beograda i Google 3D Tiles sloj drži nezavisno.
