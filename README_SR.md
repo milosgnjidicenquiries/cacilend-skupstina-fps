@@ -32,6 +32,8 @@ Za C++ build koristi Visual Studio 2026 (aktuelna Epic preporuka) ili kompatibil
 2. Pokreni `Check_Cacilend_UE5_Requirements.bat`. Skripta proverava Windows, RAM, GPU naziv, UE5.8, Visual Studio/C++ workload, MSVC, Windows SDK i slobodan prostor. Izveštaj se čuva u `Build/UE5-preflight-report.txt`. Reši sve `FAIL` stavke pre build-a; `WARN` stavke označavaju moguća ograničenja.
 3. Pokreni `Build_Run_Cacilend_UE5.bat`. Skripta ponavlja proveru preduslova automatski, zatim poziva UnrealBuildTool za `CacilendUEEditor Win64 Development` i tek ako kompilacija uspe pokreće setup u Unreal Editor-u. Pronalazač pretražuje poznate lokacije i Epic Launcher manifeste; ako instalacija ipak nije pronađena, podesi `UE_5_8_ROOT` na folder engine-a.
 4. U Editor-u otvori `/Game/Maps/L_Cacilend` i pritisni **Play**.
+
+**Kontrole:** WASD kretanje, miš gledanje, levi klik pucanje, R punjenje, Shift sprint, Space skok, E interakcija/ulazak/izlazak, Esc pauza/nastavak.
 5. Tek kada je gameplay potvrđen u Editor-u, pokreni `Package_Windows.bat` za Win64 Shipping paket. Pakovanje sada odbija da krene ako nema `Build/UE5-setup-status.txt` sa statusom `SUCCESS` ili ako `Content/Maps/L_Cacilend.umap` ne postoji.
 
 Ako C++ build ne uspe, ceo log se čuva u `Build/UE5-build.log`; ako Windows pakovanje ne uspe, UAT log se čuva u `Build/UE5-package.log`. Skripte prikažu i završne linije greške. Poruka iz dijagnostičke skripte nije dokaz da se projekat kompajlira. GitHub CI proverava strukturu, sintaksu i veze između konfiguracije i koda, ali ne kompajlira UE C++ niti potvrđuje EXE/gameplay.
