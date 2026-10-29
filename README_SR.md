@@ -13,7 +13,10 @@
 - `Scripts/extract_cod2_assets.py` / `Extract_COD2_Assets.bat` — lokalno izvlačenje relevantnih `.iwd` sadržaja iz COD2 instalacije.
 - `Build_Run_Cacilend_UE5.bat` — pokušava stvarnu UE5.8 C++ kompilaciju, zatim pokreće setup mape i asseta u editoru.
 - `Import_Cacilend_Assets.bat`, `Setup_Cacilend_Assets.bat`, `Package_Windows.bat` — Windows alati.
-- `Install_COD2_Blender_Importer.bat`, `Extract_COD2_Assets.bat` i `Download_CC0_Weapon_Fallback.bat` — priprema lokalnih asseta.
+- `Install_COD2_Blender_Importer.bat` — preuzima gotov COD2 Blender importer za D3DBSP mape i XModel-e.
+- `Convert_COD2_Animations.bat` — konvertuje lokalnu `.xanim_bin` animaciju u XAnim export tekst.
+- `Install_COD2_Animation_Addon.bat` — priprema odvojeni Blender dodatak za XAnim; njegov uvoz je eksperimentalan i mora se proveriti po konkretnom fajlu.
+- `Extract_COD2_Assets.bat` i `Download_CC0_Weapon_Fallback.bat` — pripremaju lokalne assete / privremenu pušku.
 
 UE5 ima offline fallback geometriju za Dom Narodne skupštine, Pionirski park, Predsedništvo/Novi dvor, Palatu Glavne pošte, okolne blokove i kamp. Ako odgovarajući uvezeni asset postoji na dokumentovanoj `/Game/Cacilend/Imported/...` putanji, map builder/karakter/oružje će ga koristiti. Bez lokalno uvezenih modela projekat ostaje proceduralni prototip.
 
@@ -23,14 +26,14 @@ Potrebno: Windows 10/11 64-bit, Unreal Engine 5.8, Visual Studio 2022 sa `Deskto
 
 1. Preuzmi/kloniraj repozitorijum u kratak folder, npr. `C:\\Games\\CacilendUE`.
 2. Pokreni `Build_Run_Cacilend_UE5.bat`: pokušava da kompajlira `CacilendUEEditor Win64 Development` preko UnrealBuildTool-a i potom pokreće editor setup. Alternativno prvo otvori `CacilendUE.uproject` i kompajliraj C++ modul u UE/Visual Studio.
-3. (Opciono) Za modele iz svoje lokalne COD2 instalacije pročitaj `Docs/ASSET_IMPORT_PIPELINE_SR.md`, pokreni `Extract_COD2_Assets.bat`, zatim `Install_COD2_Blender_Importer.bat`; izvezi željene modele kao FBX i sačuvaj ih u `SourceArt/Import/`.
+3. (Opciono) Za modele iz svoje lokalne COD2 instalacije pročitaj `Docs/ASSET_IMPORT_PIPELINE_SR.md`, pokreni `Extract_COD2_Assets.bat`, zatim `Install_COD2_Blender_Importer.bat`; u Blenderu uvezi XModel-e / D3DBSP i izvezi potrebne mesh-eve kao FBX u `SourceArt/Import/`. Za animacije pokreni `Convert_COD2_Animations.bat` sa jednom `.xanim_bin` datotekom, a zatim `Install_COD2_Animation_Addon.bat`; XAnim uvoz je poznato eksperimentalan i nije uslov za prvi build.
 4. Pokreni `Setup_Cacilend_Assets.bat` ako želiš ponovo da generišeš PBR teksture, uvezeš lokalne FBX/teksture i napraviš mapu/materijale.
 5. U Unreal Editor-u otvori `/Game/Maps/L_Cacilend` i pritisni **Play**.
 6. Posle testiranja gameplay-a u editoru, pokreni `Package_Windows.bat` za Win64 Shipping build.
 
 ## Originalni COD2 modeli i teksture
 
-Za privremeni fallback postoji `Download_CC0_Weapon_Fallback.bat`, koji preuzima CC0 pušku iz zasebnog open-source paketa; to nije originalni COD2 model. Javni repo ne sadrži originalne Call of Duty 2 IWD arhive niti izvučene vlasničke assete. Za lokalnu instalaciju koju poseduješ pripremljeni su ekstrakcioni alat i FBX importer. Pročitaj `Docs/ASSET_IMPORT_PIPELINE_SR.md`. Očekivani modeli su `SM_NationalAssembly`, `SM_PionirskiPark`, `SM_Presidency`, `SM_MainPostOfficePalace`, `SK_COD2_Soldier` i `SM_COD2_Weapon`, uz opcione `AN_COD2_Idle` / `AN_COD2_Walk` animacije. Datoteke moraš stvarno lokalno izvesti i uvesti pre nego što zamene proceduralne modele.
+Za privremeni fallback postoji `Download_CC0_Weapon_Fallback.bat`, koji preuzima CC0 pušku iz zasebnog open-source paketa; to nije originalni COD2 model. Javni repo ne sadrži originalne Call of Duty 2 IWD arhive niti izvučene vlasničke assete. Za lokalnu instalaciju koju poseduješ pripremljeni su ekstrakcioni alat, XModel/map importer i odvojena (eksperimentalna) putanja za XAnim animacije. Pročitaj `Docs/ASSET_IMPORT_PIPELINE_SR.md`. Očekivani modeli su `SM_NationalAssembly`, `SM_PionirskiPark`, `SM_Presidency`, `SM_MainPostOfficePalace`, `SK_COD2_Soldier` i `SM_COD2_Weapon`, uz opcione `AN_COD2_Idle` / `AN_COD2_Walk` animacije. Datoteke moraš stvarno lokalno izvesti i uvesti pre nego što zamene proceduralne modele.
 
 ## Google Earth / Photorealistic 3D Tiles
 
