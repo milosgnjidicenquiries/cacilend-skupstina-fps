@@ -44,6 +44,11 @@ if ((Test-Path -LiteralPath (Join-Path $ProjectRoot "Source\CacilendUE\CacilendU
 } else {
     Add-Check "FAIL" "Izvorni kod" "Nedostaje C++ modul ili Build_Run_Cacilend_UE5.bat."
 }
+if (-not (Test-Path -LiteralPath (Join-Path $ProjectRoot "Scripts\Find_UE_5_8.ps1"))) {
+    Add-Check "FAIL" "UE pronalazac" "Nedostaje Scripts\Find_UE_5_8.ps1; ponovo preuzmi aktuelni projekat."
+} else {
+    Add-Check "PASS" "UE pronalazac" "Zajednicka skripta za Build/Editor/Package postoji."
+}
 
 # OS and machine
 try {
@@ -121,7 +126,7 @@ foreach ($candidate in ($engineCandidates | Where-Object { $_ } | Select-Object 
                 }
             } catch { }
         }
-        if ($versionOkay -or $candidate -match "UE[_ -]?5[._-]8") {
+        if ($versionOkay) {
             $engineRoot = $candidate
             break
         }
