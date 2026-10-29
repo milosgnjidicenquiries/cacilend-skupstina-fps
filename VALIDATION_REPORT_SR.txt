@@ -1,0 +1,17 @@
+IZVESTAJ O PAKETU
+
+U ovom repozitorijumu su izvorni Unreal Engine projekat, C++ fajlovi, konfiguracija i skripte.
+PBR PNG teksture generišu se lokalno skriptom Scripts/generate_textures.py i nisu commit-ovane.
+
+Lokalno provereno pre objavljivanja:
+- CacilendUE.uproject je validan JSON.
+- Python skripte prolaze proveru sintakse.
+- Projekat sadrži target konfiguracije za Game i Editor.
+- GitHub workflow za proveru izvora može da proveri JSON/Python i napravi source archive.
+
+Nije provereno:
+- Unreal Engine C++ kompilacija.
+- Editor skripta za kreiranje mape i materijala.
+- Cook/stage/package i pokretanje Windows EXE.
+
+Za te testove potreban je računar ili self-hosted GitHub runner sa Unreal Engine 5.8, Visual Studio C++ alatima i kompatibilnim Windows SDK-om.

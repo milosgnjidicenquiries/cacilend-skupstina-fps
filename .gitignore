@@ -1,0 +1,11 @@
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vs/
+*.sln
+*.VC.db
+*.VC.VC.opendb
+Build/
+SourceArt/Textures/*.png
+SourceArt/PBR_Texture_Atlas_Preview.jpg

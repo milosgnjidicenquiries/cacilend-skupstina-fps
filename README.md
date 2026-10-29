@@ -1,27 +1,30 @@
 # Cacilend: Skupstina FPS
 
-Windows-first Unreal Engine 5.8 C++ FPS prototype inspired by the user's visual reference. The project is a work in progress, not a finished Call of Duty-level game.
+Two related prototypes live in this repository:
 
-## Requirements
-- Unreal Engine 5.8
-- Visual Studio 2022 with Desktop development with C++ and Game development with C++ workloads
-- Windows SDK supported by the installed Unreal version
+- **Browser demo** in the browser/ directory: a Three.js first-person practice demo with PBR-style materials, ACES tone mapping, shadow maps, procedural textures, a HUD, robotic range targets, and an interior Assembly room. Deploy browser/ as a Render Static Site to play it in a web browser.
+- **Windows source project** in the repository root: Unreal Engine 5.8 C++ project with a procedural scene and Windows packaging scripts.
 
-## Build
-1. Clone/download this repository to a short local path such as `C:\\Games\\CacilendUE`.
-2. Right-click `CacilendUE.uproject` and generate Visual Studio project files if prompted.
-3. Open the project in Unreal Editor and allow the C++ modules to compile.
-4. Run `Setup_Cacilend_Assets.bat` to generate source PBR textures and editor-generated level assets.
-5. Reopen the editor, open the generated map, and press Play.
-6. Use `Package_Windows.bat` after the project builds successfully to package a Windows build.
+The browser edition is inspired by modern UE-style rendering techniques; it is not Unreal Engine running in a browser and will not match a completed AAA Call of Duty title.
 
-## Controls (prototype)
-WASD move, mouse look, left mouse fire, R reload, Shift sprint, Space jump, E interact/enter-exit, Esc pause.
+## Browser edition
+See browser/README.md for controls and hosting. It requires a browser with WebGL and an internet connection to load Three.js from jsDelivr.
 
-## Notes
-- `Content/Python/Setup_Cacilend.py` creates prototype geometry and maps inside the Unreal Editor.
-- `Scripts/generate_textures.py` generates texture images at setup time; generated texture outputs are intentionally not committed.
-- This repository contains source files and setup scripts, not a prebuilt `.exe` or a verified packaged build.
-- Replace prototype geometry with properly licensed detailed assets and perform an Unreal Editor validation pass before treating the game as release-ready.
+Render Static Site settings:
+- Repository: https://github.com/milosgnjidicenquiries/cacilend-skupstina-fps
+- Branch: main
+- Publish directory: browser
+- Build command: echo "Static site - no build step"
 
-Read `README_SR.md` for Serbian setup instructions.
+## Windows UE 5.8 build
+Requirements: Unreal Engine 5.8, Visual Studio 2022 with C++ workloads, and a compatible Windows SDK.
+
+1. Download/clone to a short Windows path such as C:\Games\CacilendUE.
+2. Open CacilendUE.uproject and allow the C++ module to compile.
+3. Run Setup_Cacilend_Assets.bat to generate PBR source textures and editor assets.
+4. Open the generated map and press Play.
+5. Run Package_Windows.bat to attempt a Win64 Shipping package.
+
+This repo contains source code and scripts, not a verified packaged EXE. The Unreal project has not been compiled or run in this environment; the first Windows build needs validation.
+
+Read README_SR.md for Serbian Windows instructions.

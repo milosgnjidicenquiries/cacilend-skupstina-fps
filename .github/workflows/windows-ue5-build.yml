@@ -1,0 +1,64 @@
+name: Package Windows build (self-hosted UE5.8 runner)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    # Configure a Windows self-hosted runner on a PC with UE 5.8 and Visual Studio C++ tools.
+    # Add the custom runner label: ue5-8.
+    runs-on: [self-hosted, windows, x64, ue5-8]
+    timeout-minutes: 240
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify build tools
+        shell: powershell
+        run: |
+          $ue = "$env:ProgramFiles\Epic Games\UE_5.8"
+          if (!(Test-Path "$ue\Engine\Build\BatchFiles\Build.bat")) {
+            throw "Unreal Engine 5.8 not found at $ue"
+          }
+          if (!(Test-Path "$ue\Engine\Build\BatchFiles\RunUAT.bat")) {
+            throw "RunUAT.bat not found in Unreal Engine installation."
+          }
+          Write-Host "Using Unreal Engine at $ue"
+
+      - name: Generate PBR source textures
+        shell: powershell
+        run: |
+          python -m pip install --user numpy pillow
+          python Scripts\generate_textures.py
+
+      - name: Compile Unreal Editor module
+        shell: powershell
+        run: |
+          $ue = "$env:ProgramFiles\Epic Games\UE_5.8"
+          & "$ue\Engine\Build\BatchFiles\Build.bat" CacilendUEEditor Win64 Development "-Project=$PWD\CacilendUE.uproject" -WaitMutex -FromMsBuild
+          if ($LASTEXITCODE -ne 0) { throw "Editor C++ compilation failed." }
+
+      - name: Generate Unreal assets and level
+        shell: powershell
+        run: |
+          $ue = "$env:ProgramFiles\Epic Games\UE_5.8"
+          & "$ue\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" "$PWD\CacilendUE.uproject" "-ExecutePythonScript=$PWD\Content\Python\Setup_Cacilend.py" -unattended -nop4 -NoSplash -NoSound -stdout -FullStdOutLogOutput
+          if ($LASTEXITCODE -ne 0) { throw "Unreal asset/map setup failed." }
+
+      - name: Package Win64 Shipping build
+        shell: powershell
+        run: |
+          $ue = "$env:ProgramFiles\Epic Games\UE_5.8"
+          & "$ue\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun "-project=$PWD\CacilendUE.uproject" -noP4 -platform=Win64 -clientconfig=Shipping -build -cook -stage -pak -archive -prereqs "-archivedirectory=$PWD\Build\Windows" -utf8output
+          if ($LASTEXITCODE -ne 0) { throw "Windows packaging failed." }
+
+      - name: Upload packaged game
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cacilend-Skupstina-Windows-Shipping
+          path: Build/Windows/**
+          if-no-files-found: error
+          retention-days: 14

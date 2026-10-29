@@ -1,0 +1,5 @@
+ASSETI I LICENCE
+
+PBR teksture se generišu skriptom Scripts/generate_textures.py za potrebe prototipa; nisu preuzete komercijalne teksture. Geometrija je proceduralno sastavljena iz osnovnih Unreal mesh-eva; nisu uključeni tuđi modeli, animacije ili zvučne biblioteke.
+
+Za finalni kvalitet zameniti proceduralne objekte odgovarajuće licenciranim detaljnim modelima i animacijama. Pre distribucije proveriti licence svakog dodatog asseta.
