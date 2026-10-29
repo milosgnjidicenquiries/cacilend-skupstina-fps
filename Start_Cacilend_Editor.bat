@@ -7,7 +7,7 @@ if defined UE_ROOT set "UEEDITOR=%UE_ROOT%\Engine\Binaries\Win64\UnrealEditor.ex
 if not defined UEEDITOR (
   echo Unreal Engine 5.8 nije pronadjen.
   echo Instaliraj Unreal Engine 5.8 kroz Epic Games Launcher.
-  echo Potrebni su Visual Studio 2022 C++ alati za prvi build projekta.
+  echo Za prvi C++ build potrebni su kompatibilni Visual Studio, MSVC i Windows SDK alati.
   pause
   exit /b 1
 )
