@@ -1,0 +1,115 @@
+"""Static contract tests for the Cacilend UE5 project; no Unreal installation required."""
+from pathlib import Path
+import json
+import re
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+FAILURES = []
+
+
+def read(rel):
+    path = ROOT / rel
+    if not path.is_file():
+        FAILURES.append(f"Missing required file: {rel}")
+        return ""
+    return path.read_text(encoding="utf-8", errors="replace")
+
+
+def require(condition, message):
+    if not condition:
+        FAILURES.append(message)
+
+
+def main():
+    try:
+        project = json.loads(read("CacilendUE.uproject"))
+    except json.JSONDecodeError as exc:
+        project = {}
+        FAILURES.append(f"CacilendUE.uproject is invalid JSON: {exc}")
+
+    require(project.get("EngineAssociation") == "5.8",
+            "Project must target Unreal Engine 5.8.")
+    require(any(module.get("Name") == "CacilendUE" for module in project.get("Modules", [])),
+            "CacilendUE runtime module is missing from .uproject.")
+
+    engine_ini = read("Config/DefaultEngine.ini")
+    input_ini = read("Config/DefaultInput.ini")
+    game_mode_h = read("Source/CacilendUE/CacilendGameMode.h")
+    game_mode_cpp = read("Source/CacilendUE/CacilendGameMode.cpp")
+    character_cpp = read("Source/CacilendUE/CacilendFPSCharacter.cpp")
+    enemy_cpp = read("Source/CacilendUE/CacilendEnemy.cpp")
+    hud_cpp = read("Source/CacilendUE/CacilendHUD.cpp")
+    map_cpp = read("Source/CacilendUE/CacilendMapBuilder.cpp")
+    setup_py = read("Content/Python/Setup_Cacilend.py")
+
+    # Default class/map must agree with actual native C++ and editor bootstrap.
+    require("GlobalDefaultGameMode=/Script/CacilendUE.CacilendGameMode" in engine_ini,
+            "DefaultEngine.ini must name the CacilendGameMode class.")
+    require("ACacilendFPSCharacter::StaticClass()" in game_mode_cpp,
+            "GameMode must assign the custom FPS pawn.")
+    require("ACacilendHUD::StaticClass()" in game_mode_cpp,
+            "GameMode must assign the custom HUD.")
+    require("ACacilendMapBuilder::StaticClass()" in game_mode_cpp,
+            "GameMode must provide the runtime map-builder fallback.")
+    require("GameDefaultMap=/Game/Maps/L_Cacilend" in engine_ini,
+            "GameDefaultMap must point at /Game/Maps/L_Cacilend.")
+    require("MAP_PATH = '/Game/Maps/L_Cacilend'" in setup_py,
+            "Python setup and GameDefaultMap must target the same level.")
+    require("ACacilendMapBuilder" in setup_py and "PlayerStart" in setup_py,
+            "Editor bootstrap must create the map builder and a PlayerStart.")
+
+    # Legacy input mappings are still required by this C++ InputComponent setup.
+    axis_bindings = set(re.findall(r'BindAxis\(TEXT\("([^"]+)"\)', character_cpp))
+    action_bindings = set(re.findall(r'BindAction\(TEXT\("([^"]+)"', character_cpp))
+    configured_axes = set(re.findall(r'\+AxisMappings=\(AxisName="([^"]+)"', input_ini))
+    configured_actions = set(re.findall(r'\+ActionMappings=\(ActionName="([^"]+)"', input_ini))
+    require(axis_bindings <= configured_axes,
+            "Input axes missing from DefaultInput.ini: " + ", ".join(sorted(axis_bindings - configured_axes)))
+    require(action_bindings <= configured_actions,
+            "Input actions missing from DefaultInput.ini: " + ", ".join(sorted(action_bindings - configured_actions)))
+
+    # HUD and combat features should remain connected to public character accessors.
+    for accessor in ("GetHealth", "GetKills", "GetAmmo", "GetReserveAmmo", "IsReloading", "IsInInterior", "IsNearAssemblyEntrance"):
+        require(accessor in hud_cpp or accessor in character_cpp,
+                f"HUD/character contract missing accessor: {accessor}")
+    require("Enemy->TakeDamage(34.0f" in character_cpp and "AddKill()" in character_cpp,
+            "Player firing path must damage enemies and track kills.")
+    require("Player->TakeDamage(" in enemy_cpp,
+            "Enemy attack path must be wired to player damage.")
+
+    # UE discovery script must exist and each principal launcher must request the correct executable.
+    helper = read("Scripts/Find_UE_5_8.ps1")
+    require("Build.version" in helper and 'MajorVersion) -ne 5' in helper and 'MinorVersion) -ne 8' in helper,
+            "UE discovery must verify the exact installed 5.8 engine version.")
+    launchers = {
+        "Build_Run_Cacilend_UE5.bat": "Build",
+        "Setup_Cacilend_Assets.bat": "Editor",
+        "Start_Cacilend_Editor.bat": "Editor",
+        "Import_Cacilend_Assets.bat": "Editor",
+        "Package_Windows.bat": "Package",
+    }
+    for rel, purpose in launchers.items():
+        content = read(rel)
+        require("Scripts\\Find_UE_5_8.ps1" in content and f"-Purpose {purpose}" in content,
+                f"{rel} must use Find_UE_5_8.ps1 with Purpose {purpose}.")
+    require((ROOT / "Check_Cacilend_UE5_Requirements.bat").is_file(),
+            "One-click UE5 requirements checker is missing.")
+    require((ROOT / "Scripts/Check_Cacilend_UE5_Requirements.ps1").is_file(),
+            "PowerShell preflight checker is missing.")
+
+    if FAILURES:
+        print("PROJECT CONTRACT CHECK FAILED")
+        for failure in FAILURES:
+            print(" - " + failure)
+        return 1
+    print("Project contract checks passed.")
+    print(f"Input axes validated: {', '.join(sorted(axis_bindings))}")
+    print(f"Input actions validated: {', '.join(sorted(action_bindings))}")
+    print("GameMode, map, HUD/combat wiring, and UE5.8 launcher discovery validated.")
+    print("Note: this is static validation; an actual UnrealBuildTool compile/gameplay test is still required.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
