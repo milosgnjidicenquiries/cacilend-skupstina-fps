@@ -11,6 +11,8 @@
 - `Content/Python/Setup_Google3DTiles_Cesium.py` — optional live Google Photorealistic 3D Tiles setup through Cesium for Unreal.
 - `Scripts/generate_textures.py` — generates local PBR texture sources.
 - `Scripts/extract_cod2_assets.py` / `Extract_COD2_Assets.bat` — local-only extraction of relevant `.iwd` contents from a COD2 installation.
+- `Check_Cacilend_UE5_Requirements.bat` — checks Windows, UE5.8, Visual Studio/C++ workload, MSVC, Windows SDK and hardware before building.
+- `Scripts/Check_Cacilend_UE5_Requirements.ps1` — the diagnostic script that writes `Build/UE5-preflight-report.txt`.
 - `Build_Run_Cacilend_UE5.bat` — attempts a real UE5.8 C++ editor build, then launches the editor asset/map setup.
 - `Import_Cacilend_Assets.bat`, `Setup_Cacilend_Assets.bat`, `Package_Windows.bat` — Windows tools.
 - `Install_COD2_Blender_Importer.bat`, `Extract_COD2_Assets.bat` and `Download_CC0_Weapon_Fallback.bat` — local asset preparation.
@@ -19,14 +21,15 @@ The UE5 scene includes offline fallback geometry for the Assembly, Pionirski Par
 
 ## Quick start on Windows
 
-Requirements: Windows 10/11 64-bit, Unreal Engine 5.8 and Visual Studio 2022 with Desktop development with C++ / Game development with C++ workloads and a compatible Windows SDK.
+**Recommended:** Windows 11 64-bit, 32 GB RAM, and a DirectX 12 graphics card with 8 GB VRAM. UE5.8 also supports specific 64-bit Windows 10 builds. For C++ development, install Visual Studio 2026 (Epic's current recommendation) or a compatible Visual Studio 2022 17.14+ installation. Select the `Game development with C++` workload, MSVC 14.38 or newer, and Windows SDK 10.0.22621.0 or newer. Add Visual Studio Tools for Unreal Engine under the workload's optional components.
 
-1. Clone/download this repository to a short path such as `C:\\Games\\CacilendUE`.
-2. Run `Build_Run_Cacilend_UE5.bat`. It invokes UnrealBuildTool for `CacilendUEEditor Win64 Development` and, only if compilation succeeds, launches asset/map setup in Unreal Editor. Alternatively open `CacilendUE.uproject` manually if you need to inspect compiler diagnostics first.
-3. (Optional) To use a local COD2 installation, read `Docs/ASSET_IMPORT_PIPELINE_SR.md`, run `Extract_COD2_Assets.bat`, install the Blender importer via `Install_COD2_Blender_Importer.bat`, export selected models to FBX, and place them under `SourceArt/Import/`. For a temporary non-COD2 placeholder rifle, run `Download_CC0_Weapon_Fallback.bat`.
-4. Run `Setup_Cacilend_Assets.bat` separately when you need to rerun texture generation/import without recompiling C++.
-5. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
-6. After Editor gameplay is validated, run `Package_Windows.bat` to attempt a Win64 Shipping package.
+1. Download/clone this repo into a short path such as `C:\\Games\\CacilendUE`.
+2. Run `Check_Cacilend_UE5_Requirements.bat`. It checks Windows, RAM, GPU name, UE5.8, Visual Studio/C++ workload, MSVC, Windows SDK, and free disk space. The report is saved to `Build/UE5-preflight-report.txt`. Fix any `FAIL` items before continuing.
+3. Run `Build_Run_Cacilend_UE5.bat`. It invokes UnrealBuildTool for `CacilendUEEditor Win64 Development` and starts editor setup only if compilation succeeds. If UE is installed elsewhere, set `UE_5_8_ROOT` to the engine folder first.
+4. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
+5. Only after validating Editor gameplay, run `Package_Windows.bat` to attempt a Win64 Shipping package.
+
+The preflight checker only verifies installation signals; it is not a compile test. GitHub CI checks source structure and syntax, not an actual Unreal C++ build, packaged EXE, or gameplay.
 
 ## Original COD2 models and textures
 
