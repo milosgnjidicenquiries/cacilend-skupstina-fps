@@ -38,6 +38,7 @@ def main():
     game_mode_h = read("Source/CacilendUE/CacilendGameMode.h")
     game_mode_cpp = read("Source/CacilendUE/CacilendGameMode.cpp")
     character_cpp = read("Source/CacilendUE/CacilendFPSCharacter.cpp")
+    character_h = read("Source/CacilendUE/CacilendFPSCharacter.h")
     enemy_cpp = read("Source/CacilendUE/CacilendEnemy.cpp")
     hud_cpp = read("Source/CacilendUE/CacilendHUD.cpp")
     map_cpp = read("Source/CacilendUE/CacilendMapBuilder.cpp")
@@ -92,6 +93,9 @@ def main():
             "Enemy attack path must be wired to player damage.")
     require('bExecuteWhenPaused = true' in character_cpp and 'UGameplayStatics::SetGamePaused' in character_cpp,
             "Pause action must remain available while the world is paused.")
+    require("void TogglePause();" in character_h and "void ACacilendFPSCharacter::TogglePause()" in character_cpp
+            and "bool IsPaused() const" in character_h,
+            "Pause methods/accessor must be declared and defined consistently.")
     require('DrawText(TEXT("PAUSED")' in hud_cpp and 'PRESS ESC TO RESUME' in hud_cpp,
             "HUD must show the pause overlay and resume instruction.")
 
