@@ -498,7 +498,7 @@ new GLTFLoader().load(rifleAssetUrl,gltf=>{
   fallbackWeaponChildren.forEach(child=>child.visible=true);
 });
 
-const player={pos:new THREE.Vector3(-61,0,8),yaw:-0.78,pitch:0,health:100,ammo:30,reserve:120,hits:0,inside:false,saved:new THREE.Vector3(),sens:.0017,locked:false};
+const player={pos:new THREE.Vector3(-61,0,8),yaw:-0.78,pitch:0,health:100,ammo:30,reserve:120,hits:0,inside:false,saved:new THREE.Vector3(),sens:.0017,locked:false,jumpHeight:0,jumpVelocity:0,onGround:true};
 const keys=new Set(),raycaster=new THREE.Raycaster();raycaster.far=85;
 let active=false,reloadTime=0,reloading=false,shotDelay=0,recoil=0,flashTime=0,toastTime=0,hitTime=0;
 camera.position.set(player.pos.x,1.68,player.pos.z);camera.rotation.set(player.pitch,player.yaw,0,'YXZ');
@@ -512,8 +512,8 @@ function updateHud(){
 function nearDoor(){return !player.inside&&Math.abs(player.pos.z+32.5)<5&&Math.abs(player.pos.x)<5;}
 function hint(){if(nearDoor())$('hint').textContent='[ E ] UĐI U SKUPŠTINU';else if(player.inside&&player.pos.z>10)$('hint').textContent='[ E ] IZAĐI NA PLATO';else $('hint').textContent='';}
 function interact(){
- if(!player.inside&&nearDoor()){player.saved.copy(player.pos);player.inside=true;player.pos.set(78,0,15);player.yaw=0;player.pitch=0;camera.position.set(78,1.68,15);camera.rotation.set(0,0,0);toast('ULAZAK U SKUPŠTINU');updateHud();}
- else if(player.inside&&player.pos.z>10){player.inside=false;player.pos.copy(player.saved);player.yaw=0;player.pitch=0;camera.position.set(player.pos.x,1.68,player.pos.z);camera.rotation.set(0,0,0);toast('POVRATAK NA PLATO');updateHud();}
+ if(!player.inside&&nearDoor()){player.saved.copy(player.pos);player.inside=true;player.pos.set(78,0,8);player.yaw=0;player.pitch=0;player.jumpHeight=0;player.jumpVelocity=0;player.onGround=true;camera.position.set(78,1.68,8);camera.rotation.set(0,0,0);toast('ULAZAK U SKUPŠTINU');updateHud();}
+ else if(player.inside&&player.pos.z>10){player.inside=false;player.pos.copy(player.saved);player.yaw=0;player.pitch=0;player.jumpHeight=0;player.jumpVelocity=0;player.onGround=true;camera.position.set(player.pos.x,1.68,player.pos.z);camera.rotation.set(0,0,0);toast('POVRATAK NA PLATO');updateHud();}
 }
 function blocked(x,z){
  if(player.inside){return x<66.8||x>89.2||z< -19||z>18.5;}
@@ -549,7 +549,7 @@ function reload(){
 $('start').addEventListener('click',()=>{active=true;$('screen').classList.add('hide');canvas.requestPointerLock?.();});
 document.addEventListener('pointerlockchange',()=>{player.locked=document.pointerLockElement===canvas;if(player.locked){active=true;$('screen').classList.add('hide');}else if(active){active=false;$('screen').classList.remove('hide');$('start').textContent='▶   NASTAVI MISIJU';}});
 document.addEventListener('mousemove',e=>{if(!player.locked)return;player.yaw-=e.movementX*player.sens*Number($('sens').value);player.pitch=THREE.MathUtils.clamp(player.pitch-e.movementY*player.sens*Number($('sens').value),-1.18,1.18);});
-document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['w','a','s','d',' ','shift','r','e'].includes(k))e.preventDefault();keys.add(k);if(k==='r')reload();if(k==='e')interact();});
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['w','a','s','d',' ','shift','r','e'].includes(k))e.preventDefault();if(k===' '&&active&&player.locked&&player.onGround){player.jumpVelocity=5.1;player.onGround=false;}keys.add(k);if(k==='r')reload();if(k==='e')interact();});
 document.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
 document.addEventListener('mousedown',e=>{if(e.button===0)fire();});
 $('settings').addEventListener('click',()=>$('settingsPanel').classList.toggle('open'));$('closeSettings').addEventListener('click',()=>$('settingsPanel').classList.remove('open'));
@@ -560,12 +560,13 @@ const clock=new THREE.Clock();let ftime=0,frames=0;
 function animate(){
  requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.04);
  if(active&&player.locked){
+  if(!player.onGround){player.jumpVelocity-=14*dt;player.jumpHeight+=player.jumpVelocity*dt;if(player.jumpHeight<=0){player.jumpHeight=0;player.jumpVelocity=0;player.onGround=true;}}
   let f=0,r=0;if(keys.has('w'))f++;if(keys.has('s'))f--;if(keys.has('d'))r++;if(keys.has('a'))r--;
   const sprint=keys.has('shift'),speed=sprint?8:4.6,mag=Math.hypot(f,r)||1;f/=mag;r/=mag;
   const dx=(-Math.sin(player.yaw)*f+Math.cos(player.yaw)*r)*speed*dt,dz=(-Math.cos(player.yaw)*f-Math.sin(player.yaw)*r)*speed*dt;
   if(!blocked(player.pos.x+dx,player.pos.z))player.pos.x+=dx;
   if(!blocked(player.pos.x,player.pos.z+dz))player.pos.z+=dz;
-  camera.position.set(player.pos.x,1.68+Math.sin(performance.now()*.012)*(Math.abs(f)+Math.abs(r)>0?.018:0),player.pos.z);
+  camera.position.set(player.pos.x,1.68+player.jumpHeight+Math.sin(performance.now()*.012)*(Math.abs(f)+Math.abs(r)>0?.018:0),player.pos.z);
   camera.rotation.set(player.pitch+recoil,player.yaw,Math.sin(performance.now()*.008)*(Math.abs(f)+Math.abs(r)>0?.004:0),'YXZ');
   weapon.position.y=-.31+Math.sin(performance.now()*.012)*(Math.abs(f)+Math.abs(r)>0?.006:0)-recoil*.35;
   recoil=Math.max(0,recoil-dt*.5);shotDelay=Math.max(0,shotDelay-dt);
