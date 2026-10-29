@@ -54,7 +54,7 @@ jobs:
             "Scripts", "Docs", "SourceArt", "Archive",
             "Start_Cacilend_Editor.bat", "Setup_Cacilend_Assets.bat",
             "Import_Cacilend_Assets.bat", "Extract_COD2_Assets.bat",
-            "Install_COD2_Blender_Importer.bat", "Convert_COD2_Animations.bat", "Download_CC0_Weapon_Fallback.bat", "Build_Run_Cacilend_UE5.bat",
+            "Install_COD2_Blender_Importer.bat", "Install_COD2_Animation_Addon.bat", "Convert_COD2_Animations.bat", "Download_CC0_Weapon_Fallback.bat", "Build_Run_Cacilend_UE5.bat",
             "Package_Windows.bat", "README.md", "README_SR.md", "START_HERE_SR.txt",
             "ASSET_NOTES_SR.txt", "VALIDATION_REPORT_SR.txt"
           )
