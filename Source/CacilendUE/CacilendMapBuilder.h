@@ -20,8 +20,13 @@ protected:
     UStaticMeshComponent* AddBlock(const FString& MaterialName, const FVector& Position, const FVector& Dimensions, const FRotator& Rotation = FRotator::ZeroRotator, const FLinearColor& Tint = FLinearColor::White, bool bCollision = true);
     UStaticMeshComponent* AddCylinder(const FString& MaterialName, const FVector& Position, const FVector& Dimensions, const FRotator& Rotation = FRotator::ZeroRotator, const FLinearColor& Tint = FLinearColor::White, bool bCollision = true);
     UStaticMeshComponent* AddSphere(const FString& MaterialName, const FVector& Position, const FVector& Dimensions, const FLinearColor& Tint = FLinearColor::White, bool bCollision = false);
+    UStaticMeshComponent* AddImportedMesh(const TCHAR* AssetPath, const FVector& Position, const FVector& DesiredDimensions, const FRotator& Rotation, bool bCollision = true);
     UMaterialInterface* ResolveMaterial(const FString& Name);
     void BuildExterior();
+    void BuildPionirskiPark();
+    void BuildPresidency();
+    void BuildMainPostOffice();
+    void BuildSurroundingBuildings();
     void BuildAssemblyInterior();
     void AddTree(float X, float Y, float Height = 520.0f);
     void AddTent(float X, float Y, float Yaw = 0.0f);
