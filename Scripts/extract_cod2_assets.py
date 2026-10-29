@@ -15,10 +15,10 @@ ALLOWED_PREFIXES = (
     "xmodelalias/", "xmodelparts/", "xmodelsurfs/", "weapons/",
 )
 CANDIDATE_ROOTS = (
-    Path(r"C:\\Program Files (x86)\\Activision\\Call of Duty 2"),
-    Path(r"C:\\Program Files\\Activision\\Call of Duty 2"),
-    Path(r"C:\\Games\\Call of Duty 2"),
-    Path(r"D:\\Games\\Call of Duty 2"),
+    Path("C:\\Program Files (x86)\\Activision\\Call of Duty 2"),
+    Path("C:\\Program Files\\Activision\\Call of Duty 2"),
+    Path("C:\\Games\\Call of Duty 2"),
+    Path("D:\\Games\\Call of Duty 2"),
 )
 
 
