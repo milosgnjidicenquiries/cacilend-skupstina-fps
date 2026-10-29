@@ -20,7 +20,7 @@ Ovo su okvirne, lokalno skalirane koordinate za igranje — nisu geodetski surve
 1. U [Google Cloud Console](https://console.cloud.google.com/) kreiraj projekat.
 2. Omogući **Map Tiles API** i podesi billing. Google obračunava upotrebu po SKU-u, uključujući Photorealistic 3D Tiles; namesti kvote i obaveštenja o potrošnji pre gameplay testiranja.
 3. Kreiraj API key i ograniči ga na odgovarajući API i aplikaciju koliko god dozvoljava desktop workflow.
-4. Instaliraj verziju **Cesium for Unreal** kompatibilnu sa instaliranim Unreal Engine 5.8, restartuj editor i uključi plugin ako UE to traži.
+4. Instaliraj verziju **Cesium for Unreal** kompatibilnu sa Unreal Engine 5.8. U Unreal Editor-u izaberi **Edit → Plugins**, pronađi *Cesium for Unreal*, uključi plugin i restartuj editor.
 5. U korenu projekta napravi folder `Config/Private`.
 6. U lokalni, git-ignored fajl `Config/Private/GoogleMapsApiKey.txt` stavi samo API key (bez dodatnog teksta). Alternativa je Windows environment variable `GOOGLE_MAPS_API_KEY`.
 7. Pokreni `Setup_Cacilend_Assets.bat`. Skripta će pokušati da pronađe Cesium plugin i API key; ako ih nađe, kreira/konfiguriše Cesium Georeference i Google 3D Tileset. Ako nije moguće podesiti property automatski, proveri izlazni Unreal log.
@@ -30,7 +30,7 @@ Ovo su okvirne, lokalno skalirane koordinate za igranje — nisu geodetski surve
 
 ## Obavezna atribucija i ključevi
 
-Google-ova pravila traže da prikazuješ kredite/attribution koji se dobijaju sa tiles. Visina u Cesium-u je ellipsoidna, ne isto što i lokalno prijavljena nadmorska visina; vrednost 160 m je okvirni start i mora vizuelno da se proveri. Zbog toga skripta postavlja `show_credits_on_screen = True`. Nemoj ga isključivati. Google API key nije upisan u source code; fajl sa ključem je git-ignored. Ne postavljaj key u javni GitHub, screenshot ili javni build bez pravilnih ograničenja.
+Google-ova pravila traže da prikazuješ kredite/attribution koji se dobijaju sa tiles. Visina u Cesium-u je ellipsoidna, ne isto što i lokalno prijavljena nadmorska visina; vrednost 160 m je okvirni start i mora vizuelno da se proveri. Zbog toga skripta postavlja `show_credits_on_screen = True`. Nemoj ga isključivati. Google API key nije upisan u source code; fajl sa ključem je git-ignored. Ipak, ako je ključ upotrebljen u tileset URL-u unutar projekta/pakovanog EXE-a, može se izvući iz klijentske aplikacije. Za lokalni test koristi poseban, API-ograničen ključ, postavi kvote i budžetska upozorenja i ne distribuiraj build sa ključem bez provere Google pravila/bezbednosti. Ne postavljaj key u javni GitHub, screenshot ili javni build bez pravilnih ograničenja.
 
 Google zvanična uputstva:
 - [Map Tiles API overview](https://developers.google.com/maps/documentation/tile/overview)
