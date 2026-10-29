@@ -4,7 +4,7 @@ Ovo je opcioni dodatak glavnom UE5 FPS projektu. Geometrija zgrada i parka ostaj
 
 ## Koordinate nivoa
 
-UE5 svet koristi lokalni origin tako da `(0, 0, 0)` odgovara približno `44.81076, 20.46583, 0`:
+UE5 svet koristi lokalni origin tako da `(0, 0, 0)` odgovara približno `44.81076, 20.46583, 160 m` ellipsoidne visine:
 
 | Objekat | UE5 lokalna pozicija (cm) | Približna lokacija |
 | --- | ---: | --- |
@@ -24,13 +24,13 @@ Ovo su okvirne, lokalno skalirane koordinate za igranje — nisu geodetski surve
 5. U korenu projekta napravi folder `Config/Private`.
 6. U lokalni, git-ignored fajl `Config/Private/GoogleMapsApiKey.txt` stavi samo API key (bez dodatnog teksta). Alternativa je Windows environment variable `GOOGLE_MAPS_API_KEY`.
 7. Pokreni `Setup_Cacilend_Assets.bat`. Skripta će pokušati da pronađe Cesium plugin i API key; ako ih nađe, kreira/konfiguriše Cesium Georeference i Google 3D Tileset. Ako nije moguće podesiti property automatski, proveri izlazni Unreal log.
-8. Proveri da je georeference origin podešen na Latitude `44.81076`, Longitude `20.46583`, Height `0`. To poravnava postojeći offline svet.
+8. Proveri da je georeference origin podešen na Latitude `44.81076`, Longitude `20.46583`, Height približno `160 m` (visina iznad elipsoida; početna aproksimacija). To poravnava postojeći offline svet.
 9. U World Outliner-u izaberi `GooglePhotorealistic3DTiles_Belgrade`, potvrdi **Source = From URL**, URL `https://tile.googleapis.com/v1/3dtiles/root.json?key=YOUR_API_KEY` i uključi **Show Credits On Screen**.
 10. Pritisni Play i proveri da tileset učita centar Beograda. Ako ne radi, proveri log, ključ, API/ billing, mrežu i Cesium plugin verziju.
 
 ## Obavezna atribucija i ključevi
 
-Google-ova pravila traže da prikazuješ kredite/attribution koji se dobijaju sa tiles. Zbog toga skripta postavlja `show_credits_on_screen = True`. Nemoj ga isključivati. Google API key nije upisan u source code; fajl sa ključem je git-ignored. Ne postavljaj key u javni GitHub, screenshot ili javni build bez pravilnih ograničenja.
+Google-ova pravila traže da prikazuješ kredite/attribution koji se dobijaju sa tiles. Visina u Cesium-u je ellipsoidna, ne isto što i lokalno prijavljena nadmorska visina; vrednost 160 m je okvirni start i mora vizuelno da se proveri. Zbog toga skripta postavlja `show_credits_on_screen = True`. Nemoj ga isključivati. Google API key nije upisan u source code; fajl sa ključem je git-ignored. Ne postavljaj key u javni GitHub, screenshot ili javni build bez pravilnih ograničenja.
 
 Google zvanična uputstva:
 - [Map Tiles API overview](https://developers.google.com/maps/documentation/tile/overview)
