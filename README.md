@@ -52,6 +52,6 @@ The `browser/` folder is intentionally retained because Render publishes that fo
 
 ## Validation status
 
-GitHub Actions validates project JSON, Python syntax, browser JS and basic C++ delimiter balance. This is **not** a C++ compile or gameplay test. The repository does not yet contain a verified Windows EXE; UnrealBuildTool, cooking, packaging and gameplay must be tested on a Windows computer with UE 5.8 installed.
+GitHub Actions validates JSON, PowerShell/Python/JavaScript syntax, C++ structural balance, and configuration/code contracts for input mappings, GameMode, HUD, map setup, packaging gates and launcher scripts. This is still **not** an actual C++ compilation or gameplay test. The repository does not yet contain a verified Windows EXE; UnrealBuildTool, editor setup, packaging and gameplay must be tested on a Windows computer with UE 5.8 installed.
 
 See `README_SR.md` for the Serbian instructions.
