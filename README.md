@@ -25,11 +25,11 @@ The UE5 scene includes offline fallback geometry for the Assembly, Pionirski Par
 
 1. Download/clone this repo into a short path such as `C:\Games\CacilendUE`.
 2. Run `Check_Cacilend_UE5_Requirements.bat`. It checks Windows, RAM, GPU name, UE5.8, Visual Studio/C++ workload, MSVC, Windows SDK, and free disk space. The report is saved to `Build/UE5-preflight-report.txt`. Fix any `FAIL` items before continuing.
-3. Run `Build_Run_Cacilend_UE5.bat`. It invokes UnrealBuildTool for `CacilendUEEditor Win64 Development` and starts editor setup only if compilation succeeds. If UE is installed elsewhere, set `UE_5_8_ROOT` to the engine folder first.
+3. Run `Build_Run_Cacilend_UE5.bat`. It repeats the prerequisites check automatically, then invokes UnrealBuildTool for `CacilendUEEditor Win64 Development` and starts editor setup only if compilation succeeds. The locator searches known paths and Epic Launcher manifests; if it still cannot find the engine, set `UE_5_8_ROOT` to the engine folder.
 4. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
 5. Only after validating Editor gameplay, run `Package_Windows.bat` to attempt a Win64 Shipping package.
 
-The preflight checker only verifies installation signals; it is not a compile test. GitHub CI checks source structure and syntax, not an actual Unreal C++ build, packaged EXE, or gameplay.
+The full C++ build log is saved to `Build/UE5-build.log`; a failed Windows package is logged to `Build/UE5-package.log`. The preflight checker only verifies installation signals; it is not a compile test. GitHub CI checks source structure, syntax and configuration/code contracts, not an actual Unreal C++ build, packaged EXE, or gameplay.
 
 ## Original COD2 models and textures
 
