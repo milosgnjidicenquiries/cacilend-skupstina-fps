@@ -9,12 +9,21 @@ if not defined UAT (
   pause
   exit /b 1
 )
-call "%UAT%" BuildCookRun -project="%ROOT%CacilendUE.uproject" -noP4 -platform=Win64 -clientconfig=Shipping -build -cook -stage -pak -archive -prereqs -archivedirectory="%ROOT%Build\Windows" -utf8output
+if not exist "%ROOT%Build" mkdir "%ROOT%Build"
+set "PACKAGE_LOG=%ROOT%Build\UE5-package.log"
+echo Paketiram Windows Shipping build. Log: "%PACKAGE_LOG%"
+call "%UAT%" BuildCookRun -project="%ROOT%CacilendUE.uproject" -noP4 -platform=Win64 -clientconfig=Shipping -build -cook -stage -pak -archive -prereqs -archivedirectory="%ROOT%Build\Windows" -utf8output > "%PACKAGE_LOG%" 2>&1
 if errorlevel 1 (
-  echo Build nije uspeo. Pogledaj UAT log i Unreal Editor log.
+  echo Pakovanje nije uspelo. Poslednjih 100 linija loga:
+  powershell.exe -NoProfile -Command "Get-Content -LiteralPath '%PACKAGE_LOG%' -Tail 100"
+  echo.
+  echo Ceo log je sacuvan u Build\UE5-package.log.
   pause
   exit /b 1
 )
-echo Gotovo. Izlazni Windows build je u folderu Build\Windows.
+echo Pakovanje je zavrseno. Zavrsne linije:
+powershell.exe -NoProfile -Command "Get-Content -LiteralPath '%PACKAGE_LOG%' -Tail 20"
+echo.
+echo Proveri izlazni Windows build u folderu Build\Windows.
 pause
 endlocal
