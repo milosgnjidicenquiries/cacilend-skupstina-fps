@@ -27,6 +27,14 @@ jobs:
           $project = Get-Content CacilendUE.uproject -Raw | ConvertFrom-Json
           if ($project.EngineAssociation -ne "5.8") { throw "Expected Unreal Engine 5.8 association." }
           Write-Host "uproject JSON valid."
+      - name: Validate PowerShell diagnostics syntax
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $parseErrors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path "Scripts/Check_Cacilend_UE5_Requirements.ps1").Path, [ref]$tokens, [ref]$parseErrors) | Out-Null
+          if ($parseErrors.Count -gt 0) { $parseErrors | Out-String | Write-Error }
+          Write-Host "PowerShell diagnostic syntax valid."
       - name: Validate Python syntax
         shell: pwsh
         run: |
@@ -60,7 +68,7 @@ jobs:
             "CacilendUE.uproject", ".gitignore", "Config", "Source", "Content",
             "Scripts", "Docs", "SourceArt", "Archive",
             "Start_Cacilend_Editor.bat", "Setup_Cacilend_Assets.bat",
-            "Import_Cacilend_Assets.bat", "Extract_COD2_Assets.bat",
+            "Import_Cacilend_Assets.bat", "Extract_COD2_Assets.bat", "Check_Cacilend_UE5_Requirements.bat",
             "Install_COD2_Blender_Importer.bat", "Install_COD2_Animation_Addon.bat", "Convert_COD2_Animations.bat", "Download_CC0_Weapon_Fallback.bat", "Build_Run_Cacilend_UE5.bat",
             "Package_Windows.bat", "README.md", "README_SR.md", "START_HERE_SR.txt",
             "ASSET_NOTES_SR.txt", "VALIDATION_REPORT_SR.txt"
