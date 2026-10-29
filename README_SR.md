@@ -11,6 +11,8 @@
 - `Content/Python/Setup_Google3DTiles_Cesium.py` — opciono podešavanje Google Photorealistic 3D Tiles preko Cesium for Unreal.
 - `Scripts/generate_textures.py` — generiše lokalne PBR teksture.
 - `Scripts/extract_cod2_assets.py` / `Extract_COD2_Assets.bat` — lokalno izvlačenje relevantnih `.iwd` sadržaja iz COD2 instalacije.
+- `Check_Cacilend_UE5_Requirements.bat` — automatska Windows/UE/Visual Studio/MSVC/SDK/hardverska provera pre build-a; pravi `Build/UE5-preflight-report.txt`.
+- `Scripts/Check_Cacilend_UE5_Requirements.ps1` — implementacija dijagnostike.
 - `Build_Run_Cacilend_UE5.bat` — pokušava stvarnu UE5.8 C++ kompilaciju, zatim pokreće setup mape i asseta u editoru.
 - `Import_Cacilend_Assets.bat`, `Setup_Cacilend_Assets.bat`, `Package_Windows.bat` — Windows alati.
 - `Install_COD2_Blender_Importer.bat` — preuzima gotov COD2 Blender importer za D3DBSP mape i XModel-e.
@@ -22,14 +24,17 @@ UE5 ima offline fallback geometriju za Dom Narodne skupštine, Pionirski park, P
 
 ## Pokretanje na Windows računaru
 
-Potrebno: Windows 10/11 64-bit, Unreal Engine 5.8, Visual Studio 2022 sa `Desktop development with C++` i `Game development with C++` workload-ima i kompatibilan Windows SDK.
+**Preporučeno:** Windows 11 64-bit, 32 GB RAM-a i grafička sa 8 GB VRAM-a i DirectX 12. UE5.8 je namenjen i podržanoj 64-bitnoj verziji Windowsa 10, ali Windows 11 je preporuka. Zahtevi za ugodan rad su veći od minimuma za samo pokretanje editora.
 
-1. Preuzmi/kloniraj repozitorijum u kratak folder, npr. `C:\\Games\\CacilendUE`.
-2. Pokreni `Build_Run_Cacilend_UE5.bat`: pokušava da kompajlira `CacilendUEEditor Win64 Development` preko UnrealBuildTool-a i potom pokreće editor setup. Alternativno prvo otvori `CacilendUE.uproject` i kompajliraj C++ modul u UE/Visual Studio.
-3. (Opciono) Za modele iz svoje lokalne COD2 instalacije pročitaj `Docs/ASSET_IMPORT_PIPELINE_SR.md`, pokreni `Extract_COD2_Assets.bat`, zatim `Install_COD2_Blender_Importer.bat`; u Blenderu uvezi XModel-e / D3DBSP i izvezi potrebne mesh-eve kao FBX u `SourceArt/Import/`. Za animacije pokreni `Convert_COD2_Animations.bat` sa jednom `.xanim_bin` datotekom, a zatim `Install_COD2_Animation_Addon.bat`; XAnim uvoz je poznato eksperimentalan i nije uslov za prvi build.
-4. Pokreni `Setup_Cacilend_Assets.bat` ako želiš ponovo da generišeš PBR teksture, uvezeš lokalne FBX/teksture i napraviš mapu/materijale.
-5. U Unreal Editor-u otvori `/Game/Maps/L_Cacilend` i pritisni **Play**.
-6. Posle testiranja gameplay-a u editoru, pokreni `Package_Windows.bat` za Win64 Shipping build.
+Za C++ build koristi Visual Studio 2026 (aktuelna Epic preporuka) ili kompatibilni Visual Studio 2022 17.14+. U Visual Studio Installer-u uključi workload `Game development with C++`, MSVC toolset 14.38 ili noviji i Windows SDK 10.0.22621.0 ili noviji. U opcionalnim komponentama workload-a uključi Visual Studio Tools for Unreal Engine; Blueprint debugger i Unreal Engine Test Adapter su korisni dodatni alati.
+
+1. Preuzmi/kloniraj repo u kratak folder, npr. `C:\\Games\\CacilendUE`.
+2. Pokreni `Check_Cacilend_UE5_Requirements.bat`. Skripta proverava Windows, RAM, GPU naziv, UE5.8, Visual Studio/C++ workload, MSVC, Windows SDK i slobodan prostor. Izveštaj se čuva u `Build/UE5-preflight-report.txt`. Reši sve `FAIL` stavke pre build-a; `WARN` stavke označavaju moguća ograničenja.
+3. Pokreni `Build_Run_Cacilend_UE5.bat`. Skripta poziva UnrealBuildTool za `CacilendUEEditor Win64 Development` i tek ako kompilacija uspe pokreće setup u Unreal Editor-u. Ako je engine instaliran na nestandardnoj lokaciji, podesi promenljivu okruženja `UE_5_8_ROOT` na folder engine-a.
+4. U Editor-u otvori `/Game/Maps/L_Cacilend` i pritisni **Play**.
+5. Tek kada je gameplay potvrđen u Editor-u, pokreni `Package_Windows.bat` za Win64 Shipping paket.
+
+Ako build ne uspe, sačuvaj ceo log; poruka iz dijagnostičke skripte nije dokaz da se projekat kompajlira. GitHub CI proverava strukturu i sintaksu, ali ne kompajlira UE C++ niti potvrđuje EXE/gameplay.
 
 ## Originalni COD2 modeli i teksture
 
