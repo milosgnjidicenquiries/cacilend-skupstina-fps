@@ -187,7 +187,7 @@ function buildAssembly(){
   box(M.stone,x-.89,y,-38.13,.12,1.8,.14);box(M.stone,x+.89,y,-38.13,.12,1.8,.14);
  }
  for(let i=0;i<7;i++)box(M.stone,0,.13+i*.23,-33.8-i*.62,18+i*1.2,.2,.8);
- solid(0,-39,25,2.3);
+ // Entrance opening is intentionally left clear; blocked() handles the facade sides.
 }
 function buildInterior(){
  const x=78,z=-2;
