@@ -22,6 +22,7 @@ See [ASSET_SOURCES.md](./ASSET_SOURCES.md) for source links and notes.
 ## Controls
 - WASD: move
 - Mouse: look
+- Space: jump
 - Left mouse button: practice shot
 - R: reload
 - Shift: sprint
