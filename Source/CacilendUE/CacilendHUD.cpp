@@ -41,8 +41,10 @@ void ACacilendHUD::DrawHUD()
     const FString Ammo = Player->IsReloading() ? TEXT("RELOADING...") : FString::Printf(TEXT("%02d  /  %02d"), Player->GetAmmo(), Player->GetReserveAmmo());
     DrawText(Ammo, Player->GetAmmo() <= 5 ? Amber : White, W - 220.0f, H - 82.0f, Font, 1.7f, false);
     DrawText(TEXT("E  INTERACT     R  RELOAD"), FLinearColor(0.75f, 0.79f, 0.76f, 0.75f), W - 260.0f, H - 42.0f, Font, 0.9f, false);
-    DrawText(TEXT("WASD KRETANJE  |  SHIFT TRCANJE  |  SPACE SKOK  |  LMB PUCANJE  |  ESC PAUZA"),
-        FLinearColor(0.76f, 0.80f, 0.77f, 0.75f), CX - 225.0f, H - 24.0f, Font, 0.8f, false);
+    DrawText(TEXT("WASD KRETANJE  |  SHIFT TRCANJE  |  CTRL CROUCH  |  SPACE SKOK"),
+        FLinearColor(0.76f, 0.80f, 0.77f, 0.75f), CX - 190.0f, H - 40.0f, Font, 0.8f, false);
+    DrawText(TEXT("LMB PUCANJE  |  R RELOAD  |  E INTERACT  |  ESC PAUZA"),
+        FLinearColor(0.76f, 0.80f, 0.77f, 0.75f), CX - 190.0f, H - 22.0f, Font, 0.8f, false);
     if (Player->IsInInterior())
     {
         DrawText(TEXT("ASSEMBLY CHAMBER"), Amber, CX - 88.0f, 32.0f, Font, 1.0f, false);
