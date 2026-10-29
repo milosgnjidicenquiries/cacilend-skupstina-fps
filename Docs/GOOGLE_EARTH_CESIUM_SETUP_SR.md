@@ -27,6 +27,7 @@ Ovo su okvirne, lokalno skalirane koordinate za igranje — nisu geodetski surve
 8. Proveri da je georeference origin podešen na Latitude `44.81076`, Longitude `20.46583`, Height približno `160 m` (visina iznad elipsoida; početna aproksimacija). To poravnava postojeći offline svet.
 9. U World Outliner-u izaberi `GooglePhotorealistic3DTiles_Belgrade`, potvrdi **Source = From URL**, URL `https://tile.googleapis.com/v1/3dtiles/root.json?key=YOUR_API_KEY` i uključi **Show Credits On Screen**.
 10. Pritisni Play i proveri da tileset učita centar Beograda. Skripta pokušava da uključi **Create Physics Meshes** da bi FPS karakter mogao da se oslanja na učitane tiles. Ovo troši dodatne resurse; ako je performansa loša, smanji nivo geometrije/obim tileset-a pre nego što isključiš kolizije. Ako ne radi, proveri log, ključ, API/billing, mrežu i Cesium plugin verziju.
+11. Podrazumevano UE5 ostavlja offline geometriju uključenu čak i ako postoji Cesium tileset actor — to je namerno, da ne dobiješ praznu mapu ako tiles ne mogu da se učitaju. Kada si vizuelno proverio da je Google fotogrametrija stvarno dostupna i da joj je atribucija vidljiva, možeš pokrenuti editor/EXE sa argumentom `-CacilendUseGooglePhotogrammetry` da sakriješ proceduralne proxy zgrade i ostaviš live tiles kao glavnu podlogu. Nemoj uključivati ovaj argument pre nego što potvrdiš da pločice učitavaju tvoj deo Beograda.
 
 ## Važno ograničenje za EEA billing
 
