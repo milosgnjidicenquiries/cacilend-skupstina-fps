@@ -140,10 +140,10 @@ def main():
     for rel in ("Setup_Cacilend_Assets.bat", "Start_Cacilend_Editor.bat", "Import_Cacilend_Assets.bat"):
         require('set "UEEDITOR="' in read(rel),
                 f"{rel} must clear an inherited UEEDITOR variable before discovery.")
-    require('set "UAT="' in package_launcher,
-            "Package_Windows.bat must clear an inherited UAT variable before discovery.")
     build_launcher = read("Build_Run_Cacilend_UE5.bat")
     package_launcher = read("Package_Windows.bat")
+    require('set "UAT="' in package_launcher,
+            "Package_Windows.bat must clear an inherited UAT variable before discovery.")
     require("Check_Cacilend_UE5_Requirements.ps1" in build_launcher,
             "Main build launcher must run the prerequisite checker automatically.")
     setup_launcher = read("Setup_Cacilend_Assets.bat")
