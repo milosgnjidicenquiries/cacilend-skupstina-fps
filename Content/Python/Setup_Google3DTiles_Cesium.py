@@ -14,7 +14,7 @@ PROJECT_ROOT = str(unreal.Paths.project_dir()).rstrip("/\\")
 KEY_FILE = os.path.join(PROJECT_ROOT, "Config", "Private", "GoogleMapsApiKey.txt")
 ORIGIN_LATITUDE = 44.81076
 ORIGIN_LONGITUDE = 20.46583
-ORIGIN_HEIGHT = 0.0
+ORIGIN_HEIGHT = 160.0
 ROOT_URL = "https://tile.googleapis.com/v1/3dtiles/root.json"
 
 
