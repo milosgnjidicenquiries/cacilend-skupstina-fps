@@ -81,6 +81,11 @@ def main():
     require("FVector(22000.0f, -3300.0f, 100.0f)" in character_cpp and
             "FVector(22000.0f, -4600.0f, 100.0f)" in character_cpp,
             "Interior spawn must be separated from the E-to-exit trigger.")
+    require("FMath::Square(750.0f)" in character_cpp and "E  EXIT ASSEMBLY" in hud_cpp and
+            "if (Player->IsNearAssemblyEntrance())" in hud_cpp,
+            "Interior exit prompt must follow the same distance check as the E interaction.")
+    require("if (bSprinting) StopSprint();" in character_cpp,
+            "Entering/exiting the Assembly must clear sprint speed and FOV modifiers.")
     require("Enemy->TakeDamage(34.0f" in character_cpp and "AddKill()" in character_cpp,
             "Player firing path must damage enemies and track kills.")
     require("Player->TakeDamage(" in enemy_cpp,
