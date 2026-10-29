@@ -25,7 +25,7 @@ def file_list(base, folders):
 
 
 def md_escape(text):
-    return str(text).replace("|", "\\|").replace("\\r", " ").replace("\\n", " ")
+    return str(text).replace("\\", "/").replace("|", "\\|").replace("\r", " ").replace("\n", " ")
 
 
 def main():
