@@ -133,6 +133,11 @@ def main():
         content = read(rel)
         require("Scripts\\Find_UE_5_8.ps1" in content and f"-Purpose {purpose}" in content,
                 f"{rel} must use Find_UE_5_8.ps1 with Purpose {purpose}.")
+    for rel in ("Setup_Cacilend_Assets.bat", "Start_Cacilend_Editor.bat", "Import_Cacilend_Assets.bat"):
+        require('set "UEEDITOR="' in read(rel),
+                f"{rel} must clear an inherited UEEDITOR variable before discovery.")
+    require('set "UAT="' in package_launcher,
+            "Package_Windows.bat must clear an inherited UAT variable before discovery.")
     build_launcher = read("Build_Run_Cacilend_UE5.bat")
     package_launcher = read("Package_Windows.bat")
     require("Check_Cacilend_UE5_Requirements.ps1" in build_launcher,
