@@ -32,18 +32,23 @@ jobs:
         run: |
           $tokens = $null
           $parseErrors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path "Scripts/Check_Cacilend_UE5_Requirements.ps1").Path, [ref]$tokens, [ref]$parseErrors) | Out-Null
-          if ($parseErrors.Count -gt 0) { $parseErrors | Out-String | Write-Error }
+          foreach ($script in @("Scripts/Check_Cacilend_UE5_Requirements.ps1", "Scripts/Find_UE_5_8.ps1")) {
+            $tokens = $null
+            $parseErrors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $script).Path, [ref]$tokens, [ref]$parseErrors) | Out-Null
+            if ($parseErrors.Count -gt 0) { $parseErrors | Out-String | Write-Error }
+          }
           Write-Host "PowerShell diagnostic syntax valid."
       - name: Validate Python syntax
         shell: pwsh
         run: |
-          python -m py_compile Scripts/generate_textures.py Scripts/extract_cod2_assets.py Scripts/list_cod2_assets.py Scripts/blender_export_selected_fbx.py Scripts/validate_cpp_braces.py Content/Python/Setup_Cacilend.py Content/Python/Import_Cacilend_Assets.py Content/Python/Setup_Google3DTiles_Cesium.py
+          python -m py_compile Scripts/generate_textures.py Scripts/extract_cod2_assets.py Scripts/list_cod2_assets.py Scripts/blender_export_selected_fbx.py Scripts/validate_cpp_braces.py Scripts/validate_project_contract.py Content/Python/Setup_Cacilend.py Content/Python/Import_Cacilend_Assets.py Content/Python/Setup_Google3DTiles_Cesium.py
           Write-Host "Python syntax valid."
       - name: Static C++ delimiter sanity
         shell: pwsh
         run: |
           python Scripts/validate_cpp_braces.py
+          python Scripts/validate_project_contract.py
       - name: Validate browser JavaScript syntax
         shell: pwsh
         run: |
