@@ -77,7 +77,11 @@ void ACacilendEnemy::BeginPlay()
             ImportedIdleAnimation = LoadObject<UAnimSequence>(nullptr, TEXT("/Game/Cacilend/Imported/Animations/AN_COD2_Idle.AN_COD2_Idle"));
             ImportedWalkAnimation = LoadObject<UAnimSequence>(nullptr, TEXT("/Game/Cacilend/Imported/Animations/AN_COD2_Walk.AN_COD2_Walk"));
             UAnimSequence* InitialAnimation = ImportedIdleAnimation ? ImportedIdleAnimation.Get() : ImportedWalkAnimation.Get();
-            if (InitialAnimation) CharacterMesh->PlayAnimation(InitialAnimation, true);
+            if (InitialAnimation)
+            {
+                CharacterMesh->PlayAnimation(InitialAnimation, true);
+                CurrentImportedAnimation = InitialAnimation;
+            }
             bImportedCOD2Mesh = true;
             UE_LOG(LogTemp, Log, TEXT("[Cacilend] Using imported COD2 skeletal soldier; idle=%s walk=%s"),
                 ImportedIdleAnimation ? TEXT("yes") : TEXT("no"),
@@ -119,8 +123,11 @@ void ACacilendEnemy::Tick(float DeltaSeconds)
         {
             if (USkeletalMeshComponent* CharacterMesh = GetMesh())
             {
-                if (CharacterMesh->GetAnimation() != DesiredAnimation)
+                if (CurrentImportedAnimation.Get() != DesiredAnimation)
+                {
                     CharacterMesh->PlayAnimation(DesiredAnimation, true);
+                    CurrentImportedAnimation = DesiredAnimation;
+                }
             }
         }
         bPlayingWalkAnimation = bShouldWalk;
