@@ -28,7 +28,7 @@ The UE5 scene includes offline fallback geometry for the Assembly, Pionirski Par
 3. Run `Build_Run_Cacilend_UE5.bat`. It repeats the prerequisites check automatically, then invokes UnrealBuildTool for `CacilendUEEditor Win64 Development` and starts editor setup only if compilation succeeds. The locator searches known paths and Epic Launcher manifests; if it still cannot find the engine, set `UE_5_8_ROOT` to the engine folder.
 4. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
 
-**Controls:** WASD move, mouse look, left mouse fire, R reload, Shift sprint, Space jump, E interact/enter/exit, Esc pause/resume.
+**Controls:** WASD move, mouse look, left mouse fire, R reload, Shift sprint, hold Ctrl to crouch, Space jump, E interact/enter/exit, Esc pause/resume.
 
 For local build instructions, diagnostic logs and the optional self-hosted GitHub packaging workflow, see [Docs/UE5_WINDOWS_BUILD_SR.md](Docs/UE5_WINDOWS_BUILD_SR.md).
 5. Only after validating Editor gameplay, run `Package_Windows.bat` to attempt a Win64 Shipping package. Packaging now refuses to start if the setup marker is not `SUCCESS` or if `Content/Maps/L_Cacilend.umap` is absent.
