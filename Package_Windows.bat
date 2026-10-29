@@ -1,6 +1,7 @@
 @echo off
 setlocal
 set "ROOT=%~dp0"
+set "UAT="
 if not exist "%ROOT%Build\UE5-setup-status.txt" (
   echo Editor setup status marker nije pronadjen.
   echo Prvo pokreni Build_Run_Cacilend_UE5.bat i sacekaj da se mapa napravi.
