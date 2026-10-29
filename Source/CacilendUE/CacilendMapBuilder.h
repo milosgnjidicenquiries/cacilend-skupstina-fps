@@ -36,5 +36,6 @@ protected:
 private:
     UPROPERTY()
     TObjectPtr<USceneComponent> Root;
+    bool bUseGooglePhotogrammetry = false;
     TMap<FString, UMaterialInterface*> MaterialCache;
 };
