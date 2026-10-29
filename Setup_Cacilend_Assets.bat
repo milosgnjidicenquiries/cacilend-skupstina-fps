@@ -30,5 +30,17 @@ if not errorlevel 1 (
 ) else (
   echo Python nije pronadjen; preskacem automatsko generisanje PBR tekstura.
 )
+if not exist "%ROOT%Build" mkdir "%ROOT%Build"
+set "SETUP_STATUS=%ROOT%Build\UE5-setup-status.txt"
+if exist "%SETUP_STATUS%" del /q "%SETUP_STATUS%"
+echo Launching Unreal Editor and running the map/material setup...
 start "Cacilend Setup" "%UEEDITOR%" "%ROOT%CacilendUE.uproject" "-ExecutePythonScript=%ROOT%Content\Python\Setup_Cacilend.py" -log
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%Scripts\Wait_Cacilend_Setup.ps1" -StatusFile "%SETUP_STATUS%" -TimeoutSeconds 900
+if errorlevel 1 (
+  echo.
+  echo UE setup nije prijavio uspeh. Proveri Build\UE5-setup-status.txt i Saved\Logs.
+  pause
+  exit /b 1
+)
+echo UE setup marker potvrden. Mapa je sacuvana; Unreal Editor ostaje otvoren za Play test.
 endlocal
