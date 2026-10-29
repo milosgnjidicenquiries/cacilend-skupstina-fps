@@ -258,7 +258,7 @@ void ACacilendMapBuilder::BuildPionirskiPark()
     // Orientation / scale is deliberately explicit: X is west/east and Y is south/north.
     // Exact photogrammetry can be streamed separately with Cesium for Unreal; this is the offline fallback.
     if (AddImportedMesh(TEXT("/Game/Cacilend/Imported/Buildings/SM_PionirskiPark.SM_PionirskiPark"),
-                        FVector(-11200,4300,80), FVector(10400,14800,280), FRotator::ZeroRotator, false))
+                        FVector(-11200,-2850,80), FVector(10400,14800,280), FRotator::ZeroRotator, false))
         return;
 
     const FVector ParkCenter(-11200,-2850,0);
