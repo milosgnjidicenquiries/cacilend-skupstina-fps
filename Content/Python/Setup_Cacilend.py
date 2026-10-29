@@ -242,12 +242,29 @@ def build_level():
     log('Level created and saved: ' + MAP_PATH)
 
 
+def setup_google_tiles_optional():
+    """Automatically configure Cesium only when its plug-in and a local API key exist."""
+    script_path = os.path.join(ROOT, 'Content', 'Python', 'Setup_Google3DTiles_Cesium.py')
+    if not os.path.isfile(script_path):
+        log('Optional Cesium setup script not found; skipping live Google 3D Tiles.')
+        return
+    try:
+        namespace = {'__name__': '__main__', '__file__': script_path}
+        with open(script_path, 'r', encoding='utf-8') as handle:
+            source = handle.read()
+        exec(compile(source, script_path, 'exec'), namespace, namespace)
+    except Exception as ex:
+        log('Optional Google 3D Tiles setup skipped: ' + str(ex))
+        log('The offline Belgrade map remains usable without Cesium or a Google API key.')
+
+
 def main():
     ensure_dirs()
     import_textures()
     import_external_assets()
     build_materials()
     build_level()
+    setup_google_tiles_optional()
     log('SETUP COMPLETE. Press Play in Unreal Editor to test the Windows FPS prototype.')
 
 
