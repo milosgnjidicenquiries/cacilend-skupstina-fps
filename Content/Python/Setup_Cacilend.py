@@ -20,9 +20,9 @@ def write_setup_status(status, detail=''):
     try:
         os.makedirs(os.path.dirname(STATUS_FILE), exist_ok=True)
         with open(STATUS_FILE, 'w', encoding='utf-8') as handle:
-            handle.write(str(status).strip() + '\\n')
+            handle.write(str(status).strip() + os.linesep)
             if detail:
-                handle.write(str(detail).replace('\\r', ' ').replace('\\n', ' ') + '\\n')
+                handle.write(str(detail).replace(chr(13), ' ').replace(chr(10), ' ') + os.linesep)
     except Exception as status_error:
         log('Could not write setup status marker: ' + str(status_error))
 
