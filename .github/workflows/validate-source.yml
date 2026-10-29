@@ -41,6 +41,13 @@ jobs:
         run: |
           node --check browser/src/main.js
           Write-Host "Browser JavaScript syntax valid."
+      - name: Remove generated Python bytecode before packaging
+        shell: pwsh
+        run: |
+          $cacheDirs = Get-ChildItem -Path . -Directory -Recurse -Force -Filter "__pycache__" | Sort-Object FullName -Descending
+          foreach ($dir in $cacheDirs) { Remove-Item -LiteralPath $dir.FullName -Recurse -Force }
+          Get-ChildItem -Path . -File -Recurse -Force -Filter "*.pyc" | Remove-Item -Force
+          Write-Host "Removed __pycache__ and .pyc files from the deliverable."
       - name: Create source archive
         shell: pwsh
         run: |
