@@ -27,6 +27,7 @@ public:
     int32 GetKills() const { return Kills; }
     bool IsReloading() const { return bReloading; }
     bool IsInInterior() const { return bInInterior; }
+    bool IsPaused() const { return bGamePaused; }
     bool IsNearAssemblyEntrance() const;
     void AddKill() { ++Kills; }
 
@@ -39,6 +40,7 @@ protected:
     void StartSprint();
     void StopSprint();
     void Interact();
+    void TogglePause();
     void ToggleInterior(bool bEnter);
     void SetPhotogrammetryVisible(bool bVisible);
     void ResetAfterDeath();
@@ -61,6 +63,7 @@ private:
     bool bReloading = false;
     bool bInInterior = false;
     bool bSprinting = false;
+    bool bGamePaused = false;
     FTimerHandle ReloadTimerHandle;
     FVector ExteriorReturnLocation = FVector(0.0f, -7200.0f, 100.0f);
 };
