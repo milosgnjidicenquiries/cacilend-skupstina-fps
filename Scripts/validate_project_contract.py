@@ -126,6 +126,8 @@ def main():
             "Main build launcher must retain build logs and show a useful error tail.")
     require("UE5-package.log" in package_launcher and "Tail 100" in package_launcher,
             "Packaging launcher must retain UAT logs and show a useful error tail.")
+    require('UE5-setup-status.txt' in package_launcher and 'Content\\Maps\\L_Cacilend.umap' in package_launcher,
+            "Packaging must refuse to run until the editor setup marker and generated map exist.")
     require((ROOT / "Check_Cacilend_UE5_Requirements.bat").is_file(),
             "One-click UE5 requirements checker is missing.")
     require((ROOT / "Scripts/Check_Cacilend_UE5_Requirements.ps1").is_file(),
