@@ -32,9 +32,9 @@ void ACacilendMapBuilder::BeginPlay()
     BuildAssemblyInterior();
 
     const FVector EnemySpawns[] = {
-        FVector(-15100, 1300, 100), FVector(-11700, 1100, 100), FVector(-9300, 2100, 100),
-        FVector(-14500, 3500, 100), FVector(-12100, 3900, 100), FVector(-9700, 4900, 100),
-        FVector(-13700, 6400, 100), FVector(-10800, 6900, 100), FVector(-8600, 7800, 100)
+        FVector(-15100, -5850, 100), FVector(-11700, -6050, 100), FVector(-9300, -5050, 100),
+        FVector(-14500, -3650, 100), FVector(-12100, -3250, 100), FVector(-9700, -2250, 100),
+        FVector(-13700, -750, 100), FVector(-10800, -250, 100), FVector(-8600, 650, 100)
     };
     for (const FVector& Pos : EnemySpawns)
         GetWorld()->SpawnActor<ACacilendEnemy>(ACacilendEnemy::StaticClass(), Pos, FRotator(0.0f, 180.0f, 0.0f));
@@ -220,10 +220,10 @@ void ACacilendMapBuilder::BuildExterior()
     }
 
     const FVector Tents[] = {
-        FVector(-13900,900,0), FVector(-12100,800,0), FVector(-10100,1300,0),
-        FVector(-14600,2600,0), FVector(-12600,2800,0), FVector(-10500,3300,0),
-        FVector(-13900,4500,0), FVector(-11900,5000,0), FVector(-9600,5200,0),
-        FVector(-13100,6600,0), FVector(-10900,7000,0)
+        FVector(-13900,-6250,0), FVector(-12100,-6350,0), FVector(-10100,-5850,0),
+        FVector(-14600,-4550,0), FVector(-12600,-4350,0), FVector(-10500,-3850,0),
+        FVector(-13900,-2650,0), FVector(-11900,-2150,0), FVector(-9600,-1950,0),
+        FVector(-13100,-500,0), FVector(-10900,-150,0)
     };
     for (int32 I=0; I<UE_ARRAY_COUNT(Tents); ++I)
         AddTent(Tents[I].X,Tents[I].Y,(I%3==0)?6.0f:0.0f);
@@ -231,17 +231,17 @@ void ACacilendMapBuilder::BuildExterior()
     // Barriers follow the park's west/east edge; they no longer fill the Assembly approach.
     for (int32 I=0; I<15; ++I)
     {
-        const float Y=350.0f+I*510.0f;
+        const float Y=-6800.0f+I*510.0f;
         if (I%2==0) AddBarrier(-15300,Y,90);
         if (I%3!=1) AddBarrier(-8200,Y+140,90);
     }
     for (int32 I=0; I<13; ++I)
-        AddPallet(-14500.0f+(I%4)*420.0f,800.0f+I*430.0f);
+        AddPallet(-14500.0f+(I%4)*420.0f,-6350.0f+I*430.0f);
 
     for (int32 I=0; I<6; ++I)
     {
         const float X=(I%2==0)?-14600.0f:-8800.0f;
-        const float Y=1100.0f+I*950.0f;
+        const float Y=-6050.0f+I*950.0f;
         AddCylinder(TEXT("Metal"), FVector(X,Y,55), FVector(55,55,110), FRotator::ZeroRotator, FLinearColor(0.13f,0.22f,0.13f), true);
         AddCylinder(TEXT("DarkFabric"), FVector(X,Y,112), FVector(48,48,12), FRotator::ZeroRotator, FLinearColor(0.16f,0.25f,0.15f), false);
     }
@@ -261,39 +261,39 @@ void ACacilendMapBuilder::BuildPionirskiPark()
                         FVector(-11200,4300,80), FVector(10400,14800,280), FRotator::ZeroRotator, false))
         return;
 
-    const FVector ParkCenter(-11200,4300,0);
+    const FVector ParkCenter(-11200,-2850,0);
     AddBlock(TEXT("Grass"), FVector(ParkCenter.X,ParkCenter.Y,-26), FVector(10400,14800,52),
              FRotator::ZeroRotator, FLinearColor(0.27f,0.34f,0.20f), true);
 
     // Main walking axes and cross-paths.
-    AddBlock(TEXT("Limestone"), FVector(-11200,4300,9), FVector(170,13200,18),
+    AddBlock(TEXT("Limestone"), FVector(-11200,-2850,9), FVector(170,13200,18),
              FRotator::ZeroRotator, FLinearColor(0.67f,0.64f,0.57f), true);
-    AddBlock(TEXT("Limestone"), FVector(-11200,4300,10), FVector(9400,170,20),
+    AddBlock(TEXT("Limestone"), FVector(-11200,-2850,10), FVector(9400,170,20),
              FRotator::ZeroRotator, FLinearColor(0.70f,0.67f,0.60f), true);
-    AddBlock(TEXT("Limestone"), FVector(-13700,1200,8), FVector(3000,150,16),
+    AddBlock(TEXT("Limestone"), FVector(-13700,-5950,8), FVector(3000,150,16),
              FRotator(0,0,-18), FLinearColor(0.66f,0.63f,0.56f), true);
-    AddBlock(TEXT("Limestone"), FVector(-8700,7200,8), FVector(2650,150,16),
+    AddBlock(TEXT("Limestone"), FVector(-8700,50,8), FVector(2650,150,16),
              FRotator(0,0,16), FLinearColor(0.66f,0.63f,0.56f), true);
 
     // Fountain in the southern half of the park, clear of the encampment.
-    AddCylinder(TEXT("Limestone"), FVector(-11200,-1250,36), FVector(790,790,72),
+    AddCylinder(TEXT("Limestone"), FVector(-11200,-8400,36), FVector(790,790,72),
                 FRotator::ZeroRotator, FLinearColor(0.69f,0.64f,0.55f), true);
-    AddCylinder(TEXT("Glass"), FVector(-11200,-1250,76), FVector(660,660,18),
+    AddCylinder(TEXT("Glass"), FVector(-11200,-8400,76), FVector(660,660,18),
                 FRotator::ZeroRotator, FLinearColor(0.18f,0.32f,0.35f), false);
-    AddCylinder(TEXT("Limestone"), FVector(-11200,-1250,100), FVector(155,155,46),
+    AddCylinder(TEXT("Limestone"), FVector(-11200,-8400,100), FVector(155,155,46),
                 FRotator::ZeroRotator, FLinearColor(0.78f,0.72f,0.62f), false);
-    AddSphere(TEXT("Limestone"), FVector(-11200,-1250,145), FVector(150,150,90),
+    AddSphere(TEXT("Limestone"), FVector(-11200,-8400,145), FVector(150,150,90),
               FLinearColor(0.77f,0.70f,0.59f), false);
 
     // Curbs mark the perimeter and distinguish lawn from the road.
-    AddBlock(TEXT("Limestone"), FVector(-11200,-3100,15), FVector(10500,70,30), FRotator::ZeroRotator, FLinearColor(0.56f,0.54f,0.49f), true);
-    AddBlock(TEXT("Limestone"), FVector(-11200,11700,15), FVector(10500,70,30), FRotator::ZeroRotator, FLinearColor(0.56f,0.54f,0.49f), true);
+    AddBlock(TEXT("Limestone"), FVector(-11200,-10250,15), FVector(10500,70,30), FRotator::ZeroRotator, FLinearColor(0.56f,0.54f,0.49f), true);
+    AddBlock(TEXT("Limestone"), FVector(-11200,4550,15), FVector(10500,70,30), FRotator::ZeroRotator, FLinearColor(0.56f,0.54f,0.49f), true);
     AddBlock(TEXT("Limestone"), FVector(-16400,4300,15), FVector(70,14800,30), FRotator::ZeroRotator, FLinearColor(0.56f,0.54f,0.49f), true);
 
     // Low benches face the paths.
     const FVector BenchLocations[] = {
-        FVector(-13400,800,150), FVector(-9000,800,150), FVector(-13400,5200,150),
-        FVector(-9000,5200,150), FVector(-12800,-500,150), FVector(-9600,-500,150)
+        FVector(-13400,-6350,150), FVector(-9000,-6350,150), FVector(-13400,-1950,150),
+        FVector(-9000,-1950,150), FVector(-12800,-7650,150), FVector(-9600,-7650,150)
     };
     for (const FVector& P : BenchLocations)
     {
@@ -306,21 +306,21 @@ void ACacilendMapBuilder::BuildPionirskiPark()
     // Mature-tree rows at the park perimeter, with gaps for circulation and sight-lines.
     for (int32 I=0; I<7; ++I)
     {
-        const float Y=-1800.0f+I*1950.0f;
+        const float Y=-8950.0f+I*1950.0f;
         AddTree(-15700.0f,Y,560.0f+(I%3)*55.0f);
         if (I%2==0) AddTree(-6900.0f,Y+350.0f,600.0f+(I%3)*45.0f);
     }
     for (int32 I=0; I<5; ++I)
     {
         const float X=-14900.0f+I*1850.0f;
-        AddTree(X,10800.0f,560.0f+(I%2)*55.0f);
-        if (I%2==1) AddTree(X,-2550.0f,580.0f);
+        AddTree(X,3650.0f,560.0f+(I%2)*55.0f);
+        if (I%2==1) AddTree(X,-9700.0f,580.0f);
     }
 
     // Traditional park lamps: poles and a shallow warm light head.
     for (int32 I=0; I<6; ++I)
     {
-        const float Y=-800.0f+I*2050.0f;
+        const float Y=-7950.0f+I*2050.0f;
         AddCylinder(TEXT("Metal"), FVector(-11950,Y,245), FVector(17,17,490), FRotator::ZeroRotator, FLinearColor(0.09f,0.11f,0.10f), true);
         AddSphere(TEXT("Metal"), FVector(-11950,Y,500), FVector(84,84,40), FLinearColor(0.92f,0.72f,0.40f), false);
     }
@@ -330,10 +330,10 @@ void ACacilendMapBuilder::BuildPresidency()
 {
     // A supplied static mesh can replace this recognizable architectural proxy.
     if (AddImportedMesh(TEXT("/Game/Cacilend/Imported/Buildings/SM_Presidency.SM_Presidency"),
-                        FVector(-8700,10900,1040), FVector(3000,2300,2080), FRotator::ZeroRotator, true))
+                        FVector(-21000,-9550,1040), FVector(3000,2300,2080), FRotator::ZeroRotator, true))
         return;
 
-    const float X=-8700.0f, Y=10900.0f;
+    const float X=-21000.0f, Y=-9550.0f;
     AddBlock(TEXT("Limestone"), FVector(X,Y,70), FVector(3300,2500,140), FRotator::ZeroRotator, FLinearColor(0.59f,0.56f,0.48f), true);
     AddBlock(TEXT("Limestone"), FVector(X,Y,880), FVector(2900,2100,1620), FRotator::ZeroRotator, FLinearColor(0.72f,0.65f,0.53f), true);
     AddBlock(TEXT("Limestone"), FVector(X,Y,1710), FVector(3100,2290,120), FRotator::ZeroRotator, FLinearColor(0.84f,0.76f,0.62f), false);
@@ -364,16 +364,16 @@ void ACacilendMapBuilder::BuildPresidency()
     AddSphere(TEXT("Limestone"), FVector(X,Y,2110), FVector(920,760,520), FLinearColor(0.53f,0.57f,0.51f), false);
     AddCylinder(TEXT("Metal"), FVector(X,Y,2380), FVector(280,280,190), FRotator::ZeroRotator, FLinearColor(0.28f,0.34f,0.29f), false);
     AddBlock(TEXT("Limestone"), FVector(X,Y,1805), FVector(1050,850,70), FRotator::ZeroRotator, FLinearColor(0.86f,0.78f,0.66f), false);
-    AddBlock(TEXT("Limestone"), FVector(X,9730,35), FVector(1800,300,70), FRotator::ZeroRotator, FLinearColor(0.84f,0.76f,0.62f), true);
+    AddBlock(TEXT("Limestone"), FVector(X,Y-1250,35), FVector(1800,300,70), FRotator::ZeroRotator, FLinearColor(0.84f,0.76f,0.62f), true);
 }
 
 void ACacilendMapBuilder::BuildMainPostOffice()
 {
     if (AddImportedMesh(TEXT("/Game/Cacilend/Imported/Buildings/SM_MainPostOfficePalace.SM_MainPostOfficePalace"),
-                        FVector(14500,13200,1080), FVector(4200,3200,2160), FRotator::ZeroRotator, true))
+                        FVector(12300,-1750,1080), FVector(4200,3200,2160), FRotator::ZeroRotator, true))
         return;
 
-    const float X=14500.0f, Y=13200.0f;
+    const float X=12300.0f, Y=-1750.0f;
     AddBlock(TEXT("Limestone"), FVector(X,Y,65), FVector(4500,3500,130), FRotator::ZeroRotator, FLinearColor(0.62f,0.58f,0.50f), true);
     AddBlock(TEXT("Limestone"), FVector(X,Y,970), FVector(4100,3100,1800), FRotator::ZeroRotator, FLinearColor(0.70f,0.63f,0.51f), true);
     AddBlock(TEXT("Limestone"), FVector(X,Y,1880), FVector(4300,3300,120), FRotator::ZeroRotator, FLinearColor(0.86f,0.78f,0.63f), false);
@@ -406,7 +406,7 @@ void ACacilendMapBuilder::BuildSurroundingBuildings()
 {
     // Collector roads give the area a recognizable street network beyond the park itself.
     AddBlock(TEXT("Asphalt"), FVector(-18100,6800,-18), FVector(1350,32000,42), FRotator::ZeroRotator, FLinearColor(0.32f,0.33f,0.31f), true);
-    AddBlock(TEXT("Asphalt"), FVector(10000,8500,-18), FVector(1350,31000,42), FRotator::ZeroRotator, FLinearColor(0.32f,0.33f,0.31f), true);
+    AddBlock(TEXT("Asphalt"), FVector(9000,8500,-18), FVector(1350,31000,42), FRotator::ZeroRotator, FLinearColor(0.32f,0.33f,0.31f), true);
     AddBlock(TEXT("Asphalt"), FVector(-5000,20800,-18), FVector(36000,1350,42), FRotator::ZeroRotator, FLinearColor(0.32f,0.33f,0.31f), true);
 
     auto BuildCityBlock = [this](const FVector& Center, const FVector& Size, int32 Floors, bool bWestFacing)
