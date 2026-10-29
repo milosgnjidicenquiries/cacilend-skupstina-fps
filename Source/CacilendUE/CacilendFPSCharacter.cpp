@@ -2,6 +2,7 @@
 #include "CacilendEnemy.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/InputComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
@@ -10,6 +11,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "InputCoreTypes.h"
+#include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
@@ -143,6 +145,26 @@ void ACacilendFPSCharacter::ConfigurePlayerInputMode()
     }
 }
 
+void ACacilendFPSCharacter::TogglePause()
+{
+    APlayerController* PC = Cast<APlayerController>(GetController());
+    if (!PC || !GetWorld()) return;
+
+    bGamePaused = !bGamePaused;
+    UGameplayStatics::SetGamePaused(GetWorld(), bGamePaused);
+    if (bGamePaused)
+    {
+        PC->bShowMouseCursor = true;
+        FInputModeGameAndUI GameAndUI;
+        GameAndUI.SetHideCursorDuringCapture(false);
+        PC->SetInputMode(GameAndUI);
+    }
+    else
+    {
+        ConfigurePlayerInputMode();
+    }
+}
+
 void ACacilendFPSCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
@@ -174,6 +196,8 @@ void ACacilendFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Pressed, this, &ACacilendFPSCharacter::StartSprint);
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Released, this, &ACacilendFPSCharacter::StopSprint);
     PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, this, &ACacilendFPSCharacter::Interact);
+    FInputActionBinding& PauseBinding = PlayerInputComponent->BindAction(TEXT("Pause"), IE_Pressed, this, &ACacilendFPSCharacter::TogglePause);
+    PauseBinding.bExecuteWhenPaused = true;
 }
 
 void ACacilendFPSCharacter::MoveForward(float Value)
