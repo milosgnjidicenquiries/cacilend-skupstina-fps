@@ -71,7 +71,7 @@ def main():
             "Input actions missing from DefaultInput.ini: " + ", ".join(sorted(action_bindings - configured_actions)))
 
     # HUD and combat features should remain connected to public character accessors.
-    for accessor in ("GetHealth", "GetKills", "GetAmmo", "GetReserveAmmo", "IsReloading", "IsInInterior", "IsNearAssemblyEntrance"):
+    for accessor in ("GetHealth", "GetKills", "GetAmmo", "GetReserveAmmo", "IsReloading", "IsInInterior", "IsNearAssemblyInteraction"):
         require(accessor in hud_cpp or accessor in character_cpp,
                 f"HUD/character contract missing accessor: {accessor}")
     require("MISIJA: OSIGURAJ PRILAZ I UDJI U ZGRADU" in hud_cpp and "SPACE SKOK" in hud_cpp,
@@ -93,6 +93,8 @@ def main():
             "Enemy attack path must be wired to player damage.")
     require('bExecuteWhenPaused = true' in character_cpp and 'UGameplayStatics::SetGamePaused' in character_cpp,
             "Pause action must remain available while the world is paused.")
+    require("if (!UGameplayStatics::SetGamePaused(GetWorld(), bDesiredPaused)) return;" in character_cpp,
+            "Pause state must only change when Unreal confirms the requested pause transition.")
     require("void TogglePause();" in character_h and "void ACacilendFPSCharacter::TogglePause()" in character_cpp
             and "bool IsPaused() const" in character_h,
             "Pause methods/accessor must be declared and defined consistently.")
