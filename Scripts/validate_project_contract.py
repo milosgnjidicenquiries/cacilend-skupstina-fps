@@ -83,7 +83,7 @@ def main():
             "FVector(22000.0f, -4600.0f, 100.0f)" in character_cpp,
             "Interior spawn must be separated from the E-to-exit trigger.")
     require("FMath::Square(750.0f)" in character_cpp and "E  EXIT ASSEMBLY" in hud_cpp and
-            "if (Player->IsNearAssemblyEntrance())" in hud_cpp,
+            "if (Player->IsNearAssemblyInteraction())" in hud_cpp,
             "Interior exit prompt must follow the same distance check as the E interaction.")
     require("if (bSprinting) StopSprint();" in character_cpp,
             "Entering/exiting the Assembly must clear sprint speed and FOV modifiers.")
