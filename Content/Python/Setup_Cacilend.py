@@ -36,6 +36,9 @@ def ensure_dirs():
     tools.make_directory('/Game/Cacilend')
     tools.make_directory(TEXTURE_DEST)
     tools.make_directory(MATERIAL_DEST)
+    tools.make_directory('/Game/Cacilend/Imported')
+    for category in ('Buildings', 'Characters', 'Weapons', 'Animations', 'Maps', 'COD2Maps', 'Textures', 'Materials', 'Vehicles', 'Props'):
+        tools.make_directory(f'/Game/Cacilend/Imported/{category}')
     tools.make_directory('/Game/Maps')
 
 
@@ -152,6 +155,22 @@ def create_material(name, u_tiling, v_tiling, default_roughness, metallic):
     log(f'Created material M_{name}')
 
 
+def import_external_assets():
+    """Import optional local FBX/texture assets before the generated level is played."""
+    script_path = os.path.join(ROOT, 'Content', 'Python', 'Import_Cacilend_Assets.py')
+    if not os.path.isfile(script_path):
+        log('Import_Cacilend_Assets.py not found; using procedural fallback meshes.')
+        return
+    try:
+        namespace = {'__name__': '__main__', '__file__': script_path}
+        with open(script_path, 'r', encoding='utf-8') as handle:
+            source = handle.read()
+        exec(compile(source, script_path, 'exec'), namespace, namespace)
+        log('External asset import step finished.')
+    except Exception as ex:
+        log('WARNING: external import failed; procedural fallback will remain available: ' + str(ex))
+
+
 def build_materials():
     for name, (u, v, rough, metal) in MATERIALS.items():
         create_material(name, u, v, rough, metal)
@@ -226,6 +245,7 @@ def build_level():
 def main():
     ensure_dirs()
     import_textures()
+    import_external_assets()
     build_materials()
     build_level()
     log('SETUP COMPLETE. Press Play in Unreal Editor to test the Windows FPS prototype.')
