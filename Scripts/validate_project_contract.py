@@ -98,6 +98,10 @@ def main():
             "Player firing path must damage enemies and track kills.")
     require("Player->TakeDamage(" in enemy_cpp,
             "Enemy attack path must be wired to player damage.")
+    require("SCENE_QUERY_STAT(CacilendEnemyLineOfSight)" in enemy_cpp and
+            "LineTraceSingleByChannel" in enemy_cpp and
+            "if (!bBlocked && AttackCooldown <= 0.0f)" in enemy_cpp,
+            "Enemy attacks must require line of sight rather than damage through walls.")
     require('bExecuteWhenPaused = true' in character_cpp and 'UGameplayStatics::SetGamePaused' in character_cpp,
             "Pause action must remain available while the world is paused.")
     require("if (!UGameplayStatics::SetGamePaused(GetWorld(), bDesiredPaused)) return;" in character_cpp,
