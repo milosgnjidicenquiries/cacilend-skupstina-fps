@@ -306,7 +306,7 @@ void ACacilendFPSCharacter::ResetAfterDeath()
     ReserveAmmo = FMath::Max(ReserveAmmo, 60);
     bInInterior = false;
     SetPhotogrammetryVisible(true);
-    SetActorLocation(FVector(0.0f, -7200.0f, 100.0f), false, nullptr, ETeleportType::TeleportPhysics);
+    SetActorLocation(FVector(-8500.0f, -7200.0f, 100.0f), false, nullptr, ETeleportType::TeleportPhysics);
     SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
     if (APlayerController* PC = Cast<APlayerController>(GetController())) PC->SetControlRotation(GetActorRotation());
 }
