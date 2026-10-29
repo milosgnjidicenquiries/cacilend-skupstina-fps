@@ -2,7 +2,10 @@
 setlocal
 set "ROOT=%~dp0"
 set "UEEDITOR="
-for %%P in (
+if defined UE_5_8_ROOT (
+  if exist "%UE_5_8_ROOT%\Engine\Binaries\Win64\UnrealEditor.exe" set "UEEDITOR=%UE_5_8_ROOT%\Engine\Binaries\Win64\UnrealEditor.exe"
+)
+if not defined UEEDITOR for %%P in (
   "%ProgramFiles%\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe"
   "D:\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe"
   "C:\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe"
