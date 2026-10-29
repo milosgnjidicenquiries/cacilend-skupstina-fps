@@ -1,17 +1,29 @@
-ĆACILEND: SKUPŠTINA FPS — GLAVNI UE5 WINDOWS PROJEKAT
+ĆACILEND: SKUPSTINA FPS — UE5.8 WINDOWS PROJEKAT
 
-GLAVNI PROJEKAT: CacilendUE.uproject (Unreal Engine 5.8). Browser/Render demo je prethodna verzija sačuvana u Archive/ i grani archive/browser-render-demo-2026-10-29.
+GLAVNI PROJEKAT: CacilendUE.uproject (Unreal Engine 5.8 C++). Browser/Render demo je starija, odvojena verzija.
 
-1) Instaliraj Unreal Engine 5.8 i Visual Studio 2022 C++ tools + kompatibilni Windows SDK.
-2) Preuzmi/kloniraj repo u kratak folder, npr. C:\Games\CacilendUE.
-3) Pokreni Build_Run_Cacilend_UE5.bat da pokuša stvarnu UE5 C++ kompilaciju i zatim setup u editoru. Ako build ne uspe, sačuvaj log i proveri UE5.8/VS2022/Windows SDK.
-4) Build_Run_Cacilend_UE5.bat već poziva setup posle uspešne kompilacije. Setup_Cacilend_Assets.bat pokreni samostalno samo kada želiš ponovo generisati PBR teksture ili uvesti nove FBX/teksture bez nove C++ kompilacije.
-5) (Opciono) Pokreni Download_CC0_Weapon_Fallback.bat za privremenu CC0 pušku (nije COD2 original). Za lokalni COD2 sadržaj pročitaj Docs\ASSET_IMPORT_PIPELINE_SR.md. Extract_COD2_Assets.bat izdvaja datoteke lokalno; Install_COD2_Blender_Importer.bat postavlja XModel/D3DBSP dodatak; uvezi modele i izvezi potrebne FBX u SourceArt\Import. Za animacije, prevuci jednu .xanim_bin na Convert_COD2_Animations.bat pa instaliraj dodatak preko Install_COD2_Animation_Addon.bat. XAnim importer je eksperimentalan i može zahtevati ručno popravljanje/retarget.
-6) Ako želiš Google Photorealistic 3D Tiles unutar UE5: instaliraj/omogući Cesium for Unreal, podesi Google Maps Platform Map Tiles API + billing i lokalni Config\Private\GoogleMapsApiKey.txt. Detalji: Docs\GOOGLE_EARTH_CESIUM_SETUP_SR.md.
-7) U Unreal Editor-u otvori /Game/Maps/L_Cacilend i pritisni Play.
-8) Kad je Editor gameplay potvrđen, pokreni Package_Windows.bat za Win64 Shipping build.
+PRE INSTALACIJE
+- Preporuka: Windows 11 64-bit, 32 GB RAM i graficka sa 8 GB VRAM-a / DirectX 12.
+- UE5.8 preporucuje Visual Studio 2026 za opsti razvoj; kompatibilna alternativa za ovaj projekat je Visual Studio 2022 verzije 17.14 ili novije.
+- U Visual Studio Installer-u ukljuci workload "Game development with C++".
+- U Individual components proveri MSVC toolset 14.38 ili noviji i Windows SDK 10.0.22621.0 ili noviji. Pod "Game development with C++ > Optional" ukljuci Visual Studio Tools for Unreal Engine; korisni su i Blueprint debugger i Unreal Engine Test Adapter.
+- Za UE editor i shader cache ostavi sto vise slobodnog SSD prostora; 80 GB ili vise slobodnog prostora je dobra polazna tacka, posebno ako jos instaliras UE/VS.
 
-VAŽNO: Ovo je UE5 izvorni projekat, ne verifikovan EXE. CI proverava izvorne fajlove, ali C++ kompilacija/cook/packaging/gameplay i stvarni COD2/Google asseti moraju se proveriti na Windows računaru sa UE5.8.
+POKRETANJE — REDOM
+1) Preuzmi/kloniraj repo u kratak folder, npr. C:\Games\CacilendUE, pa raspakuj ako je ZIP.
+2) Dvaput klikni Check_Cacilend_UE5_Requirements.bat. Skripta proverava Windows, hardver, UE5.8, VS workload, MSVC i Windows SDK. Izvestaj ce biti u Build\UE5-preflight-report.txt. Ovo nije build; ako postoje FAIL stavke, ispravi ih pre sledeceg koraka.
+3) Ako je UE5.8 instaliran na nestandardnoj lokaciji, podesi promenljivu okruzenja UE_5_8_ROOT na folder koji sadrzi Engine, npr. D:\Epic Games\UE_5.8.
+4) Dvaput klikni Build_Run_Cacilend_UE5.bat. Skripta pokusava C++ build. Ako se build zavrsi neuspesno, sacuvaj ceo log sa porukom greske; ne ocekuj da je EXE napravljen.
+5) Kada C++ build uspe, skripta otvara Unreal Editor i pokrece setup mape/materijala. U editoru otvori /Game/Maps/L_Cacilend i pritisni Play.
+6) Ako samo zelis da otvoris projekat bez automatskog setup-a, pokreni Start_Cacilend_Editor.bat ili otvori CacilendUE.uproject.
+7) Tek nakon sto gameplay radi u editoru, pokreni Package_Windows.bat za Windows Shipping paket.
 
-Arhiva browser/Render demo-a: Archive\README_SR.md
-Javni Render demo: https://cacilend-skupstina-browser.onrender.com
+OPCIONO
+- Lokalni COD2 asseti nisu ukljuceni u javni repo. Za uvoz pogledaj Docs\ASSET_IMPORT_PIPELINE_SR.md. Uvoz animacija je eksperimentalan; nije potreban za prvi build.
+- Google Photorealistic 3D Tiles/Cesium je opcioni korak i zahteva odvojenu konfiguraciju i kljuc. Offline mapa radi bez toga.
+
+VAZNO
+GitHub CI proverava strukturu i staticki kod, ali ne kompajlira UE C++ projekat, ne pravi potvrden EXE i ne testira gameplay. Prvi pravi test mora se izvrsiti na Windows racunaru sa UE5.8 i odgovarajucim C++ toolchain-om.
+
+Browser demo: https://cacilend-skupstina-browser.onrender.com
+GitHub repo: https://github.com/milosgnjidicenquiries/cacilend-skupstina-fps
