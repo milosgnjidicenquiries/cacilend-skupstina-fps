@@ -67,7 +67,9 @@ void ACacilendEnemy::BeginPlay()
             CharacterMesh->SetSkeletalMesh(ImportedSoldier);
             CharacterMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
             CharacterMesh->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
-            CharacterMesh->SetRelativeScale3D(FVector(1.0f));
+            const float ImportedHeight = ImportedSoldier->GetBounds().BoxExtent.Z * 2.0f;
+            const float CharacterScale = ImportedHeight > 1.0f ? 180.0f / ImportedHeight : 1.0f;
+            CharacterMesh->SetRelativeScale3D(FVector(CharacterScale));
             CharacterMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             CharacterMesh->SetVisibility(true, true);
             CharacterMesh->SetHiddenInGame(false);
