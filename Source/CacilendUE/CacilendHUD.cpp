@@ -25,12 +25,17 @@ void ACacilendHUD::DrawHUD()
     ACacilendFPSCharacter* Player = OwningPC ? Cast<ACacilendFPSCharacter>(OwningPC->GetPawn()) : nullptr;
     if (!Player) return;
     DrawText(TEXT("CACILEND // SKUPSTINA"), White, 34.0f, 28.0f, Font, 1.45f, false);
-    DrawText(TEXT("MISija: osiguraj prilaz i pristupi zgradi"), FLinearColor(0.79f, 0.83f, 0.80f, 0.9f), 34.0f, 58.0f, Font, 1.0f, false);
-    DrawText(FString::Printf(TEXT("HEALTH  %03d"), FMath::Clamp(Player->GetHealth(), 0, 100)), Green, 36.0f, H - 84.0f, Font, 1.45f, false);
+    DrawText(TEXT("MISIJA: OSIGURAJ PRILAZ I UDJI U ZGRADU"), FLinearColor(0.79f, 0.83f, 0.80f, 0.9f), 34.0f, 58.0f, Font, 1.0f, false);
+    const int32 PlayerHealth = FMath::Clamp(Player->GetHealth(), 0, 100);
+    const FLinearColor HealthColor = PlayerHealth <= 25 ? FLinearColor(1.0f, 0.22f, 0.16f, 1.0f)
+        : (PlayerHealth <= 50 ? Amber : Green);
+    DrawText(FString::Printf(TEXT("HEALTH  %03d"), PlayerHealth), HealthColor, 36.0f, H - 84.0f, Font, 1.45f, false);
     DrawText(FString::Printf(TEXT("KILLS  %02d"), Player->GetKills()), White, 36.0f, H - 52.0f, Font, 1.0f, false);
     const FString Ammo = Player->IsReloading() ? TEXT("RELOADING...") : FString::Printf(TEXT("%02d  /  %02d"), Player->GetAmmo(), Player->GetReserveAmmo());
     DrawText(Ammo, Player->GetAmmo() <= 5 ? Amber : White, W - 220.0f, H - 82.0f, Font, 1.7f, false);
     DrawText(TEXT("E  INTERACT     R  RELOAD"), FLinearColor(0.75f, 0.79f, 0.76f, 0.75f), W - 260.0f, H - 42.0f, Font, 0.9f, false);
+    DrawText(TEXT("WASD KRETANJE  |  SHIFT TRCANJE  |  SPACE SKOK  |  LMB PUCANJE"),
+        FLinearColor(0.76f, 0.80f, 0.77f, 0.75f), CX - 225.0f, H - 24.0f, Font, 0.8f, false);
     if (Player->IsInInterior())
         DrawText(TEXT("ASSEMBLY CHAMBER // EXIT: E"), Amber, CX - 145.0f, 32.0f, Font, 1.0f, false);
     else if (Player->IsNearAssemblyEntrance())
