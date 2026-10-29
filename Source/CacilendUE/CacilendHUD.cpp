@@ -46,9 +46,9 @@ void ACacilendHUD::DrawHUD()
     if (Player->IsInInterior())
     {
         DrawText(TEXT("ASSEMBLY CHAMBER"), Amber, CX - 88.0f, 32.0f, Font, 1.0f, false);
-        if (Player->IsNearAssemblyEntrance())
+        if (Player->IsNearAssemblyInteraction())
             DrawText(TEXT("E  EXIT ASSEMBLY"), Amber, CX - 76.0f, CY + 34.0f, Font, 1.0f, false);
     }
-    else if (Player->IsNearAssemblyEntrance())
+    else if (Player->IsNearAssemblyInteraction())
         DrawText(TEXT("E  ENTER ASSEMBLY"), Amber, CX - 88.0f, CY + 34.0f, Font, 1.0f, false);
 }
