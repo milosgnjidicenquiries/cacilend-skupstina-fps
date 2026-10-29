@@ -80,7 +80,7 @@ def main():
 
     # UE discovery script must exist and each principal launcher must request the correct executable.
     helper = read("Scripts/Find_UE_5_8.ps1")
-    require("Build.version" in helper and 'MajorVersion) -ne 5' in helper and 'MinorVersion) -ne 8' in helper,
+    require("Build.version" in helper and 'MajorVersion -ne 5' in helper and 'MinorVersion -ne 8' in helper,
             "UE discovery must verify the exact installed 5.8 engine version.")
     launchers = {
         "Build_Run_Cacilend_UE5.bat": "Build",
