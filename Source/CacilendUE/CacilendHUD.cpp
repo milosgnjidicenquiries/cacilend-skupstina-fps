@@ -44,7 +44,11 @@ void ACacilendHUD::DrawHUD()
     DrawText(TEXT("WASD KRETANJE  |  SHIFT TRCANJE  |  SPACE SKOK  |  LMB PUCANJE  |  ESC PAUZA"),
         FLinearColor(0.76f, 0.80f, 0.77f, 0.75f), CX - 225.0f, H - 24.0f, Font, 0.8f, false);
     if (Player->IsInInterior())
-        DrawText(TEXT("ASSEMBLY CHAMBER // EXIT: E"), Amber, CX - 145.0f, 32.0f, Font, 1.0f, false);
+    {
+        DrawText(TEXT("ASSEMBLY CHAMBER"), Amber, CX - 88.0f, 32.0f, Font, 1.0f, false);
+        if (Player->IsNearAssemblyEntrance())
+            DrawText(TEXT("E  EXIT ASSEMBLY"), Amber, CX - 76.0f, CY + 34.0f, Font, 1.0f, false);
+    }
     else if (Player->IsNearAssemblyEntrance())
         DrawText(TEXT("E  ENTER ASSEMBLY"), Amber, CX - 88.0f, CY + 34.0f, Font, 1.0f, false);
 }
