@@ -56,7 +56,7 @@ def main():
             "GameDefaultMap must point at /Game/Maps/L_Cacilend.")
     require("MAP_PATH = '/Game/Maps/L_Cacilend'" in setup_py,
             "Python setup and GameDefaultMap must target the same level.")
-    require("ACacilendMapBuilder" in setup_py and "PlayerStart" in setup_py,
+    require("CacilendMapBuilder" in setup_py and "PlayerStart" in setup_py,
             "Editor bootstrap must create the map builder and a PlayerStart.")
 
     # Legacy input mappings are still required by this C++ InputComponent setup.
@@ -77,6 +77,12 @@ def main():
             "Player firing path must damage enemies and track kills.")
     require("Player->TakeDamage(" in enemy_cpp,
             "Enemy attack path must be wired to player damage.")
+
+    # A clean checkout may have no optional generated PBR files. Materials still
+    # need a Tint parameter directly wired to BaseColor in that case.
+    require("unreal.MaterialProperty.MP_BASE_COLOR" in setup_py and "else:" in setup_py and
+            "connect_material_property(\n            tint, '', unreal.MaterialProperty.MP_BASE_COLOR" in setup_py,
+            "Material generation must have a visible Tint-only fallback when textures are absent.")
 
     # UE discovery script must exist and each principal launcher must request the correct executable.
     helper = read("Scripts/Find_UE_5_8.ps1")
