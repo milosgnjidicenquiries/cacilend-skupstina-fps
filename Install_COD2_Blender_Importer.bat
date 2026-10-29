@@ -3,6 +3,7 @@ setlocal EnableExtensions
 set "ROOT=%~dp0"
 set "TOOLS=%ROOT%Tools\third_party"
 set "ADDON=%TOOLS%\cod-asset-importer"
+set "ADDON_SRC=%TOOLS%\cod-asset-importer-source"
 set "RELEASE_DIR=%ADDON%\release"
 set "RELEASE_ZIP=%RELEASE_DIR%\cod_asset_importer_v3.5.0.zip"
 set "RELEASE_URL=https://github.com/mauserzjeh/cod-asset-importer/releases/download/v3.5/cod_asset_importer_v3.5.0.zip"
@@ -37,8 +38,8 @@ if errorlevel 1 (
   exit /b 1
 )
 if not exist "%TOOLS%" mkdir "%TOOLS%"
-if not exist "%ADDON%\.git" (
-  git clone https://github.com/mauserzjeh/cod-asset-importer "%ADDON%"
+if not exist "%ADDON_SRC%\.git" (
+  git clone https://github.com/mauserzjeh/cod-asset-importer "%ADDON_SRC%"
   if errorlevel 1 (
     echo Git clone nije uspeo. Proveri internet i GitHub pristup.
     pause
@@ -47,7 +48,7 @@ if not exist "%ADDON%\.git" (
 ) else (
   echo Postojeca lokalna kopija dodatka je sacuvana; necu je prepisivati.
 )
-pushd "%ADDON%"
+pushd "%ADDON_SRC%"
 if exist requirements.txt (
   python -m pip install -r requirements.txt
   if errorlevel 1 (
@@ -66,7 +67,8 @@ if errorlevel 1 (
 )
 popd
 echo.
-echo Dodatak je lokalno izgradjen u %ADDON%\release
+set "RELEASE_DIR=%ADDON_SRC%\release"
+echo Dodatak je lokalno izgradjen u %RELEASE_DIR%
 goto :INSTALL_HELP
 
 :USE_RELEASE
