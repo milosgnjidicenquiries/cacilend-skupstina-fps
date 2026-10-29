@@ -77,7 +77,7 @@ def main():
     lines.append("- Use XModel/XAnim for characters, weapons and standalone props; COD2 map geography is not a Belgrade map.")
     lines.append("- Do not upload extracted files or this catalogue to a public distribution channel.")
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text("\\n".join(lines) + "\\n", encoding="utf-8")
+    output.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print("Wrote local asset catalogue: {}".format(output))
     print("Counts: models={}, animations={}, maps={}, images/materials={}".format(len(models), len(animations), len(maps), len(textures)))
 
