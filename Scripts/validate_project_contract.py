@@ -91,6 +91,10 @@ def main():
     require("unreal.MaterialProperty.MP_BASE_COLOR" in setup_py and "else:" in setup_py and
             "connect_material_property(\n            tint, '', unreal.MaterialProperty.MP_BASE_COLOR" in setup_py,
             "Material generation must have a visible Tint-only fallback when textures are absent.")
+    require("delete_all_material_expressions(mat)" in setup_py and "delete_asset(asset_path)" not in setup_py,
+            "Rerunning setup must rebuild material graphs in place without deleting assets referenced by the map.")
+    require("os.linesep" in setup_py and "UE5-setup-status.txt" in setup_py,
+            "Editor setup must write a parseable completion marker with real line breaks.")
 
     # UE discovery script must exist and each principal launcher must request the correct executable.
     helper = read("Scripts/Find_UE_5_8.ps1")
