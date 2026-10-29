@@ -9,3 +9,9 @@ Saved/
 Build/
 SourceArt/Textures/*.png
 SourceArt/PBR_Texture_Atlas_Preview.jpg
+
+# Local third-party tools and protected game/API assets
+Tools/third_party/
+Config/Private/GoogleMapsApiKey.txt
+SourceArt/Import/*
+!SourceArt/Import/README_IMPORT_ASSETS.txt
