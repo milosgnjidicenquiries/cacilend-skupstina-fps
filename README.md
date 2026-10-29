@@ -22,12 +22,11 @@ The UE5 scene includes offline fallback geometry for the Assembly, Pionirski Par
 Requirements: Windows 10/11 64-bit, Unreal Engine 5.8 and Visual Studio 2022 with Desktop development with C++ / Game development with C++ workloads and a compatible Windows SDK.
 
 1. Clone/download this repository to a short path such as `C:\\Games\\CacilendUE`.
-2. Open `CacilendUE.uproject` and let Unreal/Visual Studio compile the C++ module.
-3. Run `Build_Run_Cacilend_UE5.bat` to invoke UnrealBuildTool for `CacilendUEEditor Win64 Development` and then launch setup in Unreal Editor.
-4. (Optional) If using a locally installed COD2 copy, read `Docs/ASSET_IMPORT_PIPELINE_SR.md`, run `Extract_COD2_Assets.bat`, install the Blender importer via `Install_COD2_Blender_Importer.bat`, export selected models to FBX, and place them under `SourceArt/Import/`.
-5. Run `Setup_Cacilend_Assets.bat` when you want to rerun generation/import without rebuilding C++.
-6. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
-7. After Editor gameplay is validated, run `Package_Windows.bat` to attempt a Win64 Shipping package.
+2. Run `Build_Run_Cacilend_UE5.bat`. It invokes UnrealBuildTool for `CacilendUEEditor Win64 Development` and, only if compilation succeeds, launches asset/map setup in Unreal Editor. Alternatively open `CacilendUE.uproject` manually if you need to inspect compiler diagnostics first.
+3. (Optional) To use a local COD2 installation, read `Docs/ASSET_IMPORT_PIPELINE_SR.md`, run `Extract_COD2_Assets.bat`, install the Blender importer via `Install_COD2_Blender_Importer.bat`, export selected models to FBX, and place them under `SourceArt/Import/`. For a temporary non-COD2 placeholder rifle, run `Download_CC0_Weapon_Fallback.bat`.
+4. Run `Setup_Cacilend_Assets.bat` separately when you need to rerun texture generation/import without recompiling C++.
+5. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
+6. After Editor gameplay is validated, run `Package_Windows.bat` to attempt a Win64 Shipping package.
 
 ## Original COD2 models and textures
 
