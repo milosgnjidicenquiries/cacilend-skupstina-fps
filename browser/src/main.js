@@ -243,7 +243,7 @@ const glove=new THREE.MeshStandardMaterial({color:0x57513f,roughness:.94});
 gunPart(boxGeo,gunMetal,0,0,0,.42,.12,.13);gunPart(boxGeo,gunPoly,-.18,-.01,.08,.22,.1,.14,.06);
 gunPart(boxGeo,gunPoly,.12,.01,-.06,.22,.07,.075);gunPart(boxGeo,gunMetal,.02,.084,-.005,.29,.018,.03);
 gunPart(boxGeo,gunPoly,-.05,-.095,.045,.09,.17,.1,-.12);
-const barrel=new THREE.Mesh(new THREE.CylinderGeometry(.022,.028,.42,14),gunMetal);barrel.rotation.x=Math.PI/2;barrel.position.set(.28,.01,-.19);weapon.add(barrel);
+const gunBarrel=new THREE.Mesh(new THREE.CylinderGeometry(.022,.028,.42,14),gunMetal);gunBarrel.rotation.x=Math.PI/2;gunBarrel.position.set(.28,.01,-.19);weapon.add(gunBarrel);
 const hand1=new THREE.Mesh(new THREE.SphereGeometry(.075,16,12),glove);hand1.position.set(.02,-.1,.02);hand1.scale.set(1,.8,1.3);weapon.add(hand1);
 const hand2=hand1.clone();hand2.position.set(.25,-.09,-.12);weapon.add(hand2);
 const flash=new THREE.Mesh(new THREE.ConeGeometry(.065,.23,8),new THREE.MeshBasicMaterial({color:0xffd89a,transparent:true,opacity:.9}));flash.rotation.x=-Math.PI/2;flash.position.set(.29,.01,-.43);flash.visible=false;weapon.add(flash);
