@@ -57,4 +57,4 @@ Folder `browser/` namerno ostaje u repo-u zato što ga Render objavljuje kao sta
 
 ## Status validacije
 
-GitHub Actions proverava JSON konfiguraciju, Python sintaksu, browser JS i osnovnu ravnotežu C++ zagrada. To **nije** C++ kompilacija niti gameplay test. Repo još nema verifikovan Windows EXE; UnrealBuildTool, cooking, pakovanje i testiranje moraju da se urade na Windows računaru sa instaliranim UE 5.8.
+GitHub Actions proverava JSON, sintaksu PowerShell/Python/JavaScript, strukturnu ravnotežu C++, kao i projektne ugovore između inputa, GameMode-a, HUD-a, mape, setup-a i launcher skripti. To i dalje **nije** stvarna C++ kompilacija niti gameplay test. Repo još nema verifikovan Windows EXE; UnrealBuildTool, editor setup, pakovanje i testiranje moraju da se urade na Windows računaru sa instaliranim UE 5.8.
