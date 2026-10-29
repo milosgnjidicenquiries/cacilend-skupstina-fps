@@ -1,30 +1,50 @@
-# Cacilend: Skupstina FPS
+# Cacilend: Skupstina FPS — Unreal Engine 5.8
 
-Two related prototypes live in this repository:
+**Primary project: Windows Unreal Engine 5.8 C++ FPS.** The browser/Render version is a legacy demo kept for reference and compatibility with the existing Render Static Site.
 
-- **Browser demo** in the browser/ directory: a Three.js first-person practice demo with PBR-style materials, ACES tone mapping, shadow maps, procedural textures, a HUD, robotic range targets, and an interior Assembly room. Deploy browser/ as a Render Static Site to play it in a web browser.
-- **Windows source project** in the repository root: Unreal Engine 5.8 C++ project with a procedural scene and Windows packaging scripts.
+## Primary product: UE5 Windows project
 
-The browser edition is inspired by modern UE-style rendering techniques; it is not Unreal Engine running in a browser and will not match a completed AAA Call of Duty title.
+- `CacilendUE.uproject` — Unreal Engine 5.8 project file.
+- `Source/CacilendUE/` — FPS character, weapon handling, enemies and procedural scene builder.
+- `Content/Python/Setup_Cacilend.py` — creates the playable level, material library and imports locally supplied assets.
+- `Content/Python/Import_Cacilend_Assets.py` — FBX, skeletal mesh, animation and texture import pipeline.
+- `Content/Python/Setup_Google3DTiles_Cesium.py` — optional live Google Photorealistic 3D Tiles setup through Cesium for Unreal.
+- `Scripts/generate_textures.py` — generates local PBR texture sources.
+- `Scripts/extract_cod2_assets.py` / `Extract_COD2_Assets.bat` — local-only extraction of relevant `.iwd` contents from a COD2 installation.
+- `Import_Cacilend_Assets.bat`, `Setup_Cacilend_Assets.bat`, `Package_Windows.bat` — Windows tools.
 
-## Browser edition
-See browser/README.md for controls and hosting. It requires a browser with WebGL and an internet connection to load Three.js from jsDelivr.
+The UE5 scene includes offline fallback geometry for the Assembly, Pionirski Park, Presidency/New Palace, Main Post Office Palace, surrounding urban blocks and the encampment. When matching imported assets exist at the documented `/Game/Cacilend/Imported/...` paths, the map builder/character/weapon code uses them. Without local assets, the project remains a procedural prototype.
 
-Render Static Site settings:
-- Repository: https://github.com/milosgnjidicenquiries/cacilend-skupstina-fps
-- Branch: main
-- Publish directory: browser
-- Build command: echo "Static site - no build step"
+## Quick start on Windows
 
-## Windows UE 5.8 build
-Requirements: Unreal Engine 5.8, Visual Studio 2022 with C++ workloads, and a compatible Windows SDK.
+Requirements: Windows 10/11 64-bit, Unreal Engine 5.8 and Visual Studio 2022 with Desktop development with C++ / Game development with C++ workloads and a compatible Windows SDK.
 
-1. Download/clone to a short Windows path such as C:\Games\CacilendUE.
-2. Open CacilendUE.uproject and allow the C++ module to compile.
-3. Run Setup_Cacilend_Assets.bat to generate PBR source textures and editor assets.
-4. Open the generated map and press Play.
-5. Run Package_Windows.bat to attempt a Win64 Shipping package.
+1. Clone/download this repository to a short path such as `C:\\Games\\CacilendUE`.
+2. Open `CacilendUE.uproject` and let Unreal/Visual Studio compile the C++ module.
+3. (Optional) If using a locally installed COD2 copy, read `Docs/ASSET_IMPORT_PIPELINE_SR.md`, run `Extract_COD2_Assets.bat`, export the selected models to FBX in Blender, and place them under `SourceArt/Import/`.
+4. Run `Setup_Cacilend_Assets.bat`. It generates procedural PBR textures, imports local FBX/textures if present, builds the map/materials and attempts the optional Google 3D Tiles setup.
+5. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
+6. After Editor gameplay is validated, run `Package_Windows.bat` to attempt a Win64 Shipping package.
 
-This repo contains source code and scripts, not a verified packaged EXE. The Unreal project has not been compiled or run in this environment; the first Windows build needs validation.
+## Original COD2 models and textures
 
-Read README_SR.md for Serbian Windows instructions.
+No proprietary Call of Duty 2 IWD archives or extracted game assets are bundled in this public repository. For a user-owned local installation, the project includes an extraction helper and an FBX import pipeline. See `Docs/ASSET_IMPORT_PIPELINE_SR.md`. The model importer targets are `SM_NationalAssembly`, `SM_PionirskiPark`, `SM_Presidency`, `SM_MainPostOfficePalace`, `SK_COD2_Soldier`, and `SM_COD2_Weapon`, with optional `AN_COD2_Idle` / `AN_COD2_Walk` animations. These assets must actually be supplied/imported locally before they replace procedural fallbacks.
+
+## Google Earth / Photorealistic 3D Tiles
+
+Live Google photogrammetry is optional. It requires the Cesium for Unreal plugin, an enabled Google Maps Platform Map Tiles API, a billing-enabled project, a restricted API key and visible attribution. Store the key locally in `Config/Private/GoogleMapsApiKey.txt`; it is git-ignored. Read `Docs/GOOGLE_EARTH_CESIUM_SETUP_SR.md`. The offline map stays usable without Cesium or an API key.
+
+## Archive of previous demos
+
+- [Snapshot branch: archive/browser-render-demo-2026-10-29](https://github.com/milosgnjidicenquiries/cacilend-skupstina-fps/tree/archive/browser-render-demo-2026-10-29)
+- [Archive notes](Archive/README_SR.md)
+- [Browser demo on Render](https://cacilend-skupstina-browser.onrender.com)
+- [Browser demo's 3D model catalogue](https://cacilend-skupstina-browser.onrender.com/assets.html)
+
+The `browser/` folder is intentionally retained because Render publishes that folder. Do not remove or move it unless the Render service configuration is changed.
+
+## Validation status
+
+GitHub Actions validates project JSON, Python syntax, browser JS and basic C++ delimiter balance. This is **not** a C++ compile or gameplay test. The repository does not yet contain a verified Windows EXE; UnrealBuildTool, cooking, packaging and gameplay must be tested on a Windows computer with UE 5.8 installed.
+
+See `README_SR.md` for the Serbian instructions.
