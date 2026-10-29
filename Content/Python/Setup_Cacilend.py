@@ -109,12 +109,23 @@ def connect(a, out_pin, b, in_pin):
 def create_material(name, u_tiling, v_tiling, default_roughness, metallic):
     asset_path = f'{MATERIAL_DEST}/M_{name}'
     if unreal.EditorAssetLibrary.does_asset_exist(asset_path):
-        unreal.EditorAssetLibrary.delete_asset(asset_path)
-    tools = unreal.AssetToolsHelpers.get_asset_tools()
-    mat = tools.create_asset(f'M_{name}', MATERIAL_DEST, unreal.Material, unreal.MaterialFactoryNew())
-    if not mat:
-        log(f'ERROR: could not create M_{name}')
-        return
+        # Preserve the existing asset object/path so placed map components keep
+        # their material references when setup is rerun.
+        mat = unreal.load_asset(asset_path)
+        if not mat:
+            log(f'ERROR: existing M_{name} could not be loaded')
+            return
+        try:
+            unreal.MaterialEditingLibrary.delete_all_material_expressions(mat)
+        except Exception as ex:
+            log(f'ERROR: could not reset M_{name} graph safely: {ex}')
+            return
+    else:
+        tools = unreal.AssetToolsHelpers.get_asset_tools()
+        mat = tools.create_asset(f'M_{name}', MATERIAL_DEST, unreal.Material, unreal.MaterialFactoryNew())
+        if not mat:
+            log(f'ERROR: could not create M_{name}')
+            return
 
     base_tex = unreal.load_asset(f'{TEXTURE_DEST}/T_{name}_BaseColor')
     norm_tex = unreal.load_asset(f'{TEXTURE_DEST}/T_{name}_Normal')
