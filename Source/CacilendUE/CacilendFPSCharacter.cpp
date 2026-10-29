@@ -273,7 +273,7 @@ void ACacilendFPSCharacter::StopSprint()
     if (FirstPersonCamera) FirstPersonCamera->SetFieldOfView(92.0f);
 }
 
-bool ACacilendFPSCharacter::IsNearAssemblyEntrance() const
+bool ACacilendFPSCharacter::IsNearAssemblyInteraction() const
 {
     if (bInInterior)
         return FVector::DistSquared(GetActorLocation(), FVector(22000.0f, -4600.0f, 100.0f)) < FMath::Square(750.0f);
