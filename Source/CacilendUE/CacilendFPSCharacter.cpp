@@ -44,6 +44,7 @@ ACacilendFPSCharacter::ACacilendFPSCharacter()
 
     GetCharacterMovement()->MaxWalkSpeed = 430.0f;
     GetCharacterMovement()->MaxWalkSpeedCrouched = 210.0f;
+    GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
     GetCharacterMovement()->MaxAcceleration = 1400.0f;
     GetCharacterMovement()->BrakingDecelerationWalking = 1500.0f;
     GetCharacterMovement()->AirControl = 0.25f;
@@ -196,6 +197,8 @@ void ACacilendFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("Reload"), IE_Pressed, this, &ACacilendFPSCharacter::StartReload);
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Pressed, this, &ACacilendFPSCharacter::StartSprint);
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Released, this, &ACacilendFPSCharacter::StopSprint);
+    PlayerInputComponent->BindAction(TEXT("Crouch"), IE_Pressed, this, &ACacilendFPSCharacter::StartCrouch);
+    PlayerInputComponent->BindAction(TEXT("Crouch"), IE_Released, this, &ACacilendFPSCharacter::StopCrouch);
     PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, this, &ACacilendFPSCharacter::Interact);
     FInputActionBinding& PauseBinding = PlayerInputComponent->BindAction(TEXT("Pause"), IE_Pressed, this, &ACacilendFPSCharacter::TogglePause);
     PauseBinding.bExecuteWhenPaused = true;
@@ -261,6 +264,7 @@ void ACacilendFPSCharacter::FinishReload()
 
 void ACacilendFPSCharacter::StartSprint()
 {
+    if (IsCrouched()) return;
     bSprinting = true;
     GetCharacterMovement()->MaxWalkSpeed = 650.0f;
     if (FirstPersonCamera) FirstPersonCamera->SetFieldOfView(99.0f);
@@ -271,6 +275,17 @@ void ACacilendFPSCharacter::StopSprint()
     bSprinting = false;
     GetCharacterMovement()->MaxWalkSpeed = 430.0f;
     if (FirstPersonCamera) FirstPersonCamera->SetFieldOfView(92.0f);
+}
+
+void ACacilendFPSCharacter::StartCrouch()
+{
+    if (bSprinting) StopSprint();
+    Crouch(false);
+}
+
+void ACacilendFPSCharacter::StopCrouch()
+{
+    UnCrouch(false);
 }
 
 bool ACacilendFPSCharacter::IsNearAssemblyInteraction() const
@@ -357,6 +372,7 @@ void ACacilendFPSCharacter::ResetAfterDeath()
     bInInterior = false;
     SetPhotogrammetryVisible(true);
     SetActorLocation(FVector(-8500.0f, -7200.0f, 100.0f), false, nullptr, ETeleportType::TeleportPhysics);
+    if (IsCrouched()) UnCrouch(false);
     SetActorRotation(FRotator(0.0f, 90.0f, 0.0f));
     if (APlayerController* PC = Cast<APlayerController>(GetController())) PC->SetControlRotation(GetActorRotation());
 }
