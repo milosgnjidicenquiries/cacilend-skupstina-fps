@@ -151,15 +151,19 @@ def main():
             "Main build launcher must retain build logs and show a useful error tail.")
     require("UE5-package.log" in package_launcher and "Tail 100" in package_launcher,
             "Packaging launcher must retain UAT logs and show a useful error tail.")
-    ue_build_workflow = read(".github/workflows/windows-ue5-build.yml")
-    require("workflow_dispatch:" in ue_build_workflow and
-            "self-hosted, windows, x64, ue5-8" in ue_build_workflow,
-            "The optional Unreal packaging workflow must be manual and require the documented UE5.8 self-hosted runner labels.")
-    for required in ("Scripts\\Find_UE_5_8.ps1", "UE5-build.log", "UE5-setup-status.txt",
-                     "UE5-package.log", "Cacilend-Skupstina-Windows-Shipping",
-                     "Cacilend-UE5-Build-Diagnostics"):
-        require(required in ue_build_workflow,
-                "Self-hosted build workflow is missing required locator, diagnostic, or artifact contract: " + required)
+    ue_build_workflow_path = ROOT / ".github/workflows/windows-ue5-build.yml"
+    if ue_build_workflow_path.is_file():
+        ue_build_workflow = ue_build_workflow_path.read_text(encoding="utf-8", errors="replace")
+        require("workflow_dispatch:" in ue_build_workflow and
+                "self-hosted, windows, x64, ue5-8" in ue_build_workflow,
+                "The optional Unreal packaging workflow must be manual and require the documented UE5.8 self-hosted runner labels.")
+        for required in ("Scripts\\Find_UE_5_8.ps1", "UE5-build.log", "UE5-setup-status.txt",
+                         "UE5-package.log", "Cacilend-Skupstina-Windows-Shipping",
+                         "Cacilend-UE5-Build-Diagnostics"):
+            require(required in ue_build_workflow,
+                    "Self-hosted build workflow is missing required locator, diagnostic, or artifact contract: " + required)
+    else:
+        print("SKIP: GitHub-only self-hosted workflow contract (not bundled in the UE5-only source archive).")
     require('UE5-setup-status.txt' in package_launcher and 'Content\\Maps\\L_Cacilend.umap' in package_launcher,
             "Packaging must refuse to run until the editor setup marker and generated map exist.")
     require((ROOT / "Check_Cacilend_UE5_Requirements.bat").is_file(),
