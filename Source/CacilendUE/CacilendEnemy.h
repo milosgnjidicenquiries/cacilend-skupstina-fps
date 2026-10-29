@@ -25,6 +25,9 @@ private:
     UPROPERTY(Transient)
     TObjectPtr<UAnimSequence> ImportedWalkAnimation = nullptr;
 
+    UPROPERTY(Transient)
+    TObjectPtr<UAnimSequence> CurrentImportedAnimation = nullptr;
+
     bool bImportedCOD2Mesh = false;
     bool bPlayingWalkAnimation = false;
     float Health = 100.0f;
