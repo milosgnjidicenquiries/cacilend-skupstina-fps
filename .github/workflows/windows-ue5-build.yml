@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   package:
-    # Configure a Windows self-hosted runner on a PC with UE 5.8 and Visual Studio C++ tools.
+    # Configure a Windows self-hosted runner on a PC with UE 5.8 and compatible Visual Studio C++ tools.
     # Add the custom runner label: ue5-8.
     runs-on: [self-hosted, windows, x64, ue5-8]
     timeout-minutes: 240
@@ -16,44 +16,83 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify build tools
+      - name: Verify machine and discover Unreal Engine
         shell: powershell
         run: |
-          $ue = "$env:ProgramFiles\Epic Games\UE_5.8"
-          if (!(Test-Path "$ue\Engine\Build\BatchFiles\Build.bat")) {
-            throw "Unreal Engine 5.8 not found at $ue"
-          }
-          if (!(Test-Path "$ue\Engine\Build\BatchFiles\RunUAT.bat")) {
-            throw "RunUAT.bat not found in Unreal Engine installation."
-          }
-          Write-Host "Using Unreal Engine at $ue"
+          New-Item -ItemType Directory -Path Build -Force | Out-Null
+          & powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts\Check_Cacilend_UE5_Requirements.ps1 -ProjectRoot $PWD
+          if ($LASTEXITCODE -ne 0) { throw "UE5 prerequisites check failed; inspect Build\UE5-preflight-report.txt." }
 
-      - name: Generate PBR source textures
+          $ue = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File Scripts\Find_UE_5_8.ps1 -Purpose Build
+          if (!$ue) { throw "Unreal Engine 5.8 not found by the shared locator." }
+          $ue = ([string]$ue).Trim()
+          if (!(Test-Path (Join-Path $ue "Engine\Binaries\Win64\UnrealEditor-Cmd.exe"))) {
+            throw "UnrealEditor-Cmd.exe not found under $ue."
+          }
+          if (!(Test-Path (Join-Path $ue "Engine\Build\BatchFiles\RunUAT.bat"))) {
+            throw "RunUAT.bat not found under $ue."
+          }
+          Write-Host "Using Unreal Engine 5.8 at $ue"
+          "UE_ROOT=$ue" | Out-File -FilePath Build\ue-root.txt -Encoding utf8
+
+      - name: Generate PBR source textures (optional)
         shell: powershell
         run: |
           python -m pip install --user numpy pillow
-          python Scripts\generate_textures.py
+          if ($LASTEXITCODE -eq 0) {
+            python Scripts\generate_textures.py
+            if ($LASTEXITCODE -ne 0) { Write-Warning "Texture generation failed; the Tint-only material fallback remains available." }
+          } else {
+            Write-Warning "NumPy/Pillow could not be installed; continuing with material fallback."
+          }
 
       - name: Compile Unreal Editor module
         shell: powershell
         run: |
-          $ue = "$env:ProgramFiles\Epic Games\UE_5.8"
-          & "$ue\Engine\Build\BatchFiles\Build.bat" CacilendUEEditor Win64 Development "-Project=$PWD\CacilendUE.uproject" -WaitMutex -FromMsBuild
-          if ($LASTEXITCODE -ne 0) { throw "Editor C++ compilation failed." }
+          $ueLine = Get-Content Build\ue-root.txt | Select-Object -First 1
+          $ue = $ueLine.Substring("UE_ROOT=".Length)
+          & "$ue\Engine\Build\BatchFiles\Build.bat" CacilendUEEditor Win64 Development "-Project=$PWD\CacilendUE.uproject" -WaitMutex -FromMsBuild *> Build\UE5-build.log
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content Build\UE5-build.log -Tail 100
+            throw "Editor C++ compilation failed. Full log: Build\UE5-build.log"
+          }
+          Get-Content Build\UE5-build.log -Tail 20
 
-      - name: Generate Unreal assets and level
+      - name: Generate and validate Unreal assets and level
         shell: powershell
         run: |
-          $ue = "$env:ProgramFiles\Epic Games\UE_5.8"
-          & "$ue\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" "$PWD\CacilendUE.uproject" "-ExecutePythonScript=$PWD\Content\Python\Setup_Cacilend.py" -unattended -nop4 -NoSplash -NoSound -stdout -FullStdOutLogOutput
-          if ($LASTEXITCODE -ne 0) { throw "Unreal asset/map setup failed." }
+          $ueLine = Get-Content Build\ue-root.txt | Select-Object -First 1
+          $ue = $ueLine.Substring("UE_ROOT=".Length)
+          & "$ue\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" "$PWD\CacilendUE.uproject" "-ExecutePythonScript=$PWD\Content\Python\Setup_Cacilend.py" -unattended -nop4 -NoSplash -NoSound -stdout -FullStdOutLogOutput *> Build\UE5-setup.log
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content Build\UE5-setup.log -Tail 100
+            throw "Unreal asset/map setup command failed. Full log: Build\UE5-setup.log"
+          }
+          if (!(Test-Path Build\UE5-setup-status.txt)) {
+            Get-Content Build\UE5-setup.log -Tail 100
+            throw "Setup status marker is missing; inspect Build\UE5-setup.log."
+          }
+          $setupStatus = Get-Content Build\UE5-setup-status.txt
+          if (!$setupStatus -or $setupStatus[0].Trim() -ne "SUCCESS") {
+            Get-Content Build\UE5-setup-status.txt
+            Get-Content Build\UE5-setup.log -Tail 100
+            throw "Setup did not report SUCCESS."
+          }
+          if (!(Test-Path Content\Maps\L_Cacilend.umap)) {
+            throw "Generated map Content\Maps\L_Cacilend.umap is missing."
+          }
 
       - name: Package Win64 Shipping build
         shell: powershell
         run: |
-          $ue = "$env:ProgramFiles\Epic Games\UE_5.8"
-          & "$ue\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun "-project=$PWD\CacilendUE.uproject" -noP4 -platform=Win64 -clientconfig=Shipping -build -cook -stage -pak -archive -prereqs "-archivedirectory=$PWD\Build\Windows" -utf8output
-          if ($LASTEXITCODE -ne 0) { throw "Windows packaging failed." }
+          $ueLine = Get-Content Build\ue-root.txt | Select-Object -First 1
+          $ue = $ueLine.Substring("UE_ROOT=".Length)
+          & "$ue\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun "-project=$PWD\CacilendUE.uproject" -noP4 -platform=Win64 -clientconfig=Shipping -build -cook -stage -pak -archive -prereqs "-archivedirectory=$PWD\Build\Windows" -utf8output *> Build\UE5-package.log
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content Build\UE5-package.log -Tail 120
+            throw "Windows packaging failed. Full log: Build\UE5-package.log"
+          }
+          Get-Content Build\UE5-package.log -Tail 20
 
       - name: Upload packaged game
         uses: actions/upload-artifact@v4
@@ -61,4 +100,18 @@ jobs:
           name: Cacilend-Skupstina-Windows-Shipping
           path: Build/Windows/**
           if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cacilend-UE5-Build-Diagnostics
+          path: |
+            Build/UE5-preflight-report.txt
+            Build/UE5-build.log
+            Build/UE5-setup.log
+            Build/UE5-setup-status.txt
+            Build/UE5-package.log
+          if-no-files-found: ignore
           retention-days: 14
