@@ -1,6 +1,25 @@
 @echo off
 setlocal
 set "ROOT=%~dp0"
+if not exist "%ROOT%Build\UE5-setup-status.txt" (
+  echo Editor setup status marker nije pronadjen.
+  echo Prvo pokreni Build_Run_Cacilend_UE5.bat i sacekaj da se mapa napravi.
+  pause
+  exit /b 1
+)
+findstr /x /c:"SUCCESS" "%ROOT%Build\UE5-setup-status.txt" >nul
+if errorlevel 1 (
+  echo Poslednji Editor setup nije prijavio SUCCESS.
+  echo Proveri Build\UE5-setup-status.txt i Saved\Logs, pa ponovo pokreni Build_Run_Cacilend_UE5.bat.
+  pause
+  exit /b 1
+)
+if not exist "%ROOT%Content\Maps\L_Cacilend.umap" (
+  echo Mapa Content\Maps\L_Cacilend.umap nije pronadjena.
+  echo Pokreni Build_Run_Cacilend_UE5.bat pre pakovanja.
+  pause
+  exit /b 1
+)
 set "UE_ROOT="
 for /f "usebackq delims=" %%E in (`powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%Scripts\Find_UE_5_8.ps1" -Purpose Package`) do set "UE_ROOT=%%E"
 if defined UE_ROOT set "UAT=%UE_ROOT%\Engine\Build\BatchFiles\RunUAT.bat"
