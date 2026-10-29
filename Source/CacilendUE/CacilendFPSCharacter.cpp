@@ -11,6 +11,8 @@
 #include "GameFramework/PlayerController.h"
 #include "InputCoreTypes.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -287,7 +289,12 @@ void ACacilendFPSCharacter::ToggleInterior(bool bEnter)
 
 void ACacilendFPSCharacter::SetPhotogrammetryVisible(bool bVisible)
 {
-    if (!GetWorld()) return;
+    // Only toggle live tiles in explicit Google-photogrammetry mode.
+    // In normal offline mode a configured Cesium actor must not be hidden/unhidden
+    // over the procedural fallback city when entering or leaving the interior.
+    if (!FParse::Param(FCommandLine::Get(), TEXT("CacilendUseGooglePhotogrammetry")) || !GetWorld())
+        return;
+
     for (TActorIterator<AActor> It(GetWorld()); It; ++It)
     {
         if (It->GetClass()->GetName().Contains(TEXT("Cesium3DTileset")))
