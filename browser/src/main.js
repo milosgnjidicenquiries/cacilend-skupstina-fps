@@ -2,6 +2,15 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.m
 
 const $ = (id) => document.getElementById(id);
 const canvas = $('view'), errorBox = $('error');
+window.addEventListener('error', (event) => {
+  errorBox.hidden = false;
+  errorBox.textContent = 'Greška pri pokretanju igre: ' + (event.message || 'JavaScript greška') + '. Osveži stranicu kombinacijom Ctrl+F5 i pokušaj ponovo.';
+});
+window.addEventListener('unhandledrejection', (event) => {
+  errorBox.hidden = false;
+  const reason = event.reason && event.reason.message ? event.reason.message : String(event.reason || 'nepoznata greška');
+  errorBox.textContent = 'Greška pri učitavanju igre: ' + reason + '. Proveri internet i osveži stranicu sa Ctrl+F5.';
+});
 let renderer;
 try {
   renderer = new THREE.WebGLRenderer({canvas, antialias:true, powerPreference:'high-performance'});
@@ -178,7 +187,7 @@ function buildAssembly(){
   box(M.stone,x-.89,y,-38.13,.12,1.8,.14);box(M.stone,x+.89,y,-38.13,.12,1.8,.14);
  }
  for(let i=0;i<7;i++)box(M.stone,0,.13+i*.23,-33.8-i*.62,18+i*1.2,.2,.8);
- addSolid(0,-39,25,2.3);
+ solid(0,-39,25,2.3);
 }
 function buildInterior(){
  const x=78,z=-2;
