@@ -1,0 +1,16 @@
+{
+  "project": "Cacilend: Skupstina FPS",
+  "primary_project": "Unreal Engine 5.8 Windows FPS in repository root",
+  "archive_snapshot": {
+    "branch": "archive/browser-render-demo-2026-10-29",
+    "commit": "5411f165908c2ac274e4a8309a17b432901a710e",
+    "created_from": "main before UE5 asset pipeline work",
+    "render_url": "https://cacilend-skupstina-browser.onrender.com",
+    "gallery_url": "https://cacilend-skupstina-browser.onrender.com/assets.html"
+  },
+  "notes": [
+    "browser/ remains in the root because Render Static Site publishes browser/.",
+    "Do not commit copyrighted Call of Duty 2 .iwd archives or extracted proprietary game assets.",
+    "UE5 build must be performed on Windows with Unreal Engine 5.8 and Visual Studio 2022 C++ tools."
+  ]
+}
