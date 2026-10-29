@@ -85,6 +85,10 @@ def main():
             "Player firing path must damage enemies and track kills.")
     require("Player->TakeDamage(" in enemy_cpp,
             "Enemy attack path must be wired to player damage.")
+    require('bExecuteWhenPaused = true' in character_cpp and 'UGameplayStatics::SetGamePaused' in character_cpp,
+            "Pause action must remain available while the world is paused.")
+    require('DrawText(TEXT("PAUSED")' in hud_cpp and 'PRESS ESC TO RESUME' in hud_cpp,
+            "HUD must show the pause overlay and resume instruction.")
 
     # A clean checkout may have no optional generated PBR files. Materials still
     # need a Tint parameter directly wired to BaseColor in that case.
