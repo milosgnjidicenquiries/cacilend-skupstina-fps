@@ -1,17 +1,26 @@
 @echo off
 setlocal EnableExtensions
 set "ROOT=%~dp0"
+if not exist "%ROOT%CacilendUE.uproject" (
+  echo CacilendUE.uproject nije pronadjen u %ROOT%
+  pause
+  exit /b 1
+)
+
+echo [0/2] Proveravam UE5.8, Visual Studio, MSVC, Windows SDK i hardver...
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%Scripts\Check_Cacilend_UE5_Requirements.ps1" -ProjectRoot "%ROOT%"
+if errorlevel 1 (
+  echo.
+  echo Preduslovi nisu prosli proveru. Pogledaj Build\UE5-preflight-report.txt i ispravi FAIL stavke.
+  pause
+  exit /b 1
+)
 set "UE_ROOT="
 for /f "usebackq delims=" %%E in (`powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%Scripts\Find_UE_5_8.ps1" -Purpose Build`) do set "UE_ROOT=%%E"
 if not defined UE_ROOT (
   echo Unreal Engine 5.8 Build.bat nije pronadjen.
   echo Instaliraj UE 5.8 ili proveri da li Epic Games Launcher prikazuje engine kao instaliran.
   echo Za rucnu putanju postavi UE_5_8_ROOT na folder koji sadrzi Engine.
-  pause
-  exit /b 1
-)
-if not exist "%ROOT%CacilendUE.uproject" (
-  echo CacilendUE.uproject nije pronadjen u %ROOT%
   pause
   exit /b 1
 )
