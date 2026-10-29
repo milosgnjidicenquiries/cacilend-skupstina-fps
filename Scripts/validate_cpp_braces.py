@@ -61,6 +61,7 @@ def check_project_contract():
         (char_cpp, "void ACacilendFPSCharacter::SetPhotogrammetryVisible(bool bVisible)"),
         (char_cpp, "SM_COD2_Weapon.SM_COD2_Weapon"),
         (char_cpp, "SM_CC0_Rifle.SM_CC0_Rifle"),
+        (char_cpp, "const FRotator YawRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);"),
         (enemy_h, "CurrentImportedAnimation"),
         (enemy_cpp, "SK_COD2_Soldier.SK_COD2_Soldier"),
     ]
@@ -68,6 +69,11 @@ def check_project_contract():
         require_text(path, fragment)
     if "GetAnimation()" in enemy_cpp.read_text(encoding="utf-8", errors="replace"):
         raise ValueError("CacilendEnemy.cpp still uses the unverified GetAnimation() getter; use tracked animation state.")
+    char_source = char_cpp.read_text(encoding="utf-8", errors="replace")
+    if char_source.count("const FRotator YawRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);") != 2:
+        raise ValueError("MoveForward and MoveRight must both use yaw-only movement vectors.")
+    if "FRotationMatrix(Controller->GetControlRotation()).GetUnitAxis" in char_source:
+        raise ValueError("Movement still depends on camera pitch; use yaw-only movement vectors.")
 
 
 def main():
