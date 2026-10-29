@@ -150,8 +150,9 @@ void ACacilendFPSCharacter::TogglePause()
     APlayerController* PC = Cast<APlayerController>(GetController());
     if (!PC || !GetWorld()) return;
 
-    bGamePaused = !bGamePaused;
-    UGameplayStatics::SetGamePaused(GetWorld(), bGamePaused);
+    const bool bDesiredPaused = !bGamePaused;
+    if (!UGameplayStatics::SetGamePaused(GetWorld(), bDesiredPaused)) return;
+    bGamePaused = bDesiredPaused;
     if (bGamePaused)
     {
         PC->bShowMouseCursor = true;
