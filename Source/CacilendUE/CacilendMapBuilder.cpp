@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/World.h"
+#include "EngineUtils.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
 namespace
@@ -24,6 +25,17 @@ ACacilendMapBuilder::ACacilendMapBuilder()
 void ACacilendMapBuilder::BeginPlay()
 {
     Super::BeginPlay();
+    for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+    {
+        if (It->GetClass()->GetName().Contains(TEXT("Cesium3DTileset")))
+        {
+            bUseGooglePhotogrammetry = true;
+            break;
+        }
+    }
+    if (bUseGooglePhotogrammetry)
+        UE_LOG(LogTemp, Log, TEXT("[Cacilend] Google/Cesium photogrammetry is active. Hiding offline city proxy buildings."));
+
     BuildExterior();
     BuildPionirskiPark();
     BuildPresidency();
@@ -171,7 +183,9 @@ void ACacilendMapBuilder::AddCar(float X, float Y, const FLinearColor& Paint, fl
 
 void ACacilendMapBuilder::BuildExterior()
 {
-    AddBlock(TEXT("Asphalt"), FVector(0,900,-32), FVector(16000,24500,70), FRotator::ZeroRotator, FLinearColor::White, true);
+    if (!bUseGooglePhotogrammetry)
+    {
+        AddBlock(TEXT("Asphalt"), FVector(0,900,-32), FVector(16000,24500,70), FRotator::ZeroRotator, FLinearColor::White, true);
     AddBlock(TEXT("Concrete"), FVector(-8500,900,-5), FVector(900,24500,45), FRotator::ZeroRotator, FLinearColor(0.61f,0.60f,0.56f), true);
     AddBlock(TEXT("Concrete"), FVector(8500,900,-5), FVector(900,24500,45), FRotator::ZeroRotator, FLinearColor(0.61f,0.60f,0.56f), true);
     AddBlock(TEXT("Grass"), FVector(-11200,700,-48), FVector(4200,24000,60), FRotator::ZeroRotator, FLinearColor(0.26f,0.31f,0.20f), true);
@@ -218,6 +232,7 @@ void ACacilendMapBuilder::BuildExterior()
                 AddBlock(TEXT("Limestone"), FVector(X,9950,1370), FVector(390,34,25), FRotator::ZeroRotator, FLinearColor(0.91f,0.84f,0.70f), false);
             }
     }
+    }
 
     const FVector Tents[] = {
         FVector(-13900,-6250,0), FVector(-12100,-6350,0), FVector(-10100,-5850,0),
@@ -255,6 +270,8 @@ void ACacilendMapBuilder::BuildExterior()
 
 void ACacilendMapBuilder::BuildPionirskiPark()
 {
+    if (bUseGooglePhotogrammetry) return; // Live Cesium imagery provides the surrounding real-world geometry.
+
     // Orientation / scale is deliberately explicit: X is west/east and Y is south/north.
     // Exact photogrammetry can be streamed separately with Cesium for Unreal; this is the offline fallback.
     if (AddImportedMesh(TEXT("/Game/Cacilend/Imported/Buildings/SM_PionirskiPark.SM_PionirskiPark"),
@@ -328,6 +345,8 @@ void ACacilendMapBuilder::BuildPionirskiPark()
 
 void ACacilendMapBuilder::BuildPresidency()
 {
+    if (bUseGooglePhotogrammetry) return; // Live Cesium imagery provides the surrounding real-world geometry.
+
     // A supplied static mesh can replace this recognizable architectural proxy.
     if (AddImportedMesh(TEXT("/Game/Cacilend/Imported/Buildings/SM_Presidency.SM_Presidency"),
                         FVector(-21000,-9550,1040), FVector(3000,2300,2080), FRotator::ZeroRotator, true))
@@ -369,6 +388,8 @@ void ACacilendMapBuilder::BuildPresidency()
 
 void ACacilendMapBuilder::BuildMainPostOffice()
 {
+    if (bUseGooglePhotogrammetry) return; // Live Cesium imagery provides the surrounding real-world geometry.
+
     if (AddImportedMesh(TEXT("/Game/Cacilend/Imported/Buildings/SM_MainPostOfficePalace.SM_MainPostOfficePalace"),
                         FVector(12300,-1750,1080), FVector(4200,3200,2160), FRotator::ZeroRotator, true))
         return;
@@ -404,6 +425,8 @@ void ACacilendMapBuilder::BuildMainPostOffice()
 
 void ACacilendMapBuilder::BuildSurroundingBuildings()
 {
+    if (bUseGooglePhotogrammetry) return; // Live Cesium imagery provides the surrounding real-world geometry.
+
     // Collector roads give the area a recognizable street network beyond the park itself.
     AddBlock(TEXT("Asphalt"), FVector(-18100,6800,-18), FVector(1350,32000,42), FRotator::ZeroRotator, FLinearColor(0.32f,0.33f,0.31f), true);
     AddBlock(TEXT("Asphalt"), FVector(9000,8500,-18), FVector(1350,31000,42), FRotator::ZeroRotator, FLinearColor(0.32f,0.33f,0.31f), true);
