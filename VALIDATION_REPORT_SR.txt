@@ -8,9 +8,10 @@ POTVRDJENE AUTOMATSKE PROVERE (GitHub Actions / Windows runner)
 - C++ fajlovi prolaze proveru strukture/uglastih zagrada i obaveznih simbola.
 - Projektni contract test proverava da se GameMode, FPS pawn, HUD, mapa i PlayerStart medjusobno slazu.
 - C++ InputComponent binding imena poklapaju se sa Config/DefaultInput.ini.
-- Testovi proveravaju osnovni damage/kill tok, HUD instrukcije, reset reload/sprint stanja i fallback BaseColor materijala bez PBR tekstura.
+- Testovi proveravaju osnovni damage/kill tok, HUD instrukcije, reset reload/sprint stanja, interior spawn udaljen od izlazne interakcije, fallback BaseColor materijala bez PBR tekstura i bezbedno ponovno generisanje materijala u mestu.
 - Sve glavne .bat skripte koriste zajednicki UE 5.8 locator.
 - Build skripta proverava preduslove pre kompilacije i cuva Build/UE5-build.log.
+- Editor setup Python skripta ispisuje uspeh/neuspeh marker; Windows launcher ceka marker umesto da pretpostavi da je mapa napravljena.
 - Windows packaging skripta cuva Build/UE5-package.log.
 - Browser JavaScript prolazi node --check.
 - Izvorni i UE5-only ZIP paketi se automatski prave i upload-uju kao GitHub Actions artefakti.
