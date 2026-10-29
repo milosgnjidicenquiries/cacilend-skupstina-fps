@@ -17,10 +17,11 @@ Primarni projekat je **CacilendUE.uproject — Unreal Engine 5.8 / Windows**. Br
 
 1. Preuzmi/kloniraj repozitorijum na kratak Windows put, npr. `C:\Games\CacilendUE`.
 2. Uveri se da su instalirani Unreal Engine 5.8 i Visual Studio 2022 C++ workloads.
-3. Ako koristiš svoju legalnu lokalnu instalaciju Call of Duty 2, pokreni `Extract_COD2_Assets.bat "C:\putanja\do\Call of Duty 2"`. Skripta čita lokalne `.iwd` ZIP arhive i kopira samo potrebne foldere u `Build/LocalCOD2Extraction`. Zatim automatski pravi `Build/LocalCOD2AssetCatalogue.md`, spisak mogućih modela, animacija, BSP mapa i tekstura. Te lokacije su ignorisane u Git-u i ne menjaju instalaciju igre.
-4. Pokreni `Install_COD2_Blender_Importer.bat`. Skripta proverava Git, Python i Rust/Cargo, klonira open-source [Call of Duty Asset Importer](https://github.com/mauserzjeh/cod-asset-importer), instalira Python zavisnosti i pokušava da izgradi ZIP dodatak. Zatim u Blenderu izaberi Edit → Preferences → Add-ons → Install from Disk, odaberi ZIP iz `Tools/third_party/cod-asset-importer/release`, pa omogući dodatak. Prvi build može da ne uspe ako lokalne verzije Rust/Python zavisnosti nisu kompatibilne; u tom slučaju prati poruku u konzoli. Addon treba da čita `Build/LocalCOD2Extraction` i očuva strukturu direktorijuma.
-5. U Blenderu uvezi željeni XModel/XAnim. Izvezi odabrani objekat kao FBX preko File → Export → FBX ili pomoću `Scripts/blender_export_selected_fbx.py`. Za Skeletal Mesh izaberi mesh i njegov armature; za statičnu pušku/zgradu dodaj `--static` kad koristiš skriptu.
-6. Sačuvaj FBX i teksture pod `SourceArt/Import/` koristeći tačno sledeće putanje i imena:
+3. Za privremeni CC0 placeholder oružja (nije COD2 original) možeš pokrenuti `Download_CC0_Weapon_Fallback.bat`; on ga smešta u `SourceArt/Import/Weapons/SM_CC0_Rifle.fbx`, koje se lokalno uvozi u UE5.
+4. Ako koristiš svoju legalnu lokalnu instalaciju Call of Duty 2, pokreni `Extract_COD2_Assets.bat "C:\putanja\do\Call of Duty 2"`. Skripta čita lokalne `.iwd` ZIP arhive i kopira samo potrebne foldere u `Build/LocalCOD2Extraction`. Zatim automatski pravi `Build/LocalCOD2AssetCatalogue.md`, spisak mogućih modela, animacija, BSP mapa i tekstura. Te lokacije su ignorisane u Git-u i ne menjaju instalaciju igre.
+5. Pokreni `Install_COD2_Blender_Importer.bat`. Skripta proverava Git, Python i Rust/Cargo, klonira open-source [Call of Duty Asset Importer](https://github.com/mauserzjeh/cod-asset-importer), instalira Python zavisnosti i pokušava da izgradi ZIP dodatak. Zatim u Blenderu izaberi Edit → Preferences → Add-ons → Install from Disk, odaberi ZIP iz `Tools/third_party/cod-asset-importer/release`, pa omogući dodatak. Prvi build može da ne uspe ako lokalne verzije Rust/Python zavisnosti nisu kompatibilne; u tom slučaju prati poruku u konzoli. Addon treba da čita `Build/LocalCOD2Extraction` i očuva strukturu direktorijuma.
+6. U Blenderu uvezi željeni XModel/XAnim. Izvezi odabrani objekat kao FBX preko File → Export → FBX ili pomoću `Scripts/blender_export_selected_fbx.py`. Za Skeletal Mesh izaberi mesh i njegov armature; za statičnu pušku/zgradu dodaj `--static` kad koristiš skriptu.
+7. Sačuvaj FBX i teksture pod `SourceArt/Import/` koristeći tačno sledeće putanje i imena:
 
    | Putanja | Namena |
    | --- | --- |
@@ -29,14 +30,15 @@ Primarni projekat je **CacilendUE.uproject — Unreal Engine 5.8 / Windows**. Br
    | `Buildings/SM_Presidency.fbx` | zamena zgrade Predsedništva |
    | `Buildings/SM_MainPostOfficePalace.fbx` | zamena Glavne pošte |
    | `Characters/SK_COD2_Soldier.fbx` | Skeletal Mesh vojnika |
-   | `Weapons/SM_COD2_Weapon.fbx` | FPS Static Mesh puške |
+   | `Weapons/SM_COD2_Weapon.fbx` | FPS Static Mesh COD2 puške |
+   | `Weapons/SM_CC0_Rifle.fbx` | opciona CC0 fallback puška, nije COD2 original |
    | `Animations/AN_COD2_Idle.fbx` | opcioni idle, kompatibilan sa imported skeleton-om |
    | `Animations/AN_COD2_Walk.fbx` | opcioni walk, kompatibilan sa imported skeleton-om |
 
-7. Sačuvaj teksture koje si legitimno izvezao pored odgovarajućih FBX fajlova. Koristi Blender FBX eksport koji kopira teksture ili spakuj teksture u folder uz FBX.
-8. Pokreni `Import_Cacilend_Assets.bat` za sam import, ili `Setup_Cacilend_Assets.bat` za ceo setup.
-9. U Unreal-u otvori mapu `/Game/Maps/L_Cacilend`, pritisni **Play** i proveri orijentaciju modela, veličinu, collision i materijale.
-10. Kad je testiranje uspešno, pokreni `Package_Windows.bat` da napraviš Windows Shipping build.
+8. Sačuvaj teksture koje si legitimno izvezao pored odgovarajućih FBX fajlova. Koristi Blender FBX eksport koji kopira teksture ili spakuj teksture u folder uz FBX.
+9. Pokreni `Import_Cacilend_Assets.bat` za sam import, ili `Setup_Cacilend_Assets.bat` za ceo setup.
+10. U Unreal-u otvori mapu `/Game/Maps/L_Cacilend`, pritisni **Play** i proveri orijentaciju modela, veličinu, collision i materijale.
+11. Kad je testiranje uspešno, pokreni `Package_Windows.bat` da napraviš Windows Shipping build.
 
 ## Važno za COD2 modele
 
