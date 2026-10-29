@@ -139,10 +139,22 @@ void ACacilendEnemy::Tick(float DeltaSeconds)
         SetActorRotation(FMath::RInterpTo(GetActorRotation(), Dir.Rotation(), DeltaSeconds, 3.0f));
     }
     AttackCooldown -= DeltaSeconds;
-    if (Dist < 1450.0f && AttackCooldown <= 0.0f)
+    if (Dist < 1450.0f)
     {
-        AttackCooldown = FMath::FRandRange(1.1f, 1.8f);
-        Player->TakeDamage(FMath::FRandRange(4.0f, 9.0f), FDamageEvent(), GetController(), this);
+        // Enemies must have a clear sight line; solid buildings/barriers block melee hits.
+        FHitResult VisibilityHit;
+        FCollisionQueryParams VisibilityParams(SCENE_QUERY_STAT(CacilendEnemyLineOfSight), true, this);
+        VisibilityParams.AddIgnoredActor(this);
+        VisibilityParams.AddIgnoredActor(Player);
+        const FVector EnemyEye = GetActorLocation() + FVector(0.0f, 0.0f, 70.0f);
+        const FVector PlayerTarget = Player->GetActorLocation() + FVector(0.0f, 0.0f, 55.0f);
+        const bool bBlocked = GetWorld()->LineTraceSingleByChannel(
+            VisibilityHit, EnemyEye, PlayerTarget, ECC_Visibility, VisibilityParams);
+        if (!bBlocked && AttackCooldown <= 0.0f)
+        {
+            AttackCooldown = FMath::FRandRange(1.1f, 1.8f);
+            Player->TakeDamage(FMath::FRandRange(4.0f, 9.0f), FDamageEvent(), GetController(), this);
+        }
     }
 }
 
