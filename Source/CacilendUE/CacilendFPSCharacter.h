@@ -28,7 +28,7 @@ public:
     bool IsReloading() const { return bReloading; }
     bool IsInInterior() const { return bInInterior; }
     bool IsPaused() const { return bGamePaused; }
-    bool IsNearAssemblyEntrance() const;
+    bool IsNearAssemblyInteraction() const;
     void AddKill() { ++Kills; }
 
 protected:
