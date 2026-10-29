@@ -1,6 +1,7 @@
 @echo off
 setlocal
 set "ROOT=%~dp0"
+set "UEEDITOR="
 set "UE_ROOT="
 for /f "usebackq delims=" %%E in (`powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%Scripts\Find_UE_5_8.ps1" -Purpose Editor`) do set "UE_ROOT=%%E"
 if defined UE_ROOT set "UEEDITOR=%UE_ROOT%\Engine\Binaries\Win64\UnrealEditor.exe"
