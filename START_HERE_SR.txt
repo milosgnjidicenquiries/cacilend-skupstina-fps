@@ -1,11 +1,17 @@
-CACILEND: SKUPSTINA FPS — WINDOWS PROTOTIP
+ĆACILEND: SKUPŠTINA FPS — GLAVNI UE5 WINDOWS PROJEKAT
 
-1) Instaliraj Unreal Engine 5.8 i Visual Studio 2022 C++ tools.
-2) Pokreni Start_Cacilend_Editor.bat i dozvoli da se C++ modul kompajlira.
-3) Pokreni Setup_Cacilend_Assets.bat da generiše PBR teksture i napravi mapu.
-4) Ako je potrebno, u editoru pokreni Tools > Execute Python Script i izaberi Content/Python/Setup_Cacilend.py.
-5) Otvori mapu L_Cacilend i pritisni Play.
-6) Package_Windows.bat pokušava da napravi Win64 Shipping build.
+GLAVNI PROJEKAT: CacilendUE.uproject (Unreal Engine 5.8). Browser/Render demo je prethodna verzija sačuvana u Archive/ i grani archive/browser-render-demo-2026-10-29.
 
-Ovo je izvorni Unreal Engine projekat, NE gotov EXE. Prvi build i gameplay test moraju da se odrade na Windows računaru sa UE 5.8 i Visual Studio C++ alatima.
-Detalji su u README_SR.md.
+1) Instaliraj Unreal Engine 5.8 i Visual Studio 2022 C++ tools + kompatibilni Windows SDK.
+2) Preuzmi/kloniraj repo u kratak folder, npr. C:\Games\CacilendUE.
+3) Prvo otvori CacilendUE.uproject i pusti UE/VS da kompajlira C++ modul.
+4) Pokreni Setup_Cacilend_Assets.bat. Generiše proceduralne PBR teksture, importuje lokalne FBX/teksture ako su u SourceArt\Import, pravi mapu/materijale i pokušava opciono Google 3D Tiles.
+5) Za lokalni COD2 sadržaj pročitaj Docs\ASSET_IMPORT_PIPELINE_SR.md. Extract_COD2_Assets.bat izdvaja datoteke lokalno; Install_COD2_Blender_Importer.bat priprema Blender dodatak; izvezi odabrane modele kao FBX i stavi ih u SourceArt\Import po imenima iz dokumentacije.
+6) Ako želiš Google Photorealistic 3D Tiles unutar UE5: instaliraj/omogući Cesium for Unreal, podesi Google Maps Platform Map Tiles API + billing i lokalni Config\Private\GoogleMapsApiKey.txt. Detalji: Docs\GOOGLE_EARTH_CESIUM_SETUP_SR.md.
+7) U Unreal Editor-u otvori /Game/Maps/L_Cacilend i pritisni Play.
+8) Kad je Editor gameplay potvrđen, pokreni Package_Windows.bat za Win64 Shipping build.
+
+VAŽNO: Ovo je UE5 izvorni projekat, ne verifikovan EXE. CI proverava izvorne fajlove, ali C++ kompilacija/cook/packaging/gameplay i stvarni COD2/Google asseti moraju se proveriti na Windows računaru sa UE5.8.
+
+Arhiva browser/Render demo-a: Archive\README_SR.md
+Javni Render demo: https://cacilend-skupstina-browser.onrender.com
