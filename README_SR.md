@@ -1,52 +1,48 @@
-# Ćacilend: Skupština FPS — Windows UE 5.8 prototip
+# Ćacilend: Skupština FPS — glavni UE5 projekat
 
-Ovo je izvorni Unreal Engine projekat za Windows. Cilj je FPS prototip sa mapom oko Narodne skupštine i kampa Ćacilend, uz zasebnu unutrašnju scenu skupštinske sale. Nije gotov komercijalni naslov niti je grafika već na nivou najnovijeg Call of Duty-ja.
+**Glavni proizvod je Windows FPS u Unreal Engine 5.8.** Browser/Render verzija je prethodni demo, sačuvan u arhivi i ostavljen online radi poređenja.
 
-## Uključeno
-- Unreal Engine 5.8 C++ projekat sa Windows/DX12 render podešavanjima.
-- Proceduralna spoljašnja scena: prilazni put, fasada Skupštine, šatori, prepreke, palete, vozila i drveće.
-- Odvojena unutrašnja sala, dostupna interakcijom na ulazu.
-- First-person kamera, WASD/miš, skok, sprint, prototipno oružje, trzaj, municija, reload, health i HUD.
-- Devet generičkih AI protivnika sa jednostavnim približavanjem i napadom.
-- Skripte za generisanje PBR tekstura, editor asseta i pakovanje Windows builda.
+## Šta je u UE5 projektu
 
-## Važno ograničenje
-Ovaj repo sadrži izvorni UE projekat, ne gotov EXE. Unreal Engine 5.8, Unreal Build Tool i Windows C++ build okruženje nisu dostupni u ovom okruženju, pa kompajliranje i testiranje moraju da se urade na Windows računaru.
+- `CacilendUE.uproject` — Unreal Engine 5.8 C++ projekat.
+- `Source/CacilendUE/` — FPS karakter, oružje, protivnici i generator scene.
+- `Content/Python/Setup_Cacilend.py` — priprema mape, materijala, tekstura i opcionalnih uvezenih modela.
+- `Content/Python/Import_Cacilend_Assets.py` — uvoz FBX statičnih mesh-eva, skeletal mesh-eva, animacija i tekstura.
+- `Content/Python/Setup_Google3DTiles_Cesium.py` — opciono podešavanje Google Photorealistic 3D Tiles preko Cesium for Unreal.
+- `Scripts/generate_textures.py` — generiše lokalne PBR teksture.
+- `Scripts/extract_cod2_assets.py` / `Extract_COD2_Assets.bat` — lokalno izvlačenje relevantnih `.iwd` sadržaja iz COD2 instalacije.
+- `Import_Cacilend_Assets.bat`, `Setup_Cacilend_Assets.bat`, `Package_Windows.bat` — Windows alati.
 
-Proceduralni modeli su prototipni. Za kvalitet na nivou velikog komercijalnog FPS-a potrebni su detaljni i pravilno licencirani modeli, materijali, skeletni karakteri i profesionalne animacije.
+UE5 ima offline fallback geometriju za Dom Narodne skupštine, Pionirski park, Predsedništvo/Novi dvor, Palatu Glavne pošte, okolne blokove i kamp. Ako odgovarajući uvezeni asset postoji na dokumentovanoj `/Game/Cacilend/Imported/...` putanji, map builder/karakter/oružje će ga koristiti. Bez lokalno uvezenih modela projekat ostaje proceduralni prototip.
 
-## Šta je potrebno
-- Windows 10/11 64-bit
-- Unreal Engine 5.8 preko Epic Games Launchera
-- Visual Studio 2022: Desktop development with C++ i Game development with C++ workload-i, uz kompatibilan Windows SDK
-- Za ozbiljniji rad preporuka je 32 GB RAM-a i GPU sa najmanje 8 GB VRAM-a.
+## Pokretanje na Windows računaru
 
-## Prvo pokretanje
-1. Preuzmi ili kloniraj repo u kratak folder, npr. C:\Games\CacilendUE.
-2. Instaliraj UE 5.8 i Visual Studio 2022 C++ alate.
-3. Pokreni Start_Cacilend_Editor.bat. Dozvoli Unreal-u da kompajlira C++ modul.
-4. Pokreni Setup_Cacilend_Assets.bat da generiše i uveze teksture, materijale i mapu L_Cacilend.
-5. Ako automatski Python setup ne uspe, u Unreal Editor-u izaberi Tools > Execute Python Script i pokreni Content/Python/Setup_Cacilend.py.
-6. Otvori mapu L_Cacilend i pritisni Play.
-7. Kada scena radi, pokreni Package_Windows.bat da pokušaš da napraviš Windows Shipping build.
+Potrebno: Windows 10/11 64-bit, Unreal Engine 5.8, Visual Studio 2022 sa `Desktop development with C++` i `Game development with C++` workload-ima i kompatibilan Windows SDK.
 
-## Kontrole
-- WASD — kretanje
-- Miš — pogled/nišanjenje
-- Levi klik — pucanje
-- R — reload
-- Shift — sprint
-- Space — skok
-- E — ulaz/izlaz iz skupštinske sale
-- Esc — prekida Play sesiju u editoru
+1. Preuzmi/kloniraj repozitorijum u kratak folder, npr. `C:\\Games\\CacilendUE`.
+2. Otvori `CacilendUE.uproject` i dozvoli Unreal/Visual Studio-u da kompajlira C++ modul.
+3. (Opciono) Za modele iz svoje legalne lokalne COD2 instalacije, pročitaj `Docs/ASSET_IMPORT_PIPELINE_SR.md`, pokreni `Extract_COD2_Assets.bat`, uvezi željene modele u Blender, izvezi ih kao FBX i sačuvaj ih u `SourceArt/Import/`.
+4. Pokreni `Setup_Cacilend_Assets.bat`. Skripta generiše PBR teksture, uvozi dostupne lokalne FBX/teksture, napravi materijale/mapu i pokuša opciono Google 3D Tiles podešavanje.
+5. U Unreal Editor-u otvori `/Game/Maps/L_Cacilend` i pritisni **Play**.
+6. Posle testiranja gameplay-a u editoru, pokreni `Package_Windows.bat` za Win64 Shipping build.
 
-## Struktura
-- CacilendUE.uproject — Unreal projekat
-- Source/CacilendUE — C++ karakter, AI, HUD i map builder
-- Content/Python/Setup_Cacilend.py — kreira Unreal materijale i mapu
-- Scripts/generate_textures.py — generiše PBR izvore
-- Start_Cacilend_Editor.bat — otvara Unreal Editor
-- Setup_Cacilend_Assets.bat — priprema teksture, assete i mapu
-- Package_Windows.bat — Windows pakovanje
+## Originalni COD2 modeli i teksture
 
-Ne distribuiraj build pre nego što se igra pokrene na čistom Windows računaru i ne prođu provere kontrola, kolizija, AI i prelaska između scena.
+Javni repo ne sadrži originalne Call of Duty 2 IWD arhive niti izvučene vlasničke assete. Za lokalnu instalaciju koju poseduješ pripremljeni su ekstrakcioni alat i FBX importer. Pročitaj `Docs/ASSET_IMPORT_PIPELINE_SR.md`. Očekivani modeli su `SM_NationalAssembly`, `SM_PionirskiPark`, `SM_Presidency`, `SM_MainPostOfficePalace`, `SK_COD2_Soldier` i `SM_COD2_Weapon`, uz opcione `AN_COD2_Idle` / `AN_COD2_Walk` animacije. Datoteke moraš stvarno lokalno izvesti i uvesti pre nego što zamene proceduralne modele.
+
+## Google Earth / Photorealistic 3D Tiles
+
+Fotogrametrija uživo je opciona: zahteva Cesium for Unreal, omogućen Google Maps Platform Map Tiles API, projekat sa billing-om, ograničen API key i vidljivu atribuciju. Lokalno čuvaj ključ u `Config/Private/GoogleMapsApiKey.txt`; fajl je isključen iz Git-a. Pogledaj `Docs/GOOGLE_EARTH_CESIUM_SETUP_SR.md`. Offline mapa ostaje dostupna i bez Cesium-a/ključa.
+
+## Arhiva starih demo verzija
+
+- [Snapshot grana: archive/browser-render-demo-2026-10-29](https://github.com/milosgnjidicenquiries/cacilend-skupstina-fps/tree/archive/browser-render-demo-2026-10-29)
+- [Uputstvo za arhivu](Archive/README_SR.md)
+- [Browser demo na Renderu](https://cacilend-skupstina-browser.onrender.com)
+- [Browser 3D galerija modela](https://cacilend-skupstina-browser.onrender.com/assets.html)
+
+Folder `browser/` namerno ostaje u repo-u zato što ga Render objavljuje kao statički sajt. Ne premeštaj ga bez promene Render konfiguracije.
+
+## Status validacije
+
+GitHub Actions proverava JSON konfiguraciju, Python sintaksu, browser JS i osnovnu ravnotežu C++ zagrada. To **nije** C++ kompilacija niti gameplay test. Repo još nema verifikovan Windows EXE; UnrealBuildTool, cooking, pakovanje i testiranje moraju da se urade na Windows računaru sa instaliranim UE 5.8.
