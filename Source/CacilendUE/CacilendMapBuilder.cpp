@@ -6,6 +6,8 @@
 #include "Engine/World.h"
 #include "EngineUtils.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
 
 namespace
 {
@@ -25,16 +27,15 @@ ACacilendMapBuilder::ACacilendMapBuilder()
 void ACacilendMapBuilder::BeginPlay()
 {
     Super::BeginPlay();
-    for (TActorIterator<AActor> It(GetWorld()); It; ++It)
-    {
-        if (It->GetClass()->GetName().Contains(TEXT("Cesium3DTileset")))
-        {
-            bUseGooglePhotogrammetry = true;
-            break;
-        }
-    }
+
+    // Do not hide the offline city just because a Cesium actor exists.
+    // Google tiles may fail to load (missing key, billing/API restriction, network issue).
+    // Explicitly opt in to suppressing proxy buildings only after the user confirms tiles work.
+    bUseGooglePhotogrammetry = FParse::Param(FCommandLine::Get(), TEXT("CacilendUseGooglePhotogrammetry"));
     if (bUseGooglePhotogrammetry)
-        UE_LOG(LogTemp, Log, TEXT("[Cacilend] Google/Cesium photogrammetry is active. Hiding offline city proxy buildings."));
+        UE_LOG(LogTemp, Log, TEXT("[Cacilend] Google/Cesium mode explicitly enabled; offline city proxy buildings are suppressed."));
+    else
+        UE_LOG(LogTemp, Log, TEXT("[Cacilend] Offline city mode is active. Use -CacilendUseGooglePhotogrammetry only after validating live tiles."));
 
     BuildExterior();
     BuildPionirskiPark();
