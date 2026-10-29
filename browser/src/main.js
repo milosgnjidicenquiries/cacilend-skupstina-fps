@@ -1,4 +1,5 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/loaders/GLTFLoader.js';
 
 const $ = (id) => document.getElementById(id);
 const canvas = $('view'), errorBox = $('error');
@@ -102,11 +103,22 @@ function sph(m,x,y,z,sx,sy,sz){
 }
 function ground(m,x,z,w,d){const o=addMesh(new THREE.PlaneGeometry(w,d),m,x,-.06,z,1,1,1,{cast:false});o.rotation.x=-Math.PI/2;return o;}
 function solid(x,z,hx,hz){solids.push({x,z,hx,hz});}
-ground(M.road,0,-11,58,100);ground(M.grass,-36,-11,18,110);ground(M.grass,36,-11,18,110);
-box(M.concrete,-27,.04,-11,1.3,.22,108);box(M.concrete,27,.04,-11,1.3,.22,108);
-for(let x=-28;x<=28;x+=7)box(M.dark,x,.012,31,.04,.01,80,0,{cast:false});
+ground(M.road,0,-11,58,100);
+// Approximate real-world block layout, scaled to a playable FPS area.
+// Pionirski Park lies west/southwest of the National Assembly; the Main Post Office is east.
+ground(M.grass,-38,3,61,39);
+ground(M.grass,64,1,52,105);
+ground(M.road,-38,-22,66,7.5);
+ground(M.road,-38,25,68,8);
+ground(M.road,-72,2,7.5,65);
+ground(M.road,31,0,8,105);
+ground(M.road,69,0,8,110);
+box(M.concrete,-8,.04,0,1.1,.22,90);
+box(M.concrete,27,.04,-11,1.3,.22,108);
+for(let z=-55;z<=32;z+=10)box(M.dark,27.8,.012,z,.04,.01,4.5,0,{cast:false});
 
 function barrier(x,z,yaw=0){
+ x-=38;z+=11;
  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=yaw;scene.add(g);
  for(const part of [
   [3.2,.45,.96,0,.24,0,M.concrete],[2.45,.55,.7,0,.72,0,M.concrete],[2.55,.07,.75,0,1.03,0,M.stone],[2.05,.1,.025,0,.77,.37,M.tent]
@@ -114,6 +126,7 @@ function barrier(x,z,yaw=0){
  solid(x,z,1.8,.68);
 }
 function tent(x,z,yaw=0,variant=0){
+ x-=38;z+=11;
  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=yaw;scene.add(g);
  const fabric=variant%2?M.tent:M.olive;
  const wall=new THREE.Mesh(new THREE.BoxGeometry(3.5,1.65,2.6),fabric);wall.position.y=.85;wall.castShadow=true;wall.receiveShadow=true;g.add(wall);
@@ -125,17 +138,20 @@ function tent(x,z,yaw=0,variant=0){
  solid(x,z,2.05,1.55);
 }
 function pallet(x,z,yaw=0){
+ x-=38;z+=11;
  const g=new THREE.Group();g.position.set(x,.1,z);g.rotation.y=yaw;scene.add(g);
  const part=(m,a,b,c,d,e,f)=>{const o=new THREE.Mesh(boxGeo,m);o.position.set(a,b,c);o.scale.set(d,e,f);o.castShadow=true;o.receiveShadow=true;g.add(o);};
  part(M.wood,0,.055,0,1.35,.12,.83);for(let i=-2;i<=2;i++)part(M.wood,i*.26,.14,0,.12,.08,.83);
  for(let x of [-.43,0,.43])part(M.dark,x,.01,0,.16,.07,.76);solid(x,z,.8,.58);
 }
 function barrel(x,z){
+ x-=38;z+=11;
  cyl(M.metal,x,.55,z,.4,.42,1.1,22);
  for(let y of [.23,.5,.81])cyl(M.dark,x,y,z,.425,.425,.055,22);
  cyl(M.olive,x,1.12,z,.38,.38,.035,22);solid(x,z,.5,.5);
 }
 function car(x,z,color,yaw=0){
+ x-=38;z+=11;
  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=yaw;scene.add(g);
  const paint=new THREE.MeshStandardMaterial({color:color,metalness:.45,roughness:.35});
  const p=(geo,m,a,b,c,sx,sy,sz)=>{const o=new THREE.Mesh(geo,m);o.position.set(a,b,c);o.scale.set(sx,sy,sz);o.castShadow=true;o.receiveShadow=true;g.add(o);return o;};
@@ -160,10 +176,205 @@ function tree(x,z,scale=1){
  }
 }
 function lamp(x,z){
+ x-=38;z+=11;
  cyl(M.metal,x,3.2,z,.065,.085,6.4,12);
  const arm=cyl(M.metal,x+.55,6.2,z,.035,.035,1.1,10,0,0,Math.PI/2);
  box(M.dark,x+.95,6.15,z,.38,.1,.26);
 }
+
+function pathBox(x,z,w,d,material=M.concrete){
+  return box(material,x,.005,z,w,.08,d,0,{cast:false,receive:true});
+}
+function parkTree(x,z,scale=1){
+  tree(x,z,scale);
+  solid(x,z,.45*scale,.45*scale);
+}
+function buildPionirskiPark(){
+  // Formal park geometry: central walkways, oval flowerbeds, fountain and benches.
+  pathBox(-38,3,56,2.25,M.stone);
+  pathBox(-38,3,2.25,35,M.stone);
+  pathBox(-38,-5,29,1.6,M.stone);
+  pathBox(-38,11,29,1.6,M.stone);
+  pathBox(-52,3,1.6,16,M.stone);
+  pathBox(-24,3,1.6,16,M.stone);
+  for(const x of [-58,-50,-26,-18]){
+    box(M.grass,x,.005,3,3.5,.05,8.5,0,{cast:false});
+    for(let i=0;i<5;i++)sph(i%2?M.olive:M.tent,x-1.2+i*.6,.18,3+(i%3-1)*2.4,.26,.22,.26);
+  }
+  // Central ornamental fountain.
+  cyl(M.stone,-38,.15,3,4.45,4.8,.34,40);
+  const water=new THREE.Mesh(new THREE.CylinderGeometry(3.98,3.98,.065,40),new THREE.MeshStandardMaterial({color:0x536b6b,metalness:.22,roughness:.24}));
+  water.position.set(-38,.36,3);water.receiveShadow=true;scene.add(water);
+  cyl(M.stone,-38,.58,3,.78,.92,.38,24);
+  cyl(M.stone,-38,.92,3,.46,.58,.25,24);
+  sph(M.light,-38,1.14,3,.19,.27,.19);
+  solid(-38,3,4.7,4.7);
+  // Mature trees around the park edges, away from the walkways.
+  for(let i=0;i<6;i++){
+    parkTree(-64,-11+i*5.1,.88+(i%3)*.08);
+    parkTree(-12,-11+i*5.1,.92+(i%2)*.1);
+  }
+  for(let i=0;i<5;i++){
+    parkTree(-58+i*9.5,-14,.85+(i%2)*.12);
+    parkTree(-58+i*9.5,20,.85+(i%3)*.06);
+  }
+  // Benches face the paths; legs and slats are separate meshes for depth.
+  for(const [x,z,rot] of [[-48,-4,0],[-28,-4,0],[-48,10,0],[-28,10,0],[-39,-10,Math.PI/2],[-39,16,Math.PI/2]]){
+    const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;scene.add(g);
+    for(let i=0;i<3;i++)box(M.wood,x,0.52+i*.13,z,1.8,.1,.14,rot,{cast:true});
+    for(const lx of [-.67,.67])box(M.dark,x+lx,.26,z,.1,.52,.12,rot);
+  }
+  // Low stone edging gives the park a clear border against surrounding streets.
+  box(M.stone,-38,.08,-16.8,61,.16,.35);
+  box(M.stone,-38,.08,22.7,61,.16,.35);
+  box(M.stone,-68.4,.08,3, .35,.16,39.5);
+  box(M.stone,-7.6,.08,3, .35,.16,39.5);
+}
+function frontWindow(x,y,z,w=1.2,h=1.5){
+  box(M.glass,x,y,z,w,h,.085);
+  box(M.stone,x,y-h/2-.08,z,w+.24,.1,.13);
+  box(M.stone,x,y+h/2+.08,z,w+.24,.1,.13);
+  box(M.stone,x-w/2-.07,y,z,.1,h+.22,.13);
+  box(M.stone,x+w/2+.07,y,z,.1,h+.22,.13);
+}
+function sideWindow(x,y,z,w=1.2,h=1.5){
+  box(M.glass,x,y,z,.085,h,w);
+  box(M.stone,x,y-h/2-.08,z,.13,.1,w+.24);
+  box(M.stone,x,y+h/2+.08,z,.13,.1,w+.24);
+  box(M.stone,x,y,z-w/2-.07,.13,h+.22,.1);
+  box(M.stone,x,y,z+w/2+.07,.13,h+.22,.1);
+}
+function buildPresidency(){
+  // New Palace / Presidency, Andrićev venac 1 — west/south of the park.
+  const x=-69,z=30;
+  box(M.concrete,x,.45,z,21,.9,14);
+  box(M.stone,x,7.7,z,19,14.5,12.4);
+  box(M.stone,x,14.9,z,20,.55,13.1);
+  box(M.stone,x,1.5,z-6.35,19.8,.45,.5);
+  box(M.stone,x,13.9,z-6.5,20,.48,.55);
+  // Central projecting façade and a copper-toned dome.
+  box(M.stone,x,8.1,z-6.15,8.7,15.2,.75);
+  box(M.stone,x,15.65,z-6.2,9.8,.8,1.2);
+  const dome=new THREE.Mesh(new THREE.SphereGeometry(1,28,16,0,Math.PI*2,0,Math.PI/2),new THREE.MeshStandardMaterial({color:0x667568,metalness:.38,roughness:.52}));
+  dome.position.set(x,16.1,z);dome.scale.set(3.25,2.25,3.15);dome.castShadow=true;scene.add(dome);
+  box(M.stone,x,18.25,z,2.7,1.1,2.7);
+  cyl(M.stone,x,19.1,z,.52,.68,.8,16);
+  // Four storeys of tall windows facing north toward Pionirski Park.
+  for(let floor=0;floor<4;floor++){
+    const y=3.0+floor*3.15;
+    for(const dx of [-7.2,-3.6,3.6,7.2])frontWindow(x+dx,y,z-6.28,1.3,1.8);
+    if(floor>0)frontWindow(x,y,z-6.28,1.35,1.8);
+  }
+  for(const dx of [-6,-4,-2,0,2,4,6])cyl(M.stone,x+dx,7.4,z-6.6,.14,.17,7.6,14);
+  box(M.dark,x,1.3,z-6.76,2.2,2.6,.18);
+  for(let i=0;i<4;i++)box(M.stone,x,0.14+i*.22,z-7.7-i*.5,13+i*1.1,.2,.85);
+  solid(x,z,9.8,6.2);
+}
+function buildMainPostOffice(){
+  // Main Post Office Palace, Takovska 2 — east of the central street.
+  const x=42,z=1;
+  box(M.concrete,x,.5,z,27,.95,21);
+  box(M.stone,x,7.25,z,25,13.4,18.5);
+  box(M.stone,x,14.1,z,26,.65,19.4);
+  box(M.stone,x,1.2,z-9.48,25.6,.5,.55);
+  // West-facing monumental entrance and its Doric columns.
+  box(M.stone,x-12.72,8,z,4.5,14.9,9.4);
+  box(M.stone,x-12.8,15.4,z,5.4,1.3,10.4);
+  box(M.stone,x-12.8,1.0,z,5.2,.8,10.2);
+  for(let i=0;i<7;i++){
+    const zz=z-7.5+i*2.5;
+    cyl(M.stone,x-15.1,7.7,zz,.24,.28,11.5,18);
+    cyl(M.stone,x-15.1,2.0,zz,.43,.43,.26,18);
+    cyl(M.stone,x-15.1,13.4,zz,.42,.42,.3,18);
+  }
+  // Long window rhythm and stone lintels, characteristic of the monumental palace.
+  for(let floor=0;floor<4;floor++){
+    const y=3+floor*3.05;
+    for(let i=0;i<7;i++){
+      const zz=z-7.3+i*2.35;
+      if(floor===0&&i===3){
+        box(M.dark,x-15.1,2.2,zz,.12,2.25,1.35);
+      } else sideWindow(x-12.58,y,zz,1.0,1.55);
+    }
+  }
+  // Central tower / clock marker.
+  box(M.stone,x-12.7,16.55,z,4.8,2.0,5.8);
+  const clockFace=new THREE.Mesh(new THREE.CircleGeometry(.62,32),new THREE.MeshStandardMaterial({color:0xe4ddc7,roughness:.9}));
+  clockFace.position.set(x-15.16,16.55,z);clockFace.rotation.y=-Math.PI/2;scene.add(clockFace);
+  box(M.stone,x-12.7,18.2,z,3.4,.7,3.7);
+  const crown=new THREE.Mesh(new THREE.ConeGeometry(1.8,2.4,4),M.stone);crown.position.set(x-12.7,19.65,z);crown.rotation.y=Math.PI/4;crown.castShadow=true;scene.add(crown);
+  solid(x,z,12.7,9.4);
+}
+function cityBlock(x,z,w,d,floors,front='north'){
+  const h=floors*3.0, facade=M.stone;
+  box(M.concrete,x,.45,z,w+.9,.9,d+.8);
+  box(facade,x,h/2,z,w,h,d);
+  box(M.dark,x,h+.22,z,w+.6,.44,d+.6);
+  box(M.stone,x,h-0.32,z,w+.2,.23,d+.2);
+  if(front==='west'||front==='east'){
+    const faceX=front==='west'?x-w/2-.07:x+w/2+.07;
+    for(let fl=0;fl<floors;fl++)for(let j=0;j<Math.max(2,Math.floor(d/3));j++)sideWindow(faceX,1.7+fl*3,z-d/2+1.5+j*3,1.1,1.5);
+  } else {
+    const faceZ=front==='north'?z-d/2-.07:z+d/2+.07;
+    for(let fl=0;fl<floors;fl++)for(let j=0;j<Math.max(2,Math.floor(w/3));j++)frontWindow(x-w/2+1.5+j*3,1.7+fl*3,faceZ,1.1,1.5);
+  }
+  solid(x,z,w/2,d/2);
+}
+function buildSurroundingStreets(){
+  // Dense surrounding Belgrade blocks, broad streets, pavements and traffic lanes.
+  ground(M.road,-38,47,100,8);
+  ground(M.road,-38,-67,100,8);
+  ground(M.road,-84,2,7,130);
+  ground(M.road,88,0,7,130);
+  for(const x of [-80,-66,-4,10,58,74])for(const z of [-52,41,57]){
+    if((x===-4||x===10)&&z===41)continue;
+    box(M.concrete,x,.015,z,12,.08,1.1,0,{cast:false});
+  }
+  cityBlock(-84,-3,13,25,5,'east');
+  cityBlock(-84,35,13,21,4,'east');
+  cityBlock(-84,-43,13,22,5,'east');
+  cityBlock(-84,63,13,16,4,'east');
+  cityBlock(81,-38,14,22,5,'west');
+  cityBlock(81,-4,14,24,6,'west');
+  cityBlock(81,33,14,23,4,'west');
+  cityBlock(81,63,14,16,5,'west');
+  cityBlock(-30,-70,22,12,4,'south');
+  cityBlock(2,-70,24,12,5,'south');
+  cityBlock(35,-70,22,12,4,'south');
+  cityBlock(-24,55,22,13,4,'north');
+  cityBlock(10,58,20,12,5,'north');
+  cityBlock(49,53,22,14,4,'north');
+}
+function buildSoldierPlaceholder(x,z,yaw=0){
+  // Temporary COD2-style human proxy while the separately licensed source meshes are imported.
+  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=yaw;scene.add(g);
+  const uniform=new THREE.MeshStandardMaterial({color:0x555b48,roughness:.95});
+  const vest=new THREE.MeshStandardMaterial({color:0x343a30,roughness:.92});
+  const skin=new THREE.MeshStandardMaterial({color:0x98785d,roughness:.94});
+  const helmet=new THREE.MeshStandardMaterial({color:0x424a39,roughness:.86});
+  const boot=new THREE.MeshStandardMaterial({color:0x252822,roughness:.95});
+  const part=(geo,m,px,py,pz,sx,sy,sz,rz=0)=>{const o=new THREE.Mesh(geo,m);o.position.set(px,py,pz);o.scale.set(sx,sy,sz);o.rotation.z=rz;o.castShadow=true;o.receiveShadow=true;g.add(o);return o;};
+  part(boxGeo,uniform,-.18,.55,0,.22,1.0,.28,-.03);part(boxGeo,uniform,.18,.55,0,.22,1.0,.28,.03);
+  part(boxGeo,boot,-.18,.13,-.025,.25,.22,.39);part(boxGeo,boot,.18,.13,-.025,.25,.22,.39);
+  part(boxGeo,uniform,0,1.31,0,.62,.72,.36);
+  part(boxGeo,vest,0,1.34,-.205,.53,.58,.16);
+  part(boxGeo,vest,0,1.42,.2,.4,.46,.16);
+  part(boxGeo,skin,0,1.82,-.005,.16,.16,.16);
+  part(new THREE.SphereGeometry(1,16,12),skin,0,2.03,0,.22,.26,.22);
+  part(new THREE.SphereGeometry(1,20,12,0,Math.PI*2,0,Math.PI/2),helmet,0,2.15,0,.28,.18,.28);
+  part(boxGeo,helmet,0,2.13,-.02,.58,.06,.48);
+  part(boxGeo,uniform,-.43,1.39,-.01,.2,.61,.22,.18);
+  part(boxGeo,uniform,.43,1.39,-.01,.2,.61,.22,-.18);
+  part(boxGeo,skin,-.5,1.06,-.11,.15,.24,.16,.12);
+  part(boxGeo,skin,.5,1.06,-.11,.15,.24,.16,-.12);
+  part(boxGeo,vest,0,1.04,.24,.42,.44,.22);
+  // A compact rifle silhouette; non-interactive background character.
+  part(boxGeo,vest,.22,1.23,-.31,.42,.095,.1,-.15);
+  part(boxGeo,boot,.39,1.25,-.47,.32,.045,.045);
+  for(let i=0;i<4;i++)part(boxGeo,uniform,-.22+i*.145,1.35,-.3,.08,.1,.04);
+  return g;
+}
+
 function buildAssembly(){
  box(M.stone,0,7.1,-40,48,14.2,3.5);
  box(M.stone,0,14.55,-40,50,.55,4.1);
@@ -211,8 +422,9 @@ function buildInterior(){
  }
  for(let i=0;i<5;i++){cyl(M.metal,x-8+i*4,8.5,z-11,.06,.06,.7,12);sph(M.light,x-8+i*4,8.05,z-11,.28,.13,.28);}
 }
-buildAssembly();buildInterior();
+buildAssembly();buildInterior();buildPionirskiPark();buildPresidency();buildMainPostOffice();buildSurroundingStreets();
 for(let i=0;i<12;i++){tree(-34+(i%3),-45+i*7.5,.85+rnd()*.3);tree(34-(i%3),-45+i*7.5,.9+rnd()*.32);}
+buildSoldierPlaceholder(-47,2,.25);buildSoldierPlaceholder(-29,8,-.55);buildSoldierPlaceholder(-49,-8,.45);
 for(let row=0;row<4;row++)for(let col=0;col<2;col++){
  tent(-8.5-col*3.3,4-row*8,row%2?.07:-.04,row+col);
  tent(8.5+col*3.3,2-row*8,row%2?-.07:.04,row+col+1);
@@ -240,7 +452,7 @@ function makeTarget(x,z,id){
  part(new THREE.BoxGeometry(1,1,1),M.target,.18,.36,0,.2,.65,.22);
  const t={group:g,parts,score:0,active:true,id,baseX:x,baseZ:z,phase:rnd()*6};targets.push(t);return t;
 }
-const targetSpawns=[[-14,-13],[14,-8],[-12,-24],[12,-28],[-17,3],[17,7],[-5,-19],[6,-35],[0,-8],[-20,-21],[20,-15],[0,-29]];
+const targetSpawns=[[-24,11],[-19,0],[-24,-7],[-53,12],[-48,0],[-45,-11],[-35,17],[-35,-12],[-17,8],[-55,-10],[-29,18],[-56,7]];
 targetSpawns.forEach((p,i)=>makeTarget(p[0],p[1],i));
 
 // View-model assembled from physical materials to replace the floating toy silhouette.
@@ -258,10 +470,38 @@ const hand2=hand1.clone();hand2.position.set(.25,-.09,-.12);weapon.add(hand2);
 const flash=new THREE.Mesh(new THREE.ConeGeometry(.065,.23,8),new THREE.MeshBasicMaterial({color:0xffd89a,transparent:true,opacity:.9}));flash.rotation.x=-Math.PI/2;flash.position.set(.29,.01,-.43);flash.visible=false;weapon.add(flash);
 const flashLight=new THREE.PointLight(0xffca81,0,5);flashLight.position.set(.29,.01,-.35);weapon.add(flashLight);
 
-const player={pos:new THREE.Vector3(0,0,25),yaw:0,pitch:0,health:100,ammo:30,reserve:120,hits:0,inside:false,saved:new THREE.Vector3(),sens:.0017,locked:false};
+const rifleAssetUrl='https://raw.githubusercontent.com/petroulacl/fps-asset-kit/main/weapons/flat_guns_west/Flat%20Guns%20West/GLB/Rifle_Assault_West.glb';
+let rifleAssetLoaded=false;
+const fallbackWeaponChildren=[...weapon.children].filter(child=>child!==flash&&child!==flashLight);
+fallbackWeaponChildren.forEach(child=>child.visible=false);
+new GLTFLoader().load(rifleAssetUrl,gltf=>{
+  const rifle=gltf.scene;
+  const box3=new THREE.Box3().setFromObject(rifle);
+  const size=new THREE.Vector3();box3.getSize(size);
+  const center=new THREE.Vector3();box3.getCenter(center);
+  rifle.position.sub(center);
+  const longestAxis=size.x>=size.y&&size.x>=size.z?'x':(size.y>=size.z?'y':'z');
+  if(longestAxis==='x')rifle.rotation.y=Math.PI/2;
+  else if(longestAxis==='y')rifle.rotation.x=-Math.PI/2;
+  const rotatedBox=new THREE.Box3().setFromObject(rifle);
+  const rotatedSize=new THREE.Vector3();rotatedBox.getSize(rotatedSize);
+  const length=Math.max(rotatedSize.x,rotatedSize.y,rotatedSize.z)||1;
+  rifle.scale.setScalar(.82/length);
+  const scaledBox=new THREE.Box3().setFromObject(rifle);
+  const scaledCenter=new THREE.Vector3();scaledBox.getCenter(scaledCenter);
+  rifle.position.sub(scaledCenter);
+  rifle.position.set(.02,-.025,-.04);
+  rifle.traverse(o=>{if(o.isMesh){o.castShadow=false;o.frustumCulled=false;}});
+  weapon.add(rifle);rifleAssetLoaded=true;
+},undefined,error=>{
+  console.warn('Optional CC0 rifle GLB failed to load; using built-in weapon.',error);
+  fallbackWeaponChildren.forEach(child=>child.visible=true);
+});
+
+const player={pos:new THREE.Vector3(-61,0,8),yaw:-0.78,pitch:0,health:100,ammo:30,reserve:120,hits:0,inside:false,saved:new THREE.Vector3(),sens:.0017,locked:false};
 const keys=new Set(),raycaster=new THREE.Raycaster();raycaster.far=85;
 let active=false,reloadTime=0,reloading=false,shotDelay=0,recoil=0,flashTime=0,toastTime=0,hitTime=0;
-camera.position.set(0,1.68,25);
+camera.position.set(player.pos.x,1.68,player.pos.z);camera.rotation.set(player.pitch,player.yaw,0,'YXZ');
 function toast(text){$('toast').textContent=text;$('toast').classList.add('show');toastTime=1.9;}
 function updateHud(){
  $('health').textContent=String(Math.round(player.health)).padStart(3,'0');$('healthbar').style.width=player.health+'%';
@@ -277,7 +517,7 @@ function interact(){
 }
 function blocked(x,z){
  if(player.inside){return x<66.8||x>89.2||z< -19||z>18.5;}
- if(Math.abs(x)>29||z>43||z< -59)return true;
+ if(x < -96 || x > 96 || z > 78 || z < -84)return true;
  if(Math.abs(z+40)<2.7&&Math.abs(x)>4.2)return true;
  for(const s of solids)if(Math.abs(x-s.x)<s.hx+.38&&Math.abs(z-s.z)<s.hz+.38)return true;
  return false;
