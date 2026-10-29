@@ -83,16 +83,39 @@ void ACacilendFPSCharacter::BeginPlay()
     Super::BeginPlay();
     const FString MetalPath = TEXT("/Game/Cacilend/Materials/M_Metal.M_Metal");
     const FString FabricPath = TEXT("/Game/Cacilend/Materials/M_DarkFabric.M_DarkFabric");
-    AddWeaponPart(TEXT("Receiver"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(0, 0, 0), FVector(0.29f, 0.065f, 0.080f), FRotator::ZeroRotator, MetalPath, FLinearColor(0.075f,0.085f,0.075f));
-    AddWeaponPart(TEXT("Handguard"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(19, 0, 1), FVector(0.20f, 0.057f, 0.061f), FRotator::ZeroRotator, MetalPath, FLinearColor(0.10f,0.11f,0.10f));
-    AddWeaponPart(TEXT("Barrel"), TEXT("/Engine/BasicShapes/Cylinder.Cylinder"), FVector(39, 0, 0), FVector(0.021f,0.021f,0.22f), FRotator(90,0,0), MetalPath, FLinearColor(0.035f,0.04f,0.035f));
-    AddWeaponPart(TEXT("Stock"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(-25, 0, -1), FVector(0.18f,0.055f,0.075f), FRotator(0,0,-5), FabricPath, FLinearColor(0.10f,0.12f,0.095f));
-    AddWeaponPart(TEXT("Magazine"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(-1, 0, -10), FVector(0.060f,0.045f,0.13f), FRotator(0,0,-8), MetalPath, FLinearColor(0.06f,0.07f,0.06f));
-    AddWeaponPart(TEXT("Grip"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(-7, 0, -11), FVector(0.045f,0.045f,0.085f), FRotator(0,0,-18), FabricPath, FLinearColor(0.12f,0.13f,0.11f));
-    AddWeaponPart(TEXT("TopRail"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(8, 0, 5.3f), FVector(0.31f,0.018f,0.010f), FRotator::ZeroRotator, MetalPath, FLinearColor(0.025f,0.03f,0.025f));
-    AddWeaponPart(TEXT("FrontSight"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(31, 0, 9.0f), FVector(0.017f,0.018f,0.035f), FRotator::ZeroRotator, MetalPath, FLinearColor(0.025f,0.03f,0.025f));
-    AddWeaponPart(TEXT("RightGlove"), TEXT("/Engine/BasicShapes/Sphere.Sphere"), FVector(11, 9, -13), FVector(0.095f,0.062f,0.065f), FRotator(0,0,10), FabricPath, FLinearColor(0.17f,0.18f,0.13f));
-    AddWeaponPart(TEXT("LeftGlove"), TEXT("/Engine/BasicShapes/Sphere.Sphere"), FVector(26, -8, -12), FVector(0.09f,0.06f,0.062f), FRotator(0,0,-10), FabricPath, FLinearColor(0.17f,0.18f,0.13f));
+
+    // Prefer a locally imported COD2 weapon mesh when available.
+    // If it is absent, keep the original procedural prototype weapon.
+    UStaticMesh* ImportedWeapon = LoadShape(TEXT("/Game/Cacilend/Imported/Weapons/SM_COD2_Weapon.SM_COD2_Weapon"));
+    if (ImportedWeapon)
+    {
+        UStaticMeshComponent* WeaponMesh = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass(), TEXT("ImportedCOD2Weapon"));
+        WeaponMesh->SetupAttachment(WeaponRoot);
+        WeaponMesh->SetStaticMesh(ImportedWeapon);
+        const FVector SourceSize = ImportedWeapon->GetBounds().BoxExtent * 2.0f;
+        const float LongestAxis = FMath::Max3(SourceSize.X, SourceSize.Y, SourceSize.Z);
+        const float Scale = LongestAxis > 1.0f ? 82.0f / LongestAxis : 1.0f;
+        WeaponMesh->SetRelativeScale3D(FVector(Scale));
+        WeaponMesh->SetRelativeLocation(FVector(34.0f, 0.0f, -7.0f));
+        WeaponMesh->SetRelativeRotation(FRotator::ZeroRotator);
+        WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        WeaponMesh->CastShadow = false;
+        WeaponMesh->RegisterComponent();
+        UE_LOG(LogTemp, Log, TEXT("[Cacilend] Imported weapon mesh loaded. Orient the FBX barrel toward local +X for best first-person alignment."));
+    }
+    else
+    {
+        AddWeaponPart(TEXT("Receiver"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(0, 0, 0), FVector(0.29f, 0.065f, 0.080f), FRotator::ZeroRotator, MetalPath, FLinearColor(0.075f,0.085f,0.075f));
+        AddWeaponPart(TEXT("Handguard"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(19, 0, 1), FVector(0.20f, 0.057f, 0.061f), FRotator::ZeroRotator, MetalPath, FLinearColor(0.10f,0.11f,0.10f));
+        AddWeaponPart(TEXT("Barrel"), TEXT("/Engine/BasicShapes/Cylinder.Cylinder"), FVector(39, 0, 0), FVector(0.021f,0.021f,0.22f), FRotator(90,0,0), MetalPath, FLinearColor(0.035f,0.04f,0.035f));
+        AddWeaponPart(TEXT("Stock"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(-25, 0, -1), FVector(0.18f,0.055f,0.075f), FRotator(0,0,-5), FabricPath, FLinearColor(0.10f,0.12f,0.095f));
+        AddWeaponPart(TEXT("Magazine"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(-1, 0, -10), FVector(0.060f,0.045f,0.13f), FRotator(0,0,-8), MetalPath, FLinearColor(0.06f,0.07f,0.06f));
+        AddWeaponPart(TEXT("Grip"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(-7, 0, -11), FVector(0.045f,0.045f,0.085f), FRotator(0,0,-18), FabricPath, FLinearColor(0.12f,0.13f,0.11f));
+        AddWeaponPart(TEXT("TopRail"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(8, 0, 5.3f), FVector(0.31f,0.018f,0.010f), FRotator::ZeroRotator, MetalPath, FLinearColor(0.025f,0.03f,0.025f));
+        AddWeaponPart(TEXT("FrontSight"), TEXT("/Engine/BasicShapes/Cube.Cube"), FVector(31, 0, 9.0f), FVector(0.017f,0.018f,0.035f), FRotator::ZeroRotator, MetalPath, FLinearColor(0.025f,0.03f,0.025f));
+        AddWeaponPart(TEXT("RightGlove"), TEXT("/Engine/BasicShapes/Sphere.Sphere"), FVector(11, 9, -13), FVector(0.095f,0.062f,0.065f), FRotator(0,0,10), FabricPath, FLinearColor(0.17f,0.18f,0.13f));
+        AddWeaponPart(TEXT("LeftGlove"), TEXT("/Engine/BasicShapes/Sphere.Sphere"), FVector(26, -8, -12), FVector(0.09f,0.06f,0.062f), FRotator(0,0,-10), FabricPath, FLinearColor(0.17f,0.18f,0.13f));
+    }
     ConfigurePlayerInputMode();
 }
 
