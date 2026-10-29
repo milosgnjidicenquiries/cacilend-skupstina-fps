@@ -1,17 +1,9 @@
 @echo off
 setlocal
 set "ROOT=%~dp0"
-set "UEEDITOR="
-if defined UE_5_8_ROOT (
-  if exist "%UE_5_8_ROOT%\Engine\Binaries\Win64\UnrealEditor.exe" set "UEEDITOR=%UE_5_8_ROOT%\Engine\Binaries\Win64\UnrealEditor.exe"
-)
-if not defined UEEDITOR for %%P in (
-  "%ProgramFiles%\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe"
-  "D:\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe"
-  "C:\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe"
-) do (
-  if exist "%%~P" set "UEEDITOR=%%~P"
-)
+set "UE_ROOT="
+for /f "usebackq delims=" %%E in (`powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%Scripts\Find_UE_5_8.ps1" -Purpose Editor`) do set "UE_ROOT=%%E"
+if defined UE_ROOT set "UEEDITOR=%UE_ROOT%\Engine\Binaries\Win64\UnrealEditor.exe"
 if not defined UEEDITOR (
   echo Unreal Engine 5.8 nije pronadjen.
   pause
