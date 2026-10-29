@@ -319,6 +319,13 @@ void ACacilendFPSCharacter::ResetAfterDeath()
     Health = 100.0f;
     AmmoInMagazine = 30;
     ReserveAmmo = FMath::Max(ReserveAmmo, 60);
+    GetWorldTimerManager().ClearTimer(ReloadTimerHandle);
+    bReloading = false;
+    bSprinting = false;
+    Recoil = 0.0f;
+    ShotCooldown = 0.0f;
+    GetCharacterMovement()->MaxWalkSpeed = 430.0f;
+    if (FirstPersonCamera) FirstPersonCamera->SetFieldOfView(92.0f);
     bInInterior = false;
     SetPhotogrammetryVisible(true);
     SetActorLocation(FVector(-8500.0f, -7200.0f, 100.0f), false, nullptr, ETeleportType::TeleportPhysics);
