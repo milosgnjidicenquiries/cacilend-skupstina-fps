@@ -126,7 +126,7 @@ def main():
     url = ROOT_URL + "?key=" + key
     try_set(tileset, "url", url)
     try_set(tileset, "show_credits_on_screen", True)
-    try_set(tileset, "create_physics_meshes", False)
+    try_set(tileset, "create_physics_meshes", True)
     try_set(tileset, "create_nav_collision", False)
     try_set(tileset, "enable_occlusion_culling", True)
     tileset.set_actor_label("GooglePhotorealistic3DTiles_Belgrade")
