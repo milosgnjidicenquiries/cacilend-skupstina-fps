@@ -5,7 +5,7 @@ GLAVNI PROJEKAT: CacilendUE.uproject (Unreal Engine 5.8). Browser/Render demo je
 1) Instaliraj Unreal Engine 5.8 i Visual Studio 2022 C++ tools + kompatibilni Windows SDK.
 2) Preuzmi/kloniraj repo u kratak folder, npr. C:\Games\CacilendUE.
 3) Pokreni Build_Run_Cacilend_UE5.bat da pokuša stvarnu UE5 C++ kompilaciju i zatim setup u editoru. Ako build ne uspe, sačuvaj log i proveri UE5.8/VS2022/Windows SDK.
-4) Pokreni Setup_Cacilend_Assets.bat. Generiše proceduralne PBR teksture, importuje lokalne FBX/teksture ako su u SourceArt\Import, pravi mapu/materijale i pokušava opciono Google 3D Tiles.
+4) Build_Run_Cacilend_UE5.bat već poziva setup posle uspešne kompilacije. Setup_Cacilend_Assets.bat pokreni samostalno samo kada želiš ponovo generisati PBR teksture ili uvesti nove FBX/teksture bez nove C++ kompilacije.
 5) (Opciono) Pokreni Download_CC0_Weapon_Fallback.bat za privremenu CC0 pušku (nije COD2 original). Za lokalni COD2 sadržaj pročitaj Docs\ASSET_IMPORT_PIPELINE_SR.md. Extract_COD2_Assets.bat izdvaja datoteke lokalno; Install_COD2_Blender_Importer.bat priprema Blender dodatak; izvezi odabrane modele kao FBX i stavi ih u SourceArt\Import po imenima iz dokumentacije.
 6) Ako želiš Google Photorealistic 3D Tiles unutar UE5: instaliraj/omogući Cesium for Unreal, podesi Google Maps Platform Map Tiles API + billing i lokalni Config\Private\GoogleMapsApiKey.txt. Detalji: Docs\GOOGLE_EARTH_CESIUM_SETUP_SR.md.
 7) U Unreal Editor-u otvori /Game/Maps/L_Cacilend i pritisni Play.
