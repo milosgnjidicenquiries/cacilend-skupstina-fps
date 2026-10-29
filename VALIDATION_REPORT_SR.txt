@@ -4,11 +4,11 @@ Azurirano: 2026-10-29
 POTVRDJENE AUTOMATSKE PROVERE (GitHub Actions / Windows runner)
 - CacilendUE.uproject je validan JSON i cilja Unreal Engine 5.8.
 - Python skripte prolaze py_compile proveru sintakse.
-- Oba PowerShell dijagnosticka/helper skripta prolaze PowerShell parser.
+- Sva tri PowerShell dijagnosticka/helper skripta prolaze PowerShell parser.
 - C++ fajlovi prolaze proveru strukture/uglastih zagrada i obaveznih simbola.
 - Projektni contract test proverava da se GameMode, FPS pawn, HUD, mapa i PlayerStart medjusobno slazu.
 - C++ InputComponent binding imena poklapaju se sa Config/DefaultInput.ini.
-- Testovi proveravaju osnovni damage/kill tok, HUD instrukcije, reset reload/sprint stanja, interior spawn udaljen od izlazne interakcije, fallback BaseColor materijala bez PBR tekstura i bezbedno ponovno generisanje materijala u mestu.
+- Projektni testovi proveravaju damage/kill, AI damage, HUD kontrole i Escape pauzu, crouch i input mapiranja, respawn reset, ulaz/izlaz iz Skupštine i razdaljinu prompta, fallback BaseColor bez PBR tekstura, bezbedno ponovno generisanje materijala, setup status marker i mapu pre pakovanja.
 - Sve glavne .bat skripte koriste zajednicki UE 5.8 locator.
 - Build skripta proverava preduslove pre kompilacije i cuva Build/UE5-build.log.
 - Editor setup Python skripta ispisuje uspeh/neuspeh marker; Windows launcher ceka marker umesto da pretpostavi da je mapa napravljena.
