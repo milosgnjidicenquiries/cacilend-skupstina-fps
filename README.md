@@ -23,7 +23,7 @@ The UE5 scene includes offline fallback geometry for the Assembly, Pionirski Par
 
 **Recommended:** Windows 11 64-bit, 32 GB RAM, and a DirectX 12 graphics card with 8 GB VRAM. UE5.8 also supports specific 64-bit Windows 10 builds. For C++ development, install Visual Studio 2026 (Epic's current recommendation) or a compatible Visual Studio 2022 17.14+ installation. Select the `Game development with C++` workload, MSVC 14.38 or newer, and Windows SDK 10.0.22621.0 or newer. Add Visual Studio Tools for Unreal Engine under the workload's optional components.
 
-1. Download/clone this repo into a short path such as `C:\\Games\\CacilendUE`.
+1. Download/clone this repo into a short path such as `C:\Games\CacilendUE`.
 2. Run `Check_Cacilend_UE5_Requirements.bat`. It checks Windows, RAM, GPU name, UE5.8, Visual Studio/C++ workload, MSVC, Windows SDK, and free disk space. The report is saved to `Build/UE5-preflight-report.txt`. Fix any `FAIL` items before continuing.
 3. Run `Build_Run_Cacilend_UE5.bat`. It invokes UnrealBuildTool for `CacilendUEEditor Win64 Development` and starts editor setup only if compilation succeeds. If UE is installed elsewhere, set `UE_5_8_ROOT` to the engine folder first.
 4. In the Editor, open `/Game/Maps/L_Cacilend` and press **Play**.
