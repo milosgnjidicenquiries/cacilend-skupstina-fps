@@ -15,6 +15,7 @@ POTVRDJENE AUTOMATSKE PROVERE (GitHub Actions / Windows runner)
 - Windows packaging skripta cuva Build/UE5-package.log.
 - Browser JavaScript prolazi node --check.
 - Izvorni i UE5-only ZIP paketi se automatski prave i upload-uju kao GitHub Actions artefakti.
+- Opcioni self-hosted Windows build workflow koristi isti UE locator i upload-uje dijagnostičke logove; on zahteva Windows runner sa instaliranim UE 5.8.
 
 STA OVE PROVERE NE DOKAZUJU
 - One ne pokrecu UnrealBuildTool nad C++ projektom.
