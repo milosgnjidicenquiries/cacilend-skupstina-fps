@@ -1,13 +1,12 @@
 @echo off
 setlocal EnableExtensions
 set "ROOT=%~dp0"
-set "UE_ROOT=%UE_5_8_ROOT%"
-if not defined UE_ROOT set "UE_ROOT=%ProgramFiles%\Epic Games\UE_5.8"
-if not exist "%UE_ROOT%\Engine\Build\BatchFiles\Build.bat" set "UE_ROOT=D:\Epic Games\UE_5.8"
-if not exist "%UE_ROOT%\Engine\Build\BatchFiles\Build.bat" set "UE_ROOT=C:\Epic Games\UE_5.8"
-if not exist "%UE_ROOT%\Engine\Build\BatchFiles\Build.bat" (
+set "UE_ROOT="
+for /f "usebackq delims=" %%E in (`powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%Scripts\Find_UE_5_8.ps1" -Purpose Build`) do set "UE_ROOT=%%E"
+if not defined UE_ROOT (
   echo Unreal Engine 5.8 Build.bat nije pronadjen.
-  echo Instaliraj UE 5.8 ili postavi environment variable UE_5_8_ROOT na UE_5.8 folder.
+  echo Instaliraj UE 5.8 ili proveri da li Epic Games Launcher prikazuje engine kao instaliran.
+  echo Za rucnu putanju postavi UE_5_8_ROOT na folder koji sadrzi Engine.
   pause
   exit /b 1
 )
@@ -21,7 +20,7 @@ call "%UE_ROOT%\Engine\Build\BatchFiles\Build.bat" CacilendUEEditor Win64 Develo
 if errorlevel 1 (
   echo.
   echo UE5 C++ build nije uspeo. Sacuvaj ceo log iznad; nije napravljen validiran EXE.
-  echo Proveri Visual Studio 2022 C++ workload, Windows SDK i tacnu UE verziju.
+  echo Proveri Visual Studio C++ workload, MSVC toolset, Windows SDK i tacnu UE verziju.
   pause
   exit /b 1
 )
