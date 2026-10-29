@@ -87,6 +87,12 @@ void ACacilendFPSCharacter::BeginPlay()
     // Prefer a locally imported COD2 weapon mesh when available.
     // If it is absent, keep the original procedural prototype weapon.
     UStaticMesh* ImportedWeapon = LoadShape(TEXT("/Game/Cacilend/Imported/Weapons/SM_COD2_Weapon.SM_COD2_Weapon"));
+    if (!ImportedWeapon)
+    {
+        ImportedWeapon = LoadShape(TEXT("/Game/Cacilend/Imported/Weapons/SM_CC0_Rifle.SM_CC0_Rifle"));
+        if (ImportedWeapon)
+            UE_LOG(LogTemp, Log, TEXT("[Cacilend] Using optional CC0 rifle fallback; this is not a COD2 original."));
+    }
     if (ImportedWeapon)
     {
         UStaticMeshComponent* WeaponMesh = NewObject<UStaticMeshComponent>(this, UStaticMeshComponent::StaticClass(), TEXT("ImportedCOD2Weapon"));
