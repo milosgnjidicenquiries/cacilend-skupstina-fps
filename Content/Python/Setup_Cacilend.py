@@ -274,6 +274,21 @@ def build_level():
     log('Level created and saved: ' + MAP_PATH)
 
 
+def validate_level_setup():
+    """Fail the setup if its saved map asset or essential gameplay actors are missing."""
+    if not unreal.EditorAssetLibrary.does_asset_exist(MAP_PATH):
+        raise RuntimeError('Generated map asset is missing: ' + MAP_PATH)
+
+    actors = unreal.EditorLevelLibrary.get_all_level_actors()
+    class_names = {actor.get_class().get_name() for actor in actors}
+    required = {'CacilendMapBuilder', 'PlayerStart'}
+    missing = sorted(required - class_names)
+    if missing:
+        raise RuntimeError('Generated level is missing required actors: ' + ', '.join(missing))
+
+    log('Level validation passed: map asset exists and required actors are present.')
+
+
 def setup_google_tiles_optional():
     """Automatically configure Cesium only when its plug-in and a local API key exist."""
     script_path = os.path.join(ROOT, 'Content', 'Python', 'Setup_Google3DTiles_Cesium.py')
@@ -297,6 +312,7 @@ def main():
     build_materials()
     build_level()
     setup_google_tiles_optional()
+    validate_level_setup()
     log('SETUP COMPLETE. Press Play in Unreal Editor to test the Windows FPS prototype.')
 
 
