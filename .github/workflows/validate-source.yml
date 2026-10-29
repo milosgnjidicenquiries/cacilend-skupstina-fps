@@ -46,6 +46,28 @@ jobs:
         run: |
           Compress-Archive -Path * -DestinationPath "$env:RUNNER_TEMP\CacilendUE-Source.zip" -Force
           Copy-Item "$env:RUNNER_TEMP\CacilendUE-Source.zip" "CacilendUE-Source.zip" -Force
+      - name: Create UE5-only Windows source archive
+        shell: pwsh
+        run: |
+          $candidates = @(
+            "CacilendUE.uproject", ".gitignore", "Config", "Source", "Content",
+            "Scripts", "Docs", "SourceArt", "Archive",
+            "Start_Cacilend_Editor.bat", "Setup_Cacilend_Assets.bat",
+            "Import_Cacilend_Assets.bat", "Extract_COD2_Assets.bat",
+            "Install_COD2_Blender_Importer.bat", "Download_CC0_Weapon_Fallback.bat",
+            "Package_Windows.bat", "README.md", "README_SR.md", "START_HERE_SR.txt",
+            "ASSET_NOTES_SR.txt", "VALIDATION_REPORT_SR.txt"
+          )
+          $paths = $candidates | Where-Object { Test-Path $_ }
+          Compress-Archive -Path $paths -DestinationPath "$env:RUNNER_TEMP\CacilendUE-Windows-Source.zip" -Force
+          Copy-Item "$env:RUNNER_TEMP\CacilendUE-Windows-Source.zip" "CacilendUE-Windows-Source.zip" -Force
+      - name: Upload UE5-only Windows project
+        uses: actions/upload-artifact@v4
+        with:
+          name: CacilendUE-Windows-Source
+          path: CacilendUE-Windows-Source.zip
+          if-no-files-found: error
+          retention-days: 14
       - name: Upload source archive
         uses: actions/upload-artifact@v4
         with:
