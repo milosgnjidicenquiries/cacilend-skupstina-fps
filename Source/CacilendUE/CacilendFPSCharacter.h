@@ -40,6 +40,7 @@ protected:
     void StopSprint();
     void Interact();
     void ToggleInterior(bool bEnter);
+    void SetPhotogrammetryVisible(bool bVisible);
     void ResetAfterDeath();
     void ConfigurePlayerInputMode();
     UStaticMeshComponent* AddWeaponPart(FName Name, const TCHAR* MeshPath, const FVector& LocalLocation, const FVector& LocalScale, const FRotator& LocalRotation, const FString& MaterialPath, const FLinearColor& Tint);
