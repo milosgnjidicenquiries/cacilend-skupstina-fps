@@ -17,5 +17,11 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
+python "%ROOT%Scripts\list_cod2_assets.py"
+if errorlevel 1 (
+  echo Ekstrakcija je zavrsena, ali katalog nije napravljen.
+  echo Pokreni rucno: python Scripts\list_cod2_assets.py
+)
+echo Katalog lokalnih modela je u Build\LocalCOD2AssetCatalogue.md
 pause
 endlocal
